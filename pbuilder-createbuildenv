@@ -47,12 +47,14 @@ fi
 $TRAP cleanbuildplace exit
 
 log "I: running $DEBOOTSTRAP"
-unset DEBOOTSTRAPSCRIPT
+#unset DEBOOTSTRAPSCRIPT
+if [ -z $DEBOOTSTRAPSCRIPT ]; then
 if [ -n "$HOOKDIR" ]; then
     if [ -f "$HOOKDIR/$DISTRIBUTION" ]; then
 	DEBOOTSTRAPSCRIPT=$(readlink -f "$HOOKDIR")"/$DISTRIBUTION"
 	log "I: Applying user distribution dist build script $DEBOOTSTRAPSCRIPT"
     fi
+fi
 fi
 
 if which "${DEBOOTSTRAP}"; then
@@ -97,9 +99,9 @@ case "`readlink -e "$PBUILDERSATISFYDEPENDSCMD"`" in
 esac
 
 if [ -n "$CCACHEDIR" ]; then
-    EXTRAPACKAGES="$EXTRAPACKAGES ccache"
+    EXTRAPACKAGES="$EXTRAPACKAGES"
 else
-    EXTRAPACKAGES="$EXTRAPACKAGES ccache-"
+    EXTRAPACKAGES="$EXTRAPACKAGES"
 fi
 
 if [ -n "$REMOVEPACKAGES" ]; then
