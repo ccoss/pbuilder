@@ -1,0 +1,84 @@
+I: Upgrading for distribution sid
+I: Building the build Environment
+I: extracting base tarball [/TESTDIR/testimage]
+I: creating local configuration
+I: copying local configuration
+I: Installing apt-lines
+I: Installing apt-lines and pinning for experimental
+I: mounting /proc filesystem
+I: mounting /dev/pts filesystem
+I: policy-rc.d already exists
+I: Refreshing the base.tgz 
+I: upgrading packages
+Hit http://localhost sid Release.gpg
+Get:1 http://localhost experimental Release.gpg [835B]
+Hit http://localhost sid Release
+Get:2 http://localhost experimental Release [98.5kB]
+Ign http://localhost experimental Release
+Ign http://localhost sid/main Packages/DiffIndex
+Ign http://localhost experimental/main Packages
+Ign http://localhost sid/main Packages
+Ign http://localhost experimental/main Packages
+Ign http://localhost sid/main Packages
+Get:3 http://localhost experimental/main Packages [340kB]
+Hit http://localhost sid/main Packages
+Fetched XXXB in Xs (XXXXXB/s)
+Reading package lists...
+W: GPG error: http://localhost experimental Release: The following signatures were invalid: BADSIG 9AA38DCD55BE302B Debian Archive Automatic Signing Key (5.0/lenny) <ftpmaster@debian.org>
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following packages will be upgraded:
+  diff diffutils libmpfr1ldbl libsigc++-2.0-0c2a
+4 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Need to get 717kB of archives.
+After this operation, 324kB of additional disk space will be used.
+WARNING: The following packages cannot be authenticated!
+  diffutils libsigc++-2.0-0c2a libmpfr1ldbl diff
+Get:1 http://localhost experimental/main diffutils 1:2.8.7-0.1 [248kB]
+Get:2 http://localhost experimental/main libsigc++-2.0-0c2a 2.2.2-1 [35.3kB]
+Get:3 http://localhost experimental/main libmpfr1ldbl 2.4.2~rc2-1 [428kB]
+Get:4 http://localhost experimental/main diff 1:2.8.7-0.1 [5658B]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched XXXB in Xs (XXXXXB/s)
+(Reading database ... 10202 files and directories currently installed.)
+Preparing to replace diffutils 1:2.8.1-18 (using .../diffutils_1%3a2.8.7-0.1_amd64.deb) ...
+Unpacking replacement diffutils ...
+Setting up diffutils (1:2.8.7-0.1) ...
+(Reading database ... 10210 files and directories currently installed.)
+Preparing to replace libsigc++-2.0-0c2a 2.0.18-2 (using .../libsigc++-2.0-0c2a_2.2.2-1_amd64.deb) ...
+Unpacking replacement libsigc++-2.0-0c2a ...
+Preparing to replace libmpfr1ldbl 2.4.1-2 (using .../libmpfr1ldbl_2.4.2~rc2-1_amd64.deb) ...
+Unpacking replacement libmpfr1ldbl ...
+Preparing to replace diff 1:2.8.1-18 (using .../diff_1%3a2.8.7-0.1_all.deb) ...
+Unpacking replacement diff ...
+Setting up libsigc++-2.0-0c2a (2.2.2-1) ...
+Setting up libmpfr1ldbl (2.4.2~rc2-1) ...
+Setting up diff (1:2.8.7-0.1) ...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+build-essential is already the newest version.
+dpkg-dev is already the newest version.
+apt is already the newest version.
+aptitude is already the newest version.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+I: user script /var/cache/pbuilder/build//NUM/tmp/hooks/E50-initscripts-2.86.ds1-7.workaround.sh starting
+umount: /sys: not mounted
+umount: /run: not found
+umount: /proc/bus/usb: not mounted
+umount: /dev/shm: not mounted
+umount: /lib/init/rw: not mounted
+cat: /var/run/inetd.pid: No such file or directory
+kill: 20: Usage: kill [-s sigspec | -signum | -sigspec] [pid | job]... or
+kill -l [exitstatus]
+I: user script /var/cache/pbuilder/build//NUM/tmp/hooks/E50-initscripts-2.86.ds1-7.workaround.sh finished
+I: unmounting dev/pts filesystem
+I: unmounting proc filesystem
+I: creating base tarball [/TESTDIR/testimage]
+I: cleaning the build env 
+I: removing directory /var/cache/pbuilder/build//NUM and its subdirectories

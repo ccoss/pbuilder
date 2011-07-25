@@ -1,0 +1,94 @@
+#! /bin/bash
+#   pbuilder-user-mode-linux -- personal Debian package builder
+#   Copyright (C) 2005-2007 Junichi Uekawa
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+# load and check params.
+# requires
+# . /usr/lib/pbuilder/pbuilder-loadconfig
+
+for SYSTEM_CONFIG in /usr/share/pbuilder/pbuilder-uml.conf /etc/pbuilder/pbuilder-uml.conf ${HOME}/.pbuilderrc ${HOME}/.pbuilder-umlrc; do
+    if [ -f ${SYSTEM_CONFIG} ]; then
+	. ${SYSTEM_CONFIG}
+    fi
+done
+
+PBUILDER_COW=""
+UML_EXTRAOPT=
+UML_DEBUGMODE=
+UML_EXECUTE_EXTRAOPT=
+UML_LOGIN_NOCOW=
+
+while [ -n "$1" ] ; do
+    case "$1" in
+	--logfile)
+	    exec > >(tee "$2") 2>&1
+	    shift;shift;;
+	--auto-debsign)
+	    AUTO_DEBSIGN="yes"
+	    shift;
+	    ;;
+	--buildsourceroot*)
+	    BUILDSOURCEROOTCMD="$2";
+	    shift; shift;
+	    ;;
+	--configfile)
+	    . "$2"
+	    shift; shift;;
+	--pbuilderroot*)
+	    PBUILDERROOTCMD="$2";
+	    shift; shift;
+	    ;;
+	--pbuildersatisfydepends*)
+	    PBUILDERSATISFYDEPENDSCMD="$2";
+	    shift; shift;
+	    ;;
+	--debsign-k)
+	    DEBSIGN_KEYID="$2"
+	    shift; shift; 
+	    ;;
+	--use-pdebuild-internal)
+	    USE_PDEBUILD_INTERNAL=yes;
+	    shift;
+	    ;;
+	--debbuildopts)
+	    # append to DEBBUILDOPTS or reset to empty if $2 isn't set
+	    DEBBUILDOPTS="${2:+${DEBBUILDOPTS:+$DEBBUILDOPTS }$2}";
+	    shift; shift;
+	    ;;
+	--buildresult)
+	    # ignore buildresult
+	    if [ -d "$2" ]; then
+		UML_BUILDRESULT=$(readlink -f "$2")
+	    else
+		echo "E: Directory $2 does not exist" >&2
+		exit 1
+	    fi
+	    shift; shift;;
+	## end pdebuild options
+	--)
+	    shift;
+	    break;
+	    ;;
+	--*)
+	    echo "Error: Unknown option [$1] was specified " >&2 
+	    exit 1;
+	    ;;
+	*)
+	    break;
+	    ;;
+    esac
+done

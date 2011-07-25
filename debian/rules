@@ -1,0 +1,56 @@
+#!/usr/bin/make -f
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	$(MAKE) clean
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	$(MAKE) check
+endif
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/pbuilder
+	dh_movefiles -ppbuilder-uml --sourcedir=debian/pbuilder
+
+binary-indep: build install
+	dh_testdir -i
+	dh_testroot -i
+	dh_installdocs -i
+	dh_installman pbuilder.8 pbuilderrc.5 pdebuild.1 debuild-pbuilder.1 
+	dh_installchangelogs -i
+	dh_installdebconf
+	dh_link -i
+	dh_compress -i -X.pdf
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+binary-arch: build install
+	dh_testdir -s
+	dh_testroot -s
+	dh_installdocs -s
+	dh_installman -ppbuilder-uml pbuilder-user-mode-linux.1 pbuilder-uml.conf.5 pdebuild-user-mode-linux.1
+	dh_installchangelogs -s
+	dh_link -s
+	dh_compress -s -X.pdf
+	dh_fixperms -s
+	dh_installdeb -s
+	dh_gencontrol -s
+	dh_md5sums -s
+	dh_builddeb -s
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

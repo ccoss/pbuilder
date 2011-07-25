@@ -1,0 +1,138 @@
+#! /bin/bash
+#   pbuilder-internal -- personal Debian package builder, internal routine
+#   Copyright (C) 2003-2009 Junichi Uekawa
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+#
+# invoke this as 
+#  pbuilder execute pdebuild-internal --bindmount "${pwd}/.." "$1"
+# does not support --buildresult, but should that be required ?
+#
+# Risk: May corrupt your files depending on how user-mode-linux works, if used inside UML.
+# Will take longer if your package does not successfully run 'debian/rules clean'
+# 
+
+# This script is running inside chroot under 'pbuilder execute' as root.
+
+set -e
+
+# I am probably running as root; make sure I have pbuilder installed here.
+# passwd is needed as well because of useradd and groupadd calls.
+apt-get install -q -y "${APTGETOPT[@]}" pbuilder passwd
+
+# I'm not going to have the same LOGNAME as outside, I'm root.
+export LOGNAME=root
+
+cd "$1"
+shift;
+
+# dummy function that does enough, real one is defined elsewhere.
+function log() {
+    echo "$*"
+}
+
+while [ -n "$1" ]; do 
+    case "$1" in 
+	--debbuildopts)
+	    # append to DEBBUILDOPTS or reset to empty if $2 isn't set
+	    DEBBUILDOPTS="${2:+${DEBBUILDOPTS:+$DEBBUILDOPTS }$2}";
+	    log "I: Setting DEBBUILDOPTS=$DEBBUILDOPTS"
+	    shift; shift;
+	    ;;
+	--uid)
+	    BUILDRESULTUID=$2
+	    shift; shift;
+	    ;;
+	--gid)
+	    BUILDRESULTGID=$2
+	    shift; shift;
+	    ;;
+	--pbuildersatisfydepends)
+	    PBUILDERSATISFYDEPENDSCMD=$2
+	    shift; shift;
+	    ;;
+	--debug)
+	    PBUILDER_DEBUGMODE=yes
+	    set -x
+	    shift;
+	    ;;
+	--*)
+	    log "E: Unknown option [$1] was specified "
+	    exit 1;
+	    ;;
+	*)
+	    break;
+	    ;;
+    esac
+done
+
+# Calling pbuilder-runhooks; we try to fix up enough to fool
+# pbuilder-runhooks.  The following source call depends on
+# pbuilder-runhook inside the chroot, which might be different from
+# the version outside the chroot.
+. /usr/lib/pbuilder/pbuilder-runhooks
+# fool pbuilder-runhooks to use / as buildplace, since I am already
+# inside chroot.
+BUILDPLACE=/
+# chroot command will just chroot to /, which will effectively chdir
+# to / and nothing else.
+CHROOTEXEC="chroot $BUILDPLACE "
+# make HOOKDIR contain something if there is a hook, to fool HOOKDIR
+# check inside pbuilder-runhooks that there is HOOKDIR
+# configuration. We don't call loadhooks or unloadhooks ourselves,
+# pbuilder execute will do that for you, so we should be okay.
+# TODO: handle when --hookdir was not initially specified.
+if [ -d "/$hookdir" ]; then
+    HOOKDIR="/$hookdir"
+fi
+
+executehooks "D"
+export PBCURRENTCOMMANDLINEOPERATION="pdebuild"
+"$PBUILDERSATISFYDEPENDSCMD"
+apt-get install -q -y "${APTGETOPT[@]}" fakeroot
+
+
+# set home directory to ..
+export HOME=$(readlink -f $(pwd)/../)
+if [ -z "${HOME}" ]; then
+    echo "E: Failed to obtain reasonable HOME from pwd"
+fi
+
+# create the user similar to that used outside.
+# TODO: what about id -G output? if other groups than the designated
+# is used, we're stuffed.
+groupadd -g "${BUILDRESULTGID}" -o pbgroup
+useradd -g pbgroup -u "${BUILDRESULTUID}" -d "${HOME}" -o pbuser
+
+executehooks "A"
+
+# do build with that user.
+# $DEBBUILDOPTS is evaluated inside the su and chroot.
+export DEBBUILDOPTS
+CMD="/usr/bin/dpkg-buildpackage -rfakeroot -us -uc "'${DEBBUILDOPTS}'
+echo "I: Running $CMD"
+# This command should be ran with current directory as bind-mounted
+# package source directory
+if echo "$CMD" | \
+    su -p pbuser; 
+    then
+    # build was successful
+    :
+else
+    executehooks "C"
+    exit 1
+fi
+
+executehooks "B"

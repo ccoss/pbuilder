@@ -1,0 +1,60 @@
+body {
+     background-color: #fff;
+     color: #000;
+}
+
+div.itemizedlist {
+}
+
+h1.title  {
+   color: #000;
+   border-style: ridge;
+   border-color: #ffaaaa;
+   font-size: 200%;   
+}
+
+h2.title  {
+   border-style: solid;
+   border-color: #232;
+   color: #232;
+   font-size: 140%;
+}
+
+h3.title {
+   border-style: solid;
+   border-color: #ff99ee;
+   background-color: #ff99ee;
+   color: #000000;
+   font-size: 120%;
+}
+
+pre.screen {
+   color: #ffffff;
+   background-color: #000000;
+}
+
+a:link {
+  color: #a3a;
+}
+
+a:active {
+  color: #000;
+}
+
+a:hover {
+  color: #22f;
+  background-color: #aaf;
+}
+
+a:visited {
+  color: #000;
+}
+
+tr {
+  background-color: #025;
+  color: #eee;
+}
+td {
+  background-color: #025;
+  color: #eee;
+}

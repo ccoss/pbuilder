@@ -1,0 +1,20 @@
+W: /home/dancer/.pbuilderrc does not exist
+I: using fakeroot in build.
+pbuilder-buildpackage/amd64 $Id$
+$Id$
+
+Current time: Fri Oct 27 07:38:35 JST 2006
+pbuilder-time-stamp: 1161902315
+Building the build Environment
+ -> extracting base tarball [/var/cache/pbuilder/base.tgz]
+ -> creating local configuration
+ -> copying local configuration
+ -> mounting /proc filesystem
+ -> mounting /dev/pts filesystem
+ -> policy-rc.d already exists
+dsh_0.25.7-1.diff.gz
+dsh_0.25.7-1.dsc
+dsh_0.25.7-1_amd64.build
+dsh_0.25.7-1_amd64.changes
+dsh_0.25.7-1_amd64.deb
+dsh_0.25.7.orig.tar.gz

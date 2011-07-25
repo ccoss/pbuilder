@@ -1,0 +1,119 @@
+#! /bin/bash
+#   pbuilder -- personal Debian package builder
+#   Copyright (C) 2001,2002,2005-2007 Junichi Uekawa
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+# functions local to pbuilder-buildpackage
+
+function copydsc () {
+    local DSCFILE="$1"
+    local TARGET="$2"
+    for FILE in \
+      "$DSCFILE" \
+	$(cat "$DSCFILE" | \
+	awk 'BEGIN{p=0} /^$/ {p=0} /^.*:/ {p=0} {if (p){print "'$(dirname "$DSCFILE")'/" $3}} /^Files:/{p=1}' ) ; do
+	log "I: copying [$FILE]"
+        cp -p "$FILE" "$TARGET" 
+    done
+}
+
+function checkbuilddep () {
+    # call satisfydepends
+    local BUILDOPT="--binary-all"
+    case "${BINARY_ARCH}" in
+	yes) BUILDOPT="--binary-arch";;
+	*) ;;
+    esac
+    if "$PBUILDERSATISFYDEPENDSCMD" --control "$1" --chroot "${BUILDPLACE}" --internal-chrootexec "${CHROOTEXEC}" "${BUILDOPT}" "${PBUILDERSATISFYDEPENDSOPT[@]}"; then
+	:
+    else
+    # If asked to preserve the build place, and pbuilder-satisfydepends
+    # didn't taint it, then don't clean it when exiting.
+	if [ $? -eq 2 -a "${PRESERVE_BUILDPLACE}" = "yes" ]; then
+	    trap umountproc_trap exit sighup
+	fi
+	log "E: pbuilder-satisfydepends failed."
+	exit 2
+    fi
+    # install extra packages to the chroot
+    if [ -n "$EXTRAPACKAGES" ]; then 
+	$CHROOTEXEC usr/bin/apt-get -q -y "${APTGETOPT[@]}" install ${EXTRAPACKAGES}
+    fi
+}
+
+function echobacktime () {
+    log "I: Current time: $(date)"
+    log "I: pbuilder-time-stamp: $(date +%s)"
+}
+
+function showbuildbanner () {
+    # show some banners for building
+    log "I: pbuilder-buildpackage/"$(dpkg --print-architecture) 
+    log "I: $1"
+}
+
+function cowprotect () {
+    # a hack for cowdancer, used when a file is edited in-place;
+    # Copy the file to create a new i-node so that hardlinked original is intact
+    for A in "$@"; do
+	if readlink -f "$A" > /dev/null; then
+	    A=$(readlink -f "$A")
+	    mv "$A" "$A"~
+	    cp -a "$A"~ "$A"
+	    rm -f "$A"~
+	fi
+    done
+}
+
+function createbuilduser () {
+    # create the build user, if it is necessary and specified.
+    if [ -n "$BUILDUSERNAME" -a -n "$BUILDUSERID" ]; then
+	if [ -e $BUILDPLACE/etc/shadow ]; then p='x'; else p='*'; fi
+	if [ -e $BUILDPLACE/etc/gshadow ]; then g='x'; else g='*'; fi
+	if ! grep -q ^$BUILDUSERNAME: $BUILDPLACE/etc/passwd; then
+	    cowprotect $BUILDPLACE/etc/passwd
+	    echo "$BUILDUSERNAME:$p:$BUILDUSERID:$BUILDUSERID:,,,:/tmp/buildd:/bin/sh" >> $BUILDPLACE/etc/passwd
+	fi
+	if ! grep -q ^$BUILDUSERNAME: $BUILDPLACE/etc/group; then
+	    cowprotect $BUILDPLACE/etc/group
+	    echo "$BUILDUSERNAME:$g:$BUILDUSERID:" >> $BUILDPLACE/etc/group
+	fi
+	if [ -e $BUILDPLACE/etc/shadow ] && ! grep -q ^$BUILDUSERNAME: $BUILDPLACE/etc/shadow; then
+	    cowprotect $BUILDPLACE/etc/shadow
+	    echo "$BUILDUSERNAME:!:::::::" >> $BUILDPLACE/etc/shadow
+	fi
+	if [ -e $BUILDPLACE/etc/gshadow ] && ! grep -q ^$BUILDUSERNAME: $BUILDPLACE/etc/gshadow; then
+	    cowprotect $BUILDPLACE/etc/gshadow
+	    echo "$BUILDUSERNAME:!::" >> $BUILDPLACE/etc/gshadow
+	fi
+	unset LOGNAME || true
+    else
+	unset LOGNAME || true
+    fi
+}
+
+function setup_ccache() {
+    if [ -n "$CCACHEDIR" ]; then
+        log "I: Setting up ccache"
+        if ! [ -d "$BUILDPLACE/$CCACHEDIR" ]; then
+            mkdir -p "$BUILDPLACE/$CCACHEDIR"
+        fi
+        chown -R $BUILDUSERID:$BUILDUSERID "$BUILDPLACE/$CCACHEDIR"
+        # Unfortunate difference between pbuilder-style and ccache-style config
+        # env vars   :-/
+        export CCACHE_DIR="$CCACHEDIR"
+    fi
+}

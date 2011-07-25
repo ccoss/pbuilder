@@ -1,0 +1,6 @@
+failpkg (0.1) unstable; urgency=low
+
+  * a package that fails
+
+ -- Junichi Uekawa <dancer@debian.org>  Sun, 27 May 2007 14:27:53 +0900
+

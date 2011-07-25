@@ -1,0 +1,75 @@
+TODO and possible bugs: 
+
+* lenny goal!:
+   - support --allow-unauthenticated and package signatures; #317998
+pbuilder support for signatures will hopefully come
+
+* apt authentication support
+Add hooks to install gnupg package.
+Allow new keys to be registered into pbuilder chroots.
+Document in manual.
+test
+
+
+* /etc/pbuilderrc
+I want to not make it a conffile, but removing the file is a problem,
+   since I already have /etc/pbuilder/pbuilderrc symlink.
+
+* pdebuild-internal
+   - Use pbuilder cache in pdebuild-internal (235237)
+I think I just need to add hacks to copy stuff.
+   - testsuite for pdebuild-internal?
+   - support readlink -e usage instead of readlink -f.
+
+This is too trivial, but anyway. Debian 3.1 does not support 
+'readlink -e'.
+
+* xvfb:x11-common
+   - debian-bug: 337541: fixed in 0.138
+/etc/init.d/x11-common needs to be ran; policy-rc.d is now patched.
+Remaining problem is the upgrade case, and when base.tgz already 
+contains xvfb.
+
+Maybe document the limitation.
+
+* use arrays for debbuildopts
+   - current --debbuildopts usages will break, how do we support it?
+
+* revert back to using --variant=buildd for debootstrap
+   - depends-on debian-bug: 314858 debootstrap: fixed in 0.3.2
+
+* BUG: Too many options! Creeping featurism!!
+
+* Fix pbuilder-user-mode-linux bind-mount, 
+   -  Use hostfs for better performance, 
+   -  fix space-handling in, use arrays
+
+* Build dependency handles |, but not when [] and | exist. -- no package should be using it ?
+
+* Machine type specification in Build dependency should either have  [!xxx !xxx !xxx ...] or [xxx xxx xxx ...]   [!xxx xxx] formats are not parsed, and should really not exist.
+
+* sbuild interface
+
+* Remember to update the TODO file.
+
+* Support for apt-move. Some, mount --bind trick 
+   - documentation of how to do it
+   - putting example scripts.
+         
+* Supporting really automatic/noninteractive "pbuilder upgrade"
+   - user-mode-linux is noninteractive, it no longer umounts.
+   - policy-rc.d is in place, everything should be automatic modulo bugs.
+
+* $HOME, $TMP, $TMPDIR, etc. environment vars are set to bogus values
+
+* set LOGNAME=root ? 
+   - related debian-bug: 166682
+   - perl spits out warning every time it starts up if LOGNAME is unset.
+
+* check cross-compile support, maybe adding support for dpkg-cross into build-depends checker?
+
+* Fix UML_EXTRAOPT to use arrays.
+This should change semantics; and how do we pass this thing to inside UML?
+
+elmo.txt is a memo of a discussion with James Troup.
+

@@ -1,0 +1,20 @@
+// (let* ((dot buffer-file-name) (eps (replace-regexp-in-string "dot$" "eps" dot)) (svg (replace-regexp-in-string "dot$" "svg" dot))) (shell-command (concat "dot "dot" -T ps > "eps"; gv "eps)))
+digraph structure {
+mindist=1
+node [fontsize=30]
+
+"edit source" [label="maintainer\nedits source"] 
+"bugreport"->"edit source"
+"new upstream package"->"edit source"
+"edit source"->"build package"
+"build package"->"install locally"
+"install locally"->"test package"
+"test package"->"edit source" [label="fail"]
+"test package"->"pbuilder build" [label="success"]
+"pbuilder build"->"edit source" [label="fail"]
+"pbuilder build"->"test pbuilder-generated package" [label="success"]
+"test pbuilder-generated package"->"debsign" [label="success"]
+"test pbuilder-generated package"->"edit source" [label="fail"]
+"debsign"->"dput"
+}
+

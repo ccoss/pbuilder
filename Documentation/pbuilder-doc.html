@@ -1,0 +1,1064 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>pbuilder User's Manual</title><link rel="stylesheet" href="pbuilder-doc.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.73.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id386916"></a>pbuilder User's Manual</h1></div><div><h2 class="subtitle">Usage and operations</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Junichi</span> <span class="surname">Uekawa</span></h3></div></div></div><div><p class="releaseinfo">documentation in progress</p></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="chapter"><a href="#introduction">1. Introducing pbuilder</a></span></dt><dd><dl><dt><span class="sect1"><a href="#aim">1. Aims of pbuilder</a></span></dt></dl></dd><dt><span class="chapter"><a href="#usingpbuilder">2. Using pbuilder</a></span></dt><dd><dl><dt><span class="sect1"><a href="#creatingbase">1. Creating a base chroot image tar-ball</a></span></dt><dt><span class="sect1"><a href="#basechroot">2. Updating the base.tgz</a></span></dt><dt><span class="sect1"><a href="#buildpackagechroot">3. Building a package using the base.tgz</a></span></dt><dt><span class="sect1"><a href="#pdebuild">4. Facilitating Debian Developers' typing, pdebuild</a></span></dt><dt><span class="sect1"><a href="#configfile">5. Configuration Files</a></span></dt><dt><span class="sect1"><a href="#nonrootchroot">6. Building packages as non-root inside the chroot</a></span></dt><dt><span class="sect1"><a href="#backporting">7. Using pbuilder for back-porting</a></span></dt><dt><span class="sect1"><a href="#massbuild">8. Mass-building packages</a></span></dt><dt><span class="sect1"><a href="#autobackport">9. Auto-backporting scripts</a></span></dt><dt><span class="sect1"><a href="#autotesting">10. Using pbuilder for automated testing of packages</a></span></dt><dt><span class="sect1"><a href="#altcompiler">11. Using pbuilder for testing builds with alternate compilers</a></span></dt></dl></dd><dt><span class="chapter"><a href="#pbuilder-uml">3. Using User-mode-linux with pbuilder</a></span></dt><dd><dl><dt><span class="sect1"><a href="#user-mode-linux-config">1. Configuring user-mode-linux</a></span></dt><dt><span class="sect1"><a href="#rootstrap">2. Configuring rootstrap</a></span></dt><dt><span class="sect1"><a href="#pbuilderumlconfig">3. Configuring pbuilder-uml</a></span></dt><dt><span class="sect1"><a href="#consideruml">4. Considerations for running pbuilder-user-mode-linux</a></span></dt><dt><span class="sect1"><a href="#paralleluml">5. Parallel running of pbuilder-user-mode-linux</a></span></dt><dt><span class="sect1"><a href="#pbuilderumlwrap">6. Using pbuilder-user-mode-linux as a wrapper script to start up a virtual machine</a></span></dt></dl></dd><dt><span class="chapter"><a href="#faq">4. Frequently asked questions </a></span></dt><dd><dl><dt><span class="sect1"><a href="#pbuildercreatefail">1. pbuilder create fails</a></span></dt><dt><span class="sect1"><a href="#bindmountlimits">2. Directories that cannot be bind-mounted</a></span></dt><dt><span class="sect1"><a href="#shellafterfail">3. Logging in to pbuilder to investigate build failure</a></span></dt><dt><span class="sect1"><a href="#modifyupdate">4. Logging in to pbuilder to modify the environment</a></span></dt><dt><span class="sect1"><a href="#BUILDRESULTUID">5. Setting BUILDRESULTUID for sudo sessions</a></span></dt><dt><span class="sect1"><a href="#tmpdir">6. Notes on usage of $TMPDIR</a></span></dt><dt><span class="sect1"><a href="#DISTRIBUTIONSWITCH">7. Creating a shortcut for running <span class="command"><strong>pbuilder</strong></span> with a specific distribution</a></span></dt><dt><span class="sect1"><a href="#ENVVARDISTRIBUTIONSWITCH">8. Using environmental variables for running <span class="command"><strong>pbuilder</strong></span>
+	for specific distribution
+      </a></span></dt><dt><span class="sect1"><a href="#usingspecialaptsources">9. Using special apt sources lists, and local packages</a></span></dt><dt><span class="sect1"><a href="#apt-getupdateonbuild-depend">10. How to get pbuilder to run apt-get update before trying to satisfy build-dependency</a></span></dt><dt><span class="sect1"><a href="#bashprompt">11. Different bash prompts inside pbuilder login</a></span></dt><dt><span class="sect1"><a href="#chrootmemo">12. Creating a chroot reminder</a></span></dt><dt><span class="sect1"><a href="#packagecachearchives">13. Using /var/cache/apt/archives for the package cache</a></span></dt><dt><span class="sect1"><a href="#stablebackport">14. pbuilder back ported to stable Debian releases</a></span></dt><dt><span class="sect1"><a href="#LOGNAME">15. Warning about LOGNAME not being defined</a></span></dt><dt><span class="sect1"><a href="#nobuildconflictessential">16. Cannot Build-conflict against an essential package</a></span></dt><dt><span class="sect1"><a href="#lninvalidcrossdevicelink">17. Avoiding the "ln: Invalid cross-device link" message</a></span></dt><dt><span class="sect1"><a href="#fakechroot">18. Using fakechroot</a></span></dt><dt><span class="sect1"><a href="#debconfinsidepbuilder">19. Using debconf inside pbuilder sessions</a></span></dt><dt><span class="sect1"><a href="#nodev">20. nodev mount options hinder pbuilder activity</a></span></dt><dt><span class="sect1"><a href="#faqslowpbuilder">21. pbuilder is slow</a></span></dt><dt><span class="sect1"><a href="#sponsor">22. Using pdebuild to sponsor package</a></span></dt><dt><span class="sect1"><a href="#sourcechanges">23. Why is there a source.changes file in ../?</a></span></dt><dt><span class="sect1"><a href="#amd64i386">24. amd64 and i386-mode</a></span></dt><dt><span class="sect1"><a href="#tmpfsforpbuilder">25. Using tmpfs for buildplace</a></span></dt><dt><span class="sect1"><a href="#id431300">26. Using svn-buildpackage together with pbuilder</a></span></dt></dl></dd><dt><span class="chapter"><a href="#develanddebug">5. Troubleshooting and development</a></span></dt><dd><dl><dt><span class="sect1"><a href="#bugreport">1. Reporting bugs </a></span></dt><dt><span class="sect1"><a href="#mailinglist">2. Mailing list</a></span></dt><dt><span class="sect1"><a href="#IRCchannel">3. IRC Channel</a></span></dt><dt><span class="sect1"><a href="#development">4. Information for pbuilder developers</a></span></dt></dl></dd><dt><span class="chapter"><a href="#otheruse">6. Other uses of pbuilder</a></span></dt><dd><dl><dt><span class="sect1"><a href="#chroot">1. Using pbuilder for small experiments</a></span></dt><dt><span class="sect1"><a href="#runningprograms">2. Running little programs inside the chroot</a></span></dt></dl></dd><dt><span class="chapter"><a href="#experimental">7. Experimental or wish-list features of pbuilder</a></span></dt><dd><dl><dt><span class="sect1"><a href="#lvm">1. Using LVM</a></span></dt><dt><span class="sect1"><a href="#cowdancer">2. Using cowdancer</a></span></dt><dt><span class="sect1"><a href="#withouttargz">3. Using pbuilder without tar.gz</a></span></dt><dt><span class="sect1"><a href="#inavserver">4. Using pbuilder in a vserver</a></span></dt><dt><span class="sect1"><a href="#ccache">5. Usage of ccache</a></span></dt></dl></dd><dt><span class="chapter"><a href="#refs">8. Reference materials</a></span></dt><dd><dl><dt><span class="sect1"><a href="#dirstructoutside">1. Directory structure outside the chroot</a></span></dt><dt><span class="sect1"><a href="#dirstructinside">2. Directory structure inside the chroot</a></span></dt></dl></dd><dt><span class="chapter"><a href="#id432491">9. Minor archaeological details</a></span></dt><dd><dl><dt><span class="sect1"><a href="#id432497">1. Documentation history </a></span></dt><dt><span class="sect1"><a href="#pbuilderbackgroundhistory">2. Possibly inaccurate Background History of pbuilder</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id432581">2.1. The Time Before pbuilder</a></span></dt><dt><span class="sect2"><a href="#birth">2.2. Birth of pbuilder</a></span></dt><dt><span class="sect2"><a href="#secondyear">2.3. And the second year of its life</a></span></dt><dt><span class="sect2"><a href="#fifthyear">2.4. Fifth year of pbuilder</a></span></dt></dl></dd></dl></dd></dl></div><div class="list-of-tables"><p><b>List of Tables</b></p><dl><dt>5.1. <a href="#dirtestsuites">Directory structure of the testsuite</a></dt><dt>8.1. <a href="#id432051">Directory Structure outside the chroot </a></dt><dt>8.2. <a href="#id432306">Directory Structure inside the chroot </a></dt></dl></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="introduction"></a>Chapter 1. Introducing pbuilder</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#aim">1. Aims of pbuilder</a></span></dt></dl></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="aim"></a>1. Aims of pbuilder</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> stands for
+	Personal Builder, and it is an automatic Debian Package Building system
+	for personal development workstation environments.
+	<span class="command"><strong>pbuilder</strong></span> aims to be an
+	easy-to-setup system
+	for auto-building Debian packages inside a clean-room
+	environment, so that it is possible to verify that
+	a package can be built on most Debian installations.
+	The clean-room environment is achieved through the use of
+	a base chroot image,
+	so that only minimal packages will be installed inside the
+	chroot.
+      </p><p>
+	The Debian distribution consists of free software
+	accompanied with source.
+	The source code within Debian's "main" section
+	must build within Debian "main",
+	with only the explicitly specified build-dependencies
+	installed.
+      </p><p>
+	The primary aim of <span class="command"><strong>pbuilder</strong></span> is different from other
+	auto-building systems in Debian in that its aim is not
+	to try to build as many packages as possible.
+        It does not try to guess
+	what a package needs, and in most cases it tries the
+	worst choice of all if there is a choice to be made.
+      </p><p>
+	In this way, <span class="command"><strong>pbuilder</strong></span> tries to ensure
+	that packages
+	tested against <span class="command"><strong>pbuilder</strong></span> will build properly in
+	most Debian installations, hopefully resulting
+	in a good overall Debian source-buildability.
+      </p><p>
+	The goal of making Debian buildable from source is somewhat
+	accomplished, and has seen good progress.  In the past age of
+	Debian 3.0, there were many problems when building from
+	source.  More recent versions of Debian is much better.
+      </p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="usingpbuilder"></a>Chapter 2. Using pbuilder</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#creatingbase">1. Creating a base chroot image tar-ball</a></span></dt><dt><span class="sect1"><a href="#basechroot">2. Updating the base.tgz</a></span></dt><dt><span class="sect1"><a href="#buildpackagechroot">3. Building a package using the base.tgz</a></span></dt><dt><span class="sect1"><a href="#pdebuild">4. Facilitating Debian Developers' typing, pdebuild</a></span></dt><dt><span class="sect1"><a href="#configfile">5. Configuration Files</a></span></dt><dt><span class="sect1"><a href="#nonrootchroot">6. Building packages as non-root inside the chroot</a></span></dt><dt><span class="sect1"><a href="#backporting">7. Using pbuilder for back-porting</a></span></dt><dt><span class="sect1"><a href="#massbuild">8. Mass-building packages</a></span></dt><dt><span class="sect1"><a href="#autobackport">9. Auto-backporting scripts</a></span></dt><dt><span class="sect1"><a href="#autotesting">10. Using pbuilder for automated testing of packages</a></span></dt><dt><span class="sect1"><a href="#altcompiler">11. Using pbuilder for testing builds with alternate compilers</a></span></dt></dl></div><p>
+      There are several simple commands for operation.
+      <span class="command"><strong>pbuilder create</strong></span>, <span class="command"><strong>pbuilder
+      update</strong></span>, and <span class="command"><strong>pbuilder build</strong></span> commands
+      are the typical commands used.  Let us look at the commands
+      one by one.
+    </p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="creatingbase"></a>1. Creating a base chroot image tar-ball</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder create</strong></span>
+	will create a base chroot image tar-ball (base.tgz).
+	All other commands will operate on the resulting base.tgz
+
+	If the Debian release to be created within chroot is not going
+	to be "sid" (which is the default), the distribution code-name
+	needs to be specified with the
+	<span class="command"><strong><code class="option">--distribution</code></strong></span>
+	command-line option.
+      </p><p>
+	<span class="command"><strong>debootstrap</strong></span> <sup>[<a name="id387308" href="#ftn.id387308" class="footnote">1</a>]</sup>
+	is used to create
+	the bare minimum Debian installation,
+	and then build-essential packages are installed on top
+	of the minimum installation using <span class="command"><strong>apt-get</strong></span>
+	inside the chroot.
+      </p><p>
+	For fuller documentation of command-line options, see
+	the pbuilder.8 manual page.
+	Some configuration will be required for <code class="filename">/etc/pbuilderrc</code>
+	for the mirror site
+	<sup>[<a name="id387333" href="#ftn.id387333" class="footnote">2</a>]</sup>
+	to use, and proxy configuration may be required to allow access
+	through HTTP.
+	See the pbuilderrc.5 manual page for details.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="basechroot"></a>2. Updating the base.tgz</h2></div></div></div><p><span class="command"><strong>pbuilder update</strong></span>
+	will update the base.tgz.
+	It will extract the chroot, invoke <span class="command"><strong>apt-get update</strong></span>
+	and <span class="command"><strong>apt-get dist-upgrade</strong></span> inside the
+	chroot, and then recreate the base.tgz (the base tar-ball.)
+      </p><p>
+	It is possible to switch the distribution which the 
+	base.tgz is targeted at at this point.
+	Specify <span class="command"><strong><code class="option">--distribution <em class="parameter"><code>sid</code></em></code> <code class="option">--override-config</code></strong></span> to change the distribution
+	to sid.
+	<sup>[<a name="id387391" href="#ftn.id387391" class="footnote">3</a>]</sup>
+      </p><p>
+	For fuller documentation of command-line options, see
+	the pbuilder.8 manual page
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="buildpackagechroot"></a>3. Building a package using the base.tgz</h2></div></div></div><p>
+	To build a package inside the chroot, invoke
+	<span class="command"><strong>pbuilder build <code class="option">whatever.dsc</code></strong></span>.
+	<span class="command"><strong>pbuilder</strong></span> will extract
+	the base.tgz to a temporary working directory,
+	enter the directory with chroot, 
+	satisfy the build-dependencies inside chroot,
+	and build the package.
+	The built packages will be moved to a
+	directory specified with
+	the <span class="command"><strong><code class="option">--buildresult</code></strong></span>
+	command-line option.
+      </p><p>
+	The <span class="command"><strong><code class="option">--basetgz</code></strong></span> option can be
+	used to specify which base.tgz to use.
+      </p><p>
+	<span class="command"><strong>pbuilder</strong></span> will extract a fresh base chroot
+	image from base.tgz. (base.tgz is created with
+	<span class="command"><strong>pbuilder create</strong></span>, and updated with
+	<span class="command"><strong>pbuilder update</strong></span>).  The chroot is populated
+	with build-dependencies by parsing debian/control and invoking
+	<span class="command"><strong>apt-get</strong></span>.
+      </p><p>
+	For fuller documentation of command-line options, see
+	the pbuilder.8 manual page
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pdebuild"></a>4. Facilitating Debian Developers' typing, pdebuild</h2></div></div></div><p>
+	<span class="command"><strong>pdebuild</strong></span> is a little wrapper
+	script that does the most frequent of all tasks.
+	A Debian Developer may try to do <span class="command"><strong>debuild</strong></span>, and
+	build a package, inside a Debian source directory.
+	<span class="command"><strong>pdebuild</strong></span> will allow similar
+	control, and allow package to be built inside the chroot,
+	to check that the current source tree will build happily
+	inside the chroot.
+      </p><p>
+	<span class="command"><strong>pdebuild</strong></span> calls <span class="command"><strong>dpkg-source</strong></span>
+	to build the source packages, and then invokes
+	<span class="command"><strong>pbuilder</strong></span> on the resulting source package.
+	However, unlike debuild, the resulting deb files will be
+	found in the <span class="command"><strong><code class="option">--buildresult</code></strong></span>
+	directory.
+      </p><p>
+	See the pdebuild.1 manual page for more details.
+      </p><p>
+	There is a slightly different mode of operation available
+	in <span class="command"><strong>pdebuild</strong></span> since version 0.97. <span class="command"><strong>pdebuild</strong></span> usually runs
+	<span class="command"><strong>debian/rules clean</strong></span> outside of the chroot;
+	however, it is possible to change the behavior to run it
+	inside the chroot with
+	the <span class="command"><strong><code class="option">--use-pdebuild-internal</code></strong></span>.
+	It will try to bind mount the working directory inside chroot,
+	and run <span class="command"><strong>dpkg-buildpackage</strong></span> inside.
+	It has the following characteristics, and is not yet the 
+	default mode of operation.
+      </p><div class="itemizedlist"><ul type="disc"><li><p>
+	    Satisfies build-dependency inside the chroot before creating source package.
+	    (which is a good point that default <span class="command"><strong>pdebuild</strong></span> could not do).
+	  </p></li><li><p>The working directory is modified
+	  from inside the chroot.</p></li><li><p>Building with <span class="command"><strong>pdebuild</strong></span> does not guarantee
+	  that it works with <span class="command"><strong>pbuilder</strong></span>.</p></li><li><p>If making the source package fails,
+	  the session using the chroot is wasted
+	  (chroot creation takes a bit of time, which should be improved with cowdancer).</p></li><li><p>Does not work in the same manner as it used to;
+	  for example, <span class="command"><strong><code class="option">--buildresult</code></strong></span>
+	  does not have any effect.</p></li><li><p>The build inside chroot is ran with the current user outside chroot.
+	  </p></li></ul></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="configfile"></a>5. Configuration Files</h2></div></div></div><p>
+	It is possible to specify all settings by command-line
+	options. However, for typing convenience, it is possible to
+	use a configuration file.
+      </p><p>
+	<code class="filename">/etc/pbuilderrc</code> and
+	<code class="filename">${HOME}/.pbuilderrc</code>
+	are read in when <span class="command"><strong>pbuilder</strong></span> is invoked.
+	The possible options are documented in
+	the pbuilderrc.5 manual page.
+      </p><p>
+	It is useful to use <code class="option">--configfile</code> option to load up a preset
+	configuration file  when switching between configuration files for
+	different distributions.
+      </p><p>
+	Please note <code class="filename">${HOME}/.pbuilderrc</code> supersede
+	system settings.  Caveats is that if you have some
+	configuration, you may need to tweak the configuration to work
+	with new versions of pbuilder when upgrading.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="nonrootchroot"></a>6. Building packages as non-root inside the chroot</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> requires full root privilege
+	when it is satisfying the build-dependencies, but most packages do not
+	need root privilege to build, or even refused to build when they are built as root.
+	<span class="command"><strong>pbuilder </strong></span> can create a user which is only used
+	inside <span class="command"><strong>pbuilder </strong></span> and use that user id when
+	building, and use the <span class="command"><strong>fakeroot</strong></span> command
+	when root privilege is required.
+      </p><p>
+	BUILDUSERID configuration option should be set to a value for a user id that
+	does not already exist on the system, so that it is more difficult for
+	packages that are being built with
+	<span class="command"><strong>pbuilder</strong></span> to affect the environment outside the chroot.
+	When BUILDUSERNAME configuration option is also set,
+	<span class="command"><strong>pbuilder</strong></span> will use the specified user name and fakeroot for building packages,
+	instead of running as root inside chroot.
+      </p><p>
+	Even when using the fakerooting method, <span class="command"><strong>pbuilder</strong></span> will run with
+	root privilege when it is required.
+	For example, when installing
+	packages to the chroot, <span class="command"><strong>pbuilder</strong></span> will run under root privilege.
+      </p><p>
+	To be able to invoke <span class="command"><strong>pbuilder</strong></span> without being
+	root, you need to use user-mode-linux, as explained
+	in <a class="xref" href="#pbuilder-uml" title="Chapter 3. Using User-mode-linux with pbuilder">Chapter 3, <i>Using User-mode-linux with pbuilder</i></a>.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="backporting"></a>7. Using pbuilder for back-porting</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> can be used for back-porting software from
+	the latest Debian distribution to
+	the older stable distribution, by using a chroot that contains
+	an image of the older distribution, and building packages inside the
+	chroot.
+	There are several points to consider, and due to the following reasons,
+	automatic back-porting is usually not possible, and
+	manual interaction is required:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>The package from the unstable distribution
+	  may depend on packages or versions of packages which
+	  are only available in unstable.
+	  Thus, it may not be possible to satisfy Build-Depends:
+	  on stable (without additional backporting work).</p></li><li><p>The stable distribution may have bugs that have been
+	  fixed in unstable which need to be worked around.</p></li><li><p>The package in the unstable distribution may have
+	  problems building even on unstable.</p></li></ul></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="massbuild"></a>8. Mass-building packages</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> can be automated, because its operations are
+	non-interactive.
+	It is possible to run <span class="command"><strong>pbuilder</strong></span> through multiple packages
+	non-interactively.
+	Several such scripts are known to exist.
+	Junichi Uekawa has been running such a script since 2001,
+	and has been filing bugs on packages that fail the
+	test of <span class="command"><strong>pbuilder</strong></span>. There were several problems with auto-building:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>Build-Dependencies need to install non-interactively, but
+	    some packages are so broken that they cannot install
+	    without interaction (like postgresql).</p></li><li><p>When a library package breaks, or gcc/gcj/g++ breaks,
+	    or even bison, a large number of build failures are reported.
+	    (gcj-3.0 which had no "javac", bison which got more strict, etc.)
+	  </p></li><li><p>Some people were quite hostile against build failure reports.</p></li></ul></div><p>
+	Most of the initial bugs have been resolved in the <span class="command"><strong>pbuilder</strong></span>
+	sweep done around 2002, but these transitional problems which
+	affect a large portion of Debian Archive do arise from time to
+	time.  Regression tests have their values.
+      </p><p>
+	A script that was used by Junichi Uekawa in the initial run is now included in
+	the <span class="command"><strong>pbuilder</strong></span> distribution, as <span class="command"><strong>pbuildd.sh</strong></span>.
+	It is available in <code class="filename">/usr/share/doc/pbuilder/examples/pbuildd/</code>
+	and its configuration is in <code class="filename">/etc/pbuilder/pbuildd-config.sh</code>.
+	It should be easy enough to set up for people who are used to
+	<span class="command"><strong>pbuilder</strong></span>. It has been running for quite a while, and it should be
+	possible to set the application up on your system also.
+	This version of the code is not the most tested, but should function as a starter.
+      </p><p>
+	To set up pbuildd, there are some points to be aware of.
+      </p><div class="itemizedlist"><ul type="disc"><li><p>A file <code class="filename">./avoidlist</code> needs to be available with the list of packages to avoid building. </p></li><li><p>It will try building anything, even packages
+	  which are not aimed for your architecture.</p></li><li><p>Because you are running random build scripts, it is better to use
+	  the fakeroot option of <span class="command"><strong>pbuilder</strong></span>, to avoid running the build
+	  under root privilege.</p></li><li><p>Because not all builds are guaranteed to finish in a finite time,
+	    setting a timeout is probably necessary, or pbuildd may stall with
+	    a bad build.</p></li><li><p>
+	    Some packages require a lot of disk space,
+	    around 2GB seems to be sufficient for the largest packages for the time being.
+            If you find otherwise, please inform the maintainer of this documentation.
+	  </p></li></ul></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="autobackport"></a>9. Auto-backporting scripts</h2></div></div></div><p>
+	There are some people who use <span class="command"><strong>pbuilder</strong></span> to automatically back-port
+	a subset of packages to the stable distribution.
+      </p><p>
+	I would like some information on how people are doing it,
+	I would appreciate any feedback or information on
+	how you are doing, or any examples.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="autotesting"></a>10. Using pbuilder for automated testing of packages</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> can be used for automated testing of packages.
+	It has the feature of allowing hooks to be placed,
+	and these hooks can try to install packages inside
+	the chroot, or run them, or whatever else that
+	can be done. Some known tests and ideas:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>Automatic install-remove-upgrade-remove-install-purge-upgrade-purge test-suite (distributed as an example, <code class="filename">B91dpkg-i</code>),
+	    or just check that everything installs somewhat (<code class="filename">execute_installtest.sh</code>).</p></li><li><p>Automatically running lintian (distributed as an example in
+	    <code class="filename">/usr/share/doc/pbuilder/examples/B90lintian</code>).</p></li><li><p>Automatic debian-test of the package?
+	  The debian-test package has been removed from Debian.
+	  A <span class="command"><strong>pbuilder</strong></span> implementation can be found as 
+	  debian/pbuilder-test directory, implemented through B92test-pkg script.</p></li></ul></div><p>
+	To use B92test-pkg script, first, add it to your hook directory.
+	<sup>[<a name="id429595" href="#ftn.id429595" class="footnote">4</a>]</sup>. 
+	The test files are shell scripts
+	placed in
+	<code class="filename">debian/pbuilder-test/NN_name</code> (where
+	NN is number) following run-parts standard<sup>[<a name="id429611" href="#ftn.id429611" class="footnote">5</a>]</sup>
+	for file names.  After a successful build, packages are first
+	tested for installation and removal, and then each test is ran
+	inside the chroot.  The current directory is the top directory
+	of the source-code.  This means you can expect to be able to
+	use ./debian/ directory from inside your scripts.
+      </p><p>
+	Example scripts for use with pbuilder-test can be found in 
+	<code class="filename">/usr/share/doc/pbuilder/examples/pbuilder-test</code>
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="altcompiler"></a>11. Using pbuilder for testing builds with alternate compilers</h2></div></div></div><p>
+	Most packages are compiled with <span class="command"><strong>gcc</strong></span>
+	or <span class="command"><strong>g++</strong></span>
+	and using the default compiler version, which was gcc 2.95 for Debian GNU/Linux 3.0 (i386).
+	However, Debian 3.0 was distributed with other compilers, under package names
+        such as <span class="command"><strong>gcc-3.2</strong></span> for gcc compiler
+	version 3.2.
+	It was therefore possible to try compiling packages against different
+	compiler versions.
+	<span class="command"><strong>pentium-builder</strong></span> provides an infrastructure for
+	using a different compiler for building packages than the default gcc, by
+	providing a wrapper script called gcc which calls the real gcc.
+	To use <span class="command"><strong>pentium-builder</strong></span> in <span class="command"><strong>pbuilder</strong></span>, it is possible to set up the
+	following in the configuration:
+	</p><pre class="screen">
+EXTRAPACKAGES="pentium-builder gcc-3.2 g++-3.2"
+export DEBIAN_BUILDARCH=athlon
+export DEBIAN_BUILDGCCVER=3.2</pre><p>
+      </p><p>
+	It will instruct <span class="command"><strong>pbuilder</strong></span> to install the <span class="command"><strong>pentium-builder</strong></span> package
+	and also the GCC 3.2 compiler packages inside the chroot,
+	and set the environment variables required for
+	<span class="command"><strong>pentium-builder</strong></span> to function.
+      </p></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.id387308" href="#id387308" class="para">1</a>] </sup>debootstrap or cdebootstrap can be chosen</p></div><div class="footnote"><p><sup>[<a name="ftn.id387333" href="#id387333" class="para">2</a>] </sup>
+	    The mirror site should preferably be
+	    a local mirror or a cache server,
+	    so as not to overload the public mirrors with
+	    a lot of access.
+	    Use of tools such as apt-proxy would be advisable.
+	  </p></div><div class="footnote"><p><sup>[<a name="ftn.id387391" href="#id387391" class="para">3</a>] </sup>Only upgrading is supported.
+	  Debian does not generally support downgrading (yet?).</p></div><div class="footnote"><p><sup>[<a name="ftn.id429595" href="#id429595" class="para">4</a>] </sup>It is possible to specify <span class="command"><strong>--hookdir
+	    /usr/share/doc/pbuilder/examples</strong></span> command-line
+	    option to include all example hooks as
+	    well.</p></div><div class="footnote"><p><sup>[<a name="ftn.id429611" href="#id429611" class="para">5</a>] </sup> See run-parts(8). For example, no '.' in file
+	    names!
+	  </p></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="pbuilder-uml"></a>Chapter 3. Using User-mode-linux with pbuilder</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#user-mode-linux-config">1. Configuring user-mode-linux</a></span></dt><dt><span class="sect1"><a href="#rootstrap">2. Configuring rootstrap</a></span></dt><dt><span class="sect1"><a href="#pbuilderumlconfig">3. Configuring pbuilder-uml</a></span></dt><dt><span class="sect1"><a href="#consideruml">4. Considerations for running pbuilder-user-mode-linux</a></span></dt><dt><span class="sect1"><a href="#paralleluml">5. Parallel running of pbuilder-user-mode-linux</a></span></dt><dt><span class="sect1"><a href="#pbuilderumlwrap">6. Using pbuilder-user-mode-linux as a wrapper script to start up a virtual machine</a></span></dt></dl></div><p>
+      It is possible to use user-mode-linux by invoking
+      <span class="command"><strong>pbuilder-user-mode-linux</strong></span> instead of
+      <span class="command"><strong>pbuilder</strong></span>.
+      <span class="command"><strong>pbuilder-user-mode-linux</strong></span> doesn't require root
+      privileges, and it uses the copy-on-write (COW) disk access
+      method of <span class="command"><strong>User-mode-linux</strong></span> which typically
+      makes it much faster than the traditional
+      <span class="command"><strong>pbuilder</strong></span>.
+    </p><p>
+      <span class="command"><strong>User-mode-linux</strong></span> is a somewhat less proven
+      platform than the standard Unix tools which
+      <span class="command"><strong>pbuilder</strong></span> relies on
+      (<span class="command"><strong>chroot</strong></span>, <span class="command"><strong>tar</strong></span>, and
+      <span class="command"><strong>gzip</strong></span>) but mature enough to support
+      <span class="command"><strong>pbuilder-user-mode-linux</strong></span> since its version
+      0.59.  And since then,
+      <span class="command"><strong>pbuilder-user-mode-linux</strong></span> has seen a rapid
+      evolution.
+    </p><p>
+      The configuration of <span class="command"><strong>pbuilder-user-mode-linux</strong></span>
+      goes in three steps:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>Configuration of user-mode-linux</p></li><li><p>Configuration of rootstrap</p></li><li><p>Configuration of pbuilder-uml</p></li></ul></div><p>
+    </p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="user-mode-linux-config"></a>1. Configuring user-mode-linux</h2></div></div></div><p>
+	user-mode-linux isn't completely trivial to set up.  It would
+	probably be useful to acquaint yourself with it a bit before
+	attempting to use <span class="command"><strong>rootstrap</strong></span> or
+	<span class="command"><strong>pbuilder-user-mode-linux</strong></span>.  For details,
+	read
+	<code class="filename">/usr/share/doc/uml-utilities/README.Debian</code>
+	and the <span class="command"><strong>user-mode-linux</strong></span> documentation.  (It's in a separate
+	package, user-mode-linux-doc.)
+      </p><p>
+	<span class="command"><strong>user-mode-linux</strong></span> requires
+	the user to be in the uml-net group in order to configure the network
+	unless you are using slirp.
+      </p><p>
+	If you compile your own kernel, you may want to
+	verify that you enable TUN/TAP support,
+	and you might want to consider the SKAS patch.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="rootstrap"></a>2. Configuring rootstrap</h2></div></div></div><p>
+	<span class="command"><strong>rootstrap</strong></span>
+	is a wrapper around debootstrap.
+	It creates a Debian disk image for use with UML.
+	To configure rootstrap, there are several requirements.
+      </p><div class="itemizedlist"><ul type="disc"><li><p>Install the rootstrap package.</p></li><li><p>
+	    TUN/TAP only:
+	    add the user to the uml-net group to allow access to the network
+	    </p><pre class="screen">adduser dancer uml-net</pre><p>
+          </p></li><li><p>TUN/TAP only:
+	    Check that the kernel supports the TUN/TAP interface,
+	    or recompile the kernel if necessary.
+	  </p></li><li><p>Set up <code class="filename">/etc/rootstrap/rootstrap.conf</code>.
+	    For example,
+	    if the current host is 192.168.1.2, changing following
+	    entries to something like this seems to work.
+	    </p><pre class="screen">
+transport=tuntap
+interface=eth0
+gateway=192.168.1.1
+mirror=http://192.168.1.2:8081/debian
+host=192.168.1.198
+uml=192.168.1.199
+netmask=255.255.255.0</pre><p>
+	    Some experimentation with configuration and running
+	    <span class="command"><strong>rootstrap ~/test.uml</strong></span> to actually
+	    test it would be handy.
+	  </p><p>
+	    Using slirp requires less configuration.
+	    The default configuration comes with a working example.
+	  </p></li></ul></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pbuilderumlconfig"></a>3. Configuring pbuilder-uml</h2></div></div></div><p>
+	The following needs to happen:
+	</p><div class="itemizedlist"><ul type="disc"><li><p>Install the pbuilder-uml package.</p></li><li><p>
+	      Set up the configuration file
+	      <code class="filename">/etc/pbuilder/pbuilder-uml.conf</code>
+	      in the following manner. It will be different for slirp.
+	      </p><pre class="screen">
+MY_ETH0=tuntap,,,192.168.1.198
+UML_IP=192.168.1.199
+UML_NETMASK=255.255.255.0
+UML_NETWORK=192.168.1.0
+UML_BROADCAST=255.255.255.255
+UML_GATEWAY=192.168.1.1
+PBUILDER_UML_IMAGE="/home/dancer/uml-image"</pre><p>
+	      Also, it needs to match the rootstrap configuration.
+	    </p></li><li><p>
+	      Make sure BUILDPLACE is writable by the user.
+	      Change BUILDPLACE in the configuration file to a place
+	      where the user has access.
+	    </p></li><li><p>Run <span class="command"><strong>pbuilder-user-mode-linux <code class="option">create --distribution sid</code></strong></span> to create the image.</p></li><li><p>Try running <span class="command"><strong>pbuilder-user-mode-linux build</strong></span>.</p></li></ul></div><p>
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="consideruml"></a>4. Considerations for running pbuilder-user-mode-linux</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder-user-mode-linux</strong></span> emulates most of <span class="command"><strong>pbuilder</strong></span>, but there
+	are some differences.
+      </p><div class="itemizedlist"><ul type="disc"><li><p>	
+	    <span class="command"><strong>pbuilder-user-mode-linux</strong></span> does not support all options of <span class="command"><strong>pbuilder</strong></span>
+	    properly yet. This is a problem, and will be addressed as
+	    specific areas are discovered.
+	  </p></li><li><p>
+	    /tmp is handled differently inside
+	    <span class="command"><strong>pbuilder-user-mode-linux</strong></span>.  In
+	    <span class="command"><strong>pbuilder-user-mode-linux</strong></span>,
+	    <code class="filename">/tmp</code> is mounted as tmpfs inside UML,
+	    so accessing files under <code class="filename">/tmp</code> from
+	    outside user-mode-linux does not work.  It affects options
+	    like <span class="command"><strong><code class="option">--configfile</code></strong></span>, and
+	    when trying to build packages placed under
+	    <code class="filename">/tmp</code>.
+	  </p></li></ul></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paralleluml"></a>5. Parallel running of pbuilder-user-mode-linux</h2></div></div></div><p>
+	To run <span class="command"><strong>pbuilder-user-mode-linux</strong></span> in parallel
+	on a system, there are a few things to bear in mind.
+      </p><div class="itemizedlist"><ul type="disc"><li><p>The create and update methods must not be run when
+	  a build is in progress, or the COW file will be invalidated.</p></li><li><p>
+	    If you are not using slirp, user-mode-linux processes which are
+	    running in parallel need to have different IP addresses.
+	    Just trying to run the <span class="command"><strong>pbuilder-user-mode-linux</strong></span>
+	    several times will result in failure to access the network.
+	    But something like the following will work:
+	    </p><pre class="screen">
+for IP in 102 103 104 105; do
+  xterm -e pbuilder-user-mode-linux build --uml-ip 192.168.0.$IP \
+    20030107/whizzytex_1.1.1-1.dsc &amp;
+done</pre><p>
+	    When using slirp, this problem does not exist.
+	  </p></li></ul></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pbuilderumlwrap"></a>6. Using pbuilder-user-mode-linux as a wrapper script to start up a virtual machine</h2></div></div></div><p>
+	It is possible to use
+	<span class="command"><strong>pbuilder-user-mode-linux</strong></span> for other uses
+	than just building Debian packages.
+	<span class="command"><strong>pbuilder-user-mode-linux
+	<code class="option">login</code></strong></span> will let a user use a shell
+	inside the user-mode-linux <span class="command"><strong>pbuilder</strong></span> base
+	image, and <span class="command"><strong>pbuilder-user-mode-linux
+	<code class="option">execute</code></strong></span> will allow the user to
+	execute a script inside the image.
+      </p><p>
+	You can use the script to install ssh and add a new user,
+	so that it is possible to access inside the user-mode-linux through ssh.
+      </p><p>
+	Note that it is not possible to use a script from
+	<code class="filename">/tmp</code> due to the way
+	<span class="command"><strong>pbuilder-user-mode-linux</strong></span> mounts a tmpfs at
+	<code class="filename">/tmp</code>.
+      </p><p>
+	The following example script may be useful in starting a sshd
+	inside user-mode-linux.
+      </p><pre class="screen">
+#!/bin/bash
+
+apt-get install -y ssh xbase-clients xterm
+echo "enter root password"
+passwd
+cp /etc/ssh/sshd_config{,-}
+sed 's/X11Forwarding.*/X11Forwarding yes/' /etc/ssh/sshd_config- &gt; /etc/ssh/sshd_config
+
+/etc/init.d/ssh restart
+ifconfig
+echo "Hit enter to finish"
+read</pre></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="faq"></a>Chapter 4. Frequently asked questions </h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#pbuildercreatefail">1. pbuilder create fails</a></span></dt><dt><span class="sect1"><a href="#bindmountlimits">2. Directories that cannot be bind-mounted</a></span></dt><dt><span class="sect1"><a href="#shellafterfail">3. Logging in to pbuilder to investigate build failure</a></span></dt><dt><span class="sect1"><a href="#modifyupdate">4. Logging in to pbuilder to modify the environment</a></span></dt><dt><span class="sect1"><a href="#BUILDRESULTUID">5. Setting BUILDRESULTUID for sudo sessions</a></span></dt><dt><span class="sect1"><a href="#tmpdir">6. Notes on usage of $TMPDIR</a></span></dt><dt><span class="sect1"><a href="#DISTRIBUTIONSWITCH">7. Creating a shortcut for running <span class="command"><strong>pbuilder</strong></span> with a specific distribution</a></span></dt><dt><span class="sect1"><a href="#ENVVARDISTRIBUTIONSWITCH">8. Using environmental variables for running <span class="command"><strong>pbuilder</strong></span>
+	for specific distribution
+      </a></span></dt><dt><span class="sect1"><a href="#usingspecialaptsources">9. Using special apt sources lists, and local packages</a></span></dt><dt><span class="sect1"><a href="#apt-getupdateonbuild-depend">10. How to get pbuilder to run apt-get update before trying to satisfy build-dependency</a></span></dt><dt><span class="sect1"><a href="#bashprompt">11. Different bash prompts inside pbuilder login</a></span></dt><dt><span class="sect1"><a href="#chrootmemo">12. Creating a chroot reminder</a></span></dt><dt><span class="sect1"><a href="#packagecachearchives">13. Using /var/cache/apt/archives for the package cache</a></span></dt><dt><span class="sect1"><a href="#stablebackport">14. pbuilder back ported to stable Debian releases</a></span></dt><dt><span class="sect1"><a href="#LOGNAME">15. Warning about LOGNAME not being defined</a></span></dt><dt><span class="sect1"><a href="#nobuildconflictessential">16. Cannot Build-conflict against an essential package</a></span></dt><dt><span class="sect1"><a href="#lninvalidcrossdevicelink">17. Avoiding the "ln: Invalid cross-device link" message</a></span></dt><dt><span class="sect1"><a href="#fakechroot">18. Using fakechroot</a></span></dt><dt><span class="sect1"><a href="#debconfinsidepbuilder">19. Using debconf inside pbuilder sessions</a></span></dt><dt><span class="sect1"><a href="#nodev">20. nodev mount options hinder pbuilder activity</a></span></dt><dt><span class="sect1"><a href="#faqslowpbuilder">21. pbuilder is slow</a></span></dt><dt><span class="sect1"><a href="#sponsor">22. Using pdebuild to sponsor package</a></span></dt><dt><span class="sect1"><a href="#sourcechanges">23. Why is there a source.changes file in ../?</a></span></dt><dt><span class="sect1"><a href="#amd64i386">24. amd64 and i386-mode</a></span></dt><dt><span class="sect1"><a href="#tmpfsforpbuilder">25. Using tmpfs for buildplace</a></span></dt><dt><span class="sect1"><a href="#id431300">26. Using svn-buildpackage together with pbuilder</a></span></dt></dl></div><p>
+      Here, known problems and frequently asked questions are
+      documented. This portion was initially available in README.Debian
+      file, but moved here.
+    </p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pbuildercreatefail"></a>1. pbuilder create fails</h2></div></div></div><p>
+	It often happens that <span class="command"><strong>pbuilder</strong></span> cannot create the latest chroot.
+	Try upgrading <span class="command"><strong>pbuilder</strong></span> and debootstrap.
+	It is currently only possible to create software that handles the
+	past. Future prediction is a feature which may be added later after
+	we have become comfortable with the past.
+      </p><p>
+	There are people who occasionally back port debootstrap to stable
+	versions; hunt for them.
+      </p><p>
+	When there are errors with the debootstrap phase,
+	the debootstrap script needs to be fixed.
+	<span class="command"><strong>pbuilder</strong></span> does not provide a way to work around debootstrap.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="bindmountlimits"></a>2. Directories that cannot be bind-mounted</h2></div></div></div><p>
+	Because of the way <span class="command"><strong>pbuilder</strong></span> works, there
+	are several directories which cannot be bind-mounted when
+	running <span class="command"><strong>pbuilder</strong></span>.  The directories include
+	<code class="filename">/tmp</code>,
+	<code class="filename">/var/cache/pbuilder</code>, and system
+	directories such as <code class="filename">/etc</code> and
+	<code class="filename">/usr</code>.  The recommendation is to use
+	directories under the user's home directory for bind-mounts.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="shellafterfail"></a>3. Logging in to pbuilder to investigate build failure</h2></div></div></div><p>
+	It is possible to invoke a shell session after a build
+	failure.  Example hook script are provided as
+	<code class="filename">C10shell</code> and
+	<code class="filename">C11screen</code> scripts.  C10shell script will
+	start bash inside chroot, and C11screen script will start GNU
+	screen inside the chroot.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="modifyupdate"></a>4. Logging in to pbuilder to modify the environment</h2></div></div></div><p>
+	It is sometimes necessary to modify the chroot environment.
+	<span class="command"><strong>login</strong></span> will remove the contents of the chroot after logout.
+	It is possible to invoke a shell using hook scripts.
+	<span class="command"><strong>pbuilder update</strong></span> executes 'E' scripts,
+	and a sample for invoking a shell
+	is provided as <code class="filename">C10shell</code>.
+      </p><pre class="screen">
+$ mkdir ~/loginhooks
+$ cp C10shell ~/loginhooks/E10shell
+$ sudo pbuilder update --hookdir ~/loginhooks/E10shell</pre><p>
+	It is also possible to add <code class="option">--save-after-exec</code>
+	and/or <code class="option">--save-after-login</code> options
+	to the <span class="command"><strong>pbuilder login</strong></span> session
+	to accomplish the goal.
+	It is possible to add the <code class="option">--uml-login-nocow</code> option
+	to <span class="command"><strong>pbuilder-user-mode-linux <code class="option">login</code></strong></span> session
+	as well.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="BUILDRESULTUID"></a>5. Setting BUILDRESULTUID for sudo sessions</h2></div></div></div><p>
+	It is possible to set
+	</p><pre class="screen">BUILDRESULTUID=$SUDO_UID</pre><p> in pbuilderrc to set
+	the proper BUILDRESULTUID when using <span class="command"><strong>sudo</strong></span>.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tmpdir"></a>6. Notes on usage of $TMPDIR</h2></div></div></div><p>
+	If you are setting $TMPDIR to an unusual value, of other than
+	<code class="filename">/tmp</code>, you will find that some errors may occur inside the chroot,
+	such as <span class="command"><strong>dpkg-source</strong></span> failing.
+      </p><p>There are two options, you may install a hook to create that
+	directory, or set
+	</p><pre class="screen">export TMPDIR=/tmp</pre><p>
+	in pbuilderrc. Take your pick.
+      </p><p>
+	An example script is provided as
+	<code class="filename">examples/D10tmp</code> with <span class="command"><strong>pbuilder</strong></span>.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="DISTRIBUTIONSWITCH"></a>7. Creating a shortcut for running <span class="command"><strong>pbuilder</strong></span> with a specific distribution</h2></div></div></div><p>
+	When working with multiple chroots, it would be nice to work
+	with scripts that reduce the amount of typing.  An example
+	script <code class="filename">pbuilder-distribution.sh</code> is
+	provided as an example.  Invoking the script as
+	<code class="filename">pbuilder-squeeze</code> will invoke
+	<span class="command"><strong>pbuilder</strong></span> with a squeeze chroot.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ENVVARDISTRIBUTIONSWITCH"></a>8. Using environmental variables for running <span class="command"><strong>pbuilder</strong></span>
+	for specific distribution
+      </h2></div></div></div><p>      This section<sup>[<a name="id430529" href="#ftn.id430529" class="footnote">6</a>]</sup>
+	describes briefly a way to setup and use multiple pbuilder setups
+	by creating a pbuilderrc configuration in your home path (<code class="filename">$HOME/.pbuilderrc</code>)
+	and using the variable "DIST" when running pbuilder or pdebuild.
+</p><p>      First, setup <code class="filename">$HOME/.pbuilderrc</code> to look like:</p><p>
+	</p><pre class="screen">
+if [ -n "${DIST}" ]; then
+        BASETGZ="`dirname $BASETGZ`/$DIST-base.tgz"
+        DISTRIBUTION="$DIST"
+        BUILDRESULT="/var/cache/pbuilder/$DIST/result/"
+        APTCACHE="/var/cache/pbuilder/$DIST/aptcache/"
+fi
+</pre><p>Then, whenever you wish to use pbuilder for a particular distro, assign a value
+to "DIST" that is one of the distros available for Debian or any Debian based
+distro you happen to be running (i.e. whatever is found under
+/usr/lib/debootstrap/scripts).
+      </p><p>Here's some examples on running pbuilder or pdebuild:
+</p><pre class="screen">
+DIST=gutsy sudo pbuilder create
+
+DIST=sid sudo pbuilder create --mirror http://http.us.debian.org/debian
+
+DIST=gutsy sudo pbuilder create \
+        --othermirror "deb http://archive.ubuntu.com/ubuntu gutsy universe \
+        multiverse"
+
+DIST=gutsy sudo pbuilder update
+
+DIST=sid sudo pbuilder update --override-config --mirror \
+http://http.us.debian.org/debian \
+--othermirror "deb http://http.us.debian.org/debian sid contrib non-free"
+
+DIST=gutsy pdebuild
+</pre></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="usingspecialaptsources"></a>9. Using special apt sources lists, and local packages</h2></div></div></div><p>
+	If you have some very specialized requirements on your
+	apt setup inside <span class="command"><strong>pbuilder</strong></span>,
+	it is possible to specify that through
+	the <span class="command"><strong><code class="option">--othermirror</code></strong></span>
+	option.
+	Try something like:
+	<span class="command"><strong><code class="option">--othermirror "deb http://local/mirror stable main|deb-src http://local/source/repository ./"</code></strong></span>
+      </p><p>
+	To use the local file system instead of HTTP, it is necessary to do
+	bind-mounting.
+	<span class="command"><strong><code class="option">--bindmounts</code></strong></span>
+	is a command-line option useful for such cases.
+      </p><p>
+	It might be convenient to use your built packages from inside the chroot.
+	It is possible to automate the task with the following configuration.
+	First, set up pbuilderrc to bindmount your build results directory.
+      </p><p>
+	</p><pre class="screen">BINDMOUNTS="/var/cache/pbuilder/result"</pre><p>
+      </p><p>
+	Then, add the following hook
+      </p><p>
+	</p><pre class="screen">
+# cat /var/cache/pbuilder/hooks/D70results
+#!/bin/sh
+cd /var/cache/pbuilder/result/
+/usr/bin/dpkg-scanpackages . /dev/null &gt; /var/cache/pbuilder/result/Packages
+/usr/bin/apt-get update</pre><p>
+      </p><p>
+	This way, you can use <code class="filename">deb file:/var/cache/pbuilder/result</code>
+      </p><p>
+	To add new apt-key inside chroot:
+	
+      </p><p>
+	</p><pre class="screen">
+sudo pbuilder --login --save-after-login
+# apt-key add - &lt;&lt;EOF
+...public key goes here...
+EOF
+# logout
+</pre></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="apt-getupdateonbuild-depend"></a>10. How to get pbuilder to run apt-get update before trying to satisfy build-dependency</h2></div></div></div><p>
+	You can use hook scripts for this.
+	D scripts are run before satisfying build-dependency.
+      </p><p>
+	<a class="ulink" href="http://lists.debian.org/debian-devel/2006/05/msg00550.html" target="_top">
+	  This snippet comes from Ondrej Sury.
+	</a>
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="bashprompt"></a>11. Different bash prompts inside pbuilder login</h2></div></div></div><p>
+	To make distinguishing bash prompts inside
+	<span class="command"><strong>pbuilder</strong></span> easier, it is possible to set
+	environment variables such as PS1 inside
+	<code class="filename">pbuilderrc</code>
+      </p><p>
+	With versions of bash more recent than 2.05b-2-15,
+	the value of the debian_chroot variable, if set,
+	is included in the value of PS1 (the Bash prompt)
+	inside the chroot.
+	In prior versions of bash,<sup>[<a name="id430731" href="#ftn.id430731" class="footnote">7</a>]</sup>
+	setting PS1 in pbuilderrc worked.
+      </p><p>example of debian_chroot</p><pre class="screen">
+	export debian_chroot="pbuild$$"</pre><p>example of PS1</p><pre class="screen">
+	export PS1="pbuild chroot 32165 # "</pre></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="chrootmemo"></a>12. Creating a chroot reminder</h2></div></div></div><p>
+	Bash prompts will help you remember that you are inside a
+	chroot.  There are other cases where you may want other signs
+	of being inside a chroot.  Check out the
+	<code class="filename">examples/F90chrootmemo</code> hook script.  It
+	will create a file called <code class="filename">/CHROOT</code> inside
+	your chroot. 
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="packagecachearchives"></a>13. Using /var/cache/apt/archives for the package cache</h2></div></div></div><p>
+	For the help of low-bandwidth systems, it is possible to use
+	<code class="filename">/var/cache/apt/archives</code> as the package
+	cache.  Just specify it instead of the default
+	<code class="filename">/var/cache/pbuilder/aptcache</code>.
+      </p><p>
+	It is however not possible to do so currently with the
+	user-mode-linux version of <span class="command"><strong>pbuilder</strong></span>,
+	because <code class="filename">/var/cache/apt/archives</code> is
+	usually only writable by root.
+      </p><p>
+	Use of dedicated tools such as apt-proxy is recommended, since
+	caching of packages would benefit the system outside the scope
+	of <span class="command"><strong>pbuilder</strong></span>.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="stablebackport"></a>14. pbuilder back ported to stable Debian releases</h2></div></div></div><p>
+	Currently stable back port of pbuilder is available at backports.org.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="LOGNAME"></a>15. Warning about LOGNAME not being defined</h2></div></div></div><p>
+	You might see a lot of warning messages when running <span class="command"><strong>pbuilder</strong></span>.
+      </p><p>
+	</p><pre class="screen">
+	dpkg-genchanges: warning: no utmp entry available and LOGNAME not defined; using uid of process (1234)</pre><p>
+      </p><p>
+	It is currently safe to ignore this warning message.  Please
+	report back if you find any problem with having LOGNAME unset.
+	Setting LOGNAME caused a few problems when invoking
+	<span class="command"><strong>chroot</strong></span>. For example, dpkg requires getpwnam
+	to succeed inside chroot, which means LOGNAME and the related
+	user information have to be set up inside chroot.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="nobuildconflictessential"></a>16. Cannot Build-conflict against an essential package</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> does not currently allow Build-Conflicts against
+	essential packages.
+	It should be obvious that essential packages should not be
+	removed from a working Debian system, and a source
+	package should not try to force removal of such packages
+	on people building the package.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="lninvalidcrossdevicelink"></a>17. Avoiding the "ln: Invalid cross-device link" message</h2></div></div></div><p>
+	By default, <span class="command"><strong>pbuilder</strong></span> uses hard links to
+	manage the <span class="command"><strong>pbuilder</strong></span> package cache.  It is
+	not possible to make hard links across different devices; and
+	thus this error will occur, depending on your set up.  If this
+	happens, set </p><pre class="screen">APTCACHEHARDLINK=no</pre><p> in your
+	pbuilderrc file. Note that packages in
+	<span class="command"><strong>APTCACHE</strong></span> will be copied into chroot local
+	cache, so plan for enough space on
+	<span class="command"><strong>BUILDPLACE</strong></span> device.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="fakechroot"></a>18. Using fakechroot</h2></div></div></div><p>
+	It is possible to use <span class="command"><strong>fakechroot</strong></span> instead of
+	being root to run <span class="command"><strong>pbuilder</strong></span>; however,
+	several things make this impractical.
+	<span class="command"><strong>fakechroot</strong></span> overrides library loads and
+	tries to override default libc functions when providing the
+	functionality of virtual <span class="command"><strong>chroot</strong></span>.  However,
+	some binaries do no use libc to function, or override the
+	overriding provided by <span class="command"><strong>fakechroot</strong></span>.  One
+	example is <span class="command"><strong>ldd</strong></span>.  Inside
+	<span class="command"><strong>fakechroot</strong></span>, <span class="command"><strong>ldd</strong></span> will
+	check the library dependency outside of the chroot, which is
+	not the expected behavior.
+      </p><p>
+	To work around the problem, debootstrap has a
+	<code class="option">--variant fakechroot</code> option.  Use that, so
+	that ldd and ldconfig are overridden.
+      </p><p>
+	Make sure you have set your LD_PRELOAD path correctly, as described in
+	the fakechroot manpage.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="debconfinsidepbuilder"></a>19. Using debconf inside pbuilder sessions</h2></div></div></div><p>
+	To use debconf inside <span class="command"><strong>pbuilder</strong></span>, setting DEBIAN_FRONTEND to
+	&#8220;<span class="quote">readline</span>&#8221; in <code class="filename">pbuilderrc</code> should work.
+	Setting it to &#8220;<span class="quote">dialog</span>&#8221; should also work, but make sure
+	whiptail or dialog is installed inside the chroot.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="nodev"></a>20. nodev mount options hinder pbuilder activity</h2></div></div></div><p>
+	If you see messages such as this when building a chroot, you are mounting the file system with
+	the nodev option.
+      </p><pre class="screen">
+	/var/lib/dpkg/info/base-files.postinst: /dev/null: Permission denied</pre><p>
+	You will also have problems if you mount the file system with
+	the noexec option, or nosuid.
+	Make sure you do not have these flags set when mounting the file system for
+	<code class="filename">/var/cache/pbuilder</code> or $BUILDPLACE.
+      </p><p>
+	This is not a problem when using <span class="command"><strong>user-mode-linux</strong></span>.
+      </p><p>
+	See <a class="ulink" href="http://bugs.debian.org/316135" target="_top">
+	  316135
+	</a> for example.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="faqslowpbuilder"></a>21. pbuilder is slow</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> is often slow. The slowest part of
+	<span class="command"><strong>pbuilder</strong></span> is extracting the tar.gz every
+	time <span class="command"><strong>pbuilder</strong></span> is invoked. That can be
+	avoided by using <span class="command"><strong>pbuilder-user-mode-linux</strong></span>.
+	<span class="command"><strong>pbuilder-user-mode-linux</strong></span> uses COW file
+	system, and thus does not need to clean up and recreate the
+	root file system.
+      </p><p>
+	<span class="command"><strong>pbuilder-user-mode-linux</strong></span> is slower in
+	executing the actual build system, due to the usual
+	<span class="command"><strong>user-mode-linux</strong></span> overhead for system
+	calls. It is more friendly to the hard drive.
+      </p><p>
+	<span class="command"><strong>pbuilder</strong></span> with cowdancer is also an
+	alternative that improves speed of pbuilder startup.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="sponsor"></a>22. Using pdebuild to sponsor package</h2></div></div></div><p>
+	To sign a package marking for sponsorship, it is possible to
+	use<span class="command"><strong><code class="option"> --auto-debsign</code></strong></span> and
+	<span class="command"><strong><code class="option">--debsign-k</code></strong></span> options of
+	<span class="command"><strong>pdebuild</strong></span>.
+      </p><pre class="screen">
+	<span class="command"><strong>pdebuild  <code class="option">--auto-debsign </code> <code class="option">--debsign-k </code><em class="parameter"><code>XXXXXXXX</code></em></strong></span></pre></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="sourcechanges"></a>23. Why is there a source.changes file in ../?</h2></div></div></div><p>
+	When running <span class="command"><strong>pdebuild</strong></span>, <span class="command"><strong>pbuilder</strong></span> will run dpkg-buildpackage to create a
+	Debian source package to pass it on to <span class="command"><strong>pbuilder</strong></span>.
+	File named XXXX_YYY_source.changes is what remains from that process.
+	It is harmless unless you try to upload it to the Debian archive.
+      </p><p>
+	This behavior is different when running through <code class="option">--use-pdebuild-internal</code>
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="amd64i386"></a>24. amd64 and i386-mode</h2></div></div></div><p>
+	amd64 architectures are capable of running binaries in i386
+	mode.  It is possible to use <span class="command"><strong>pbuilder</strong></span> to
+	run packages, using <span class="command"><strong>linux32</strong></span> and
+	<span class="command"><strong>debootstrap <code class="option">--arch</code></strong></span> option.
+	Specifically, a command-line option like the following will
+	work.
+      </p><p>
+	</p><pre class="screen">
+<span class="command"><strong>pbuilder create --distribution sid --debootstrapopts --arch --debootstrapopts i386 \
+  --basetgz /var/cache/pbuilder/base-i386.tgz --mirror http://ftp.jp.debian.org/debian</strong></span>
+<span class="command"><strong>linux32 pbuilder build --basetgz /var/cache/pbuilder/base-i386.tgz</strong></span></pre><p>
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tmpfsforpbuilder"></a>25. Using tmpfs for buildplace</h2></div></div></div><p>
+	To improve speed of operation, it is possible to use tmpfs for
+	pbuilder build location.  Mount tmpfs to
+	<code class="filename">/var/cache/pbuilder/build</code>, and set
+	</p><pre class="screen">APTCACHEHARDLINK=no</pre><p>.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id431300"></a>26. Using svn-buildpackage together with pbuilder</h2></div></div></div><p>
+	pdebuild command can be used with svn-buildpackage
+	--svn-builder command-line option.
+	<sup>[<a name="id431310" href="#ftn.id431310" class="footnote">8</a>]</sup>
+      </p><pre class="screen">
+alias svn-cowbuilder="svn-buildpackage --svn-builder='pdebuild --pbuilder cowbuilder"</pre></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.id430529" href="#id430529" class="para">6</a>] </sup>This part of the documentation contributed by Andres Mejia</p><p>
+	    This example was taken from a wiki (<a class="ulink" href="https://wiki.ubuntu.com/PbuilderHowto" target="_top">https://wiki.ubuntu.com/PbuilderHowto</a>).
+      </p></div><div class="footnote"><p><sup>[<a name="ftn.id430731" href="#id430731" class="para">7</a>] </sup>Versions of bash from and before Debian 3.0</p></div><div class="footnote"><p><sup>[<a name="ftn.id431310" href="#id431310" class="para">8</a>] </sup><a class="ulink" href="http://upsilon.cc/~zack/blog/posts/2007/09/svn-cowbuilder/" target="_top">
+	      Zack has posted an example on his blog.
+	    </a></p></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="develanddebug"></a>Chapter 5. Troubleshooting and development</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#bugreport">1. Reporting bugs </a></span></dt><dt><span class="sect1"><a href="#mailinglist">2. Mailing list</a></span></dt><dt><span class="sect1"><a href="#IRCchannel">3. IRC Channel</a></span></dt><dt><span class="sect1"><a href="#development">4. Information for pbuilder developers</a></span></dt></dl></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="bugreport"></a>1. Reporting bugs </h2></div></div></div><p>
+	To report bugs, it would be important to have a log of what's
+	going wrong.  Most of the time, adding a
+	<span class="command"><strong><code class="option">--debug</code></strong></span> option and
+	re-running the session should do the trick.  Please send the
+	log of such session along with your problem to ease the
+	debugging process.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="mailinglist"></a>2. Mailing list</h2></div></div></div><p>
+	There is a mailing list for <span class="command"><strong>pbuilder</strong></span> on
+	alioth (pbuilder-maint@lists.alioth.debian.org).  You can
+	subscribe through the alioth web interface.
+	<a class="ulink" href="http://alioth.debian.org/mail/?group_id=30778" target="_top">
+	  http://alioth.debian.org/mail/?group_id=30778</a>.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="IRCchannel"></a>3. IRC Channel</h2></div></div></div><p>
+	For coordination and communication,
+	IRC channel #pbuilder on irc.oftc.net is used.
+	Please log your intent there when you are going to 
+	start doing some changes and committing some change.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="development"></a>4. Information for pbuilder developers</h2></div></div></div><p>
+	This section tries to document current development practices
+	and how things generally operate in development.
+      </p><p>
+	<span class="command"><strong>pbuilder</strong></span> is co-maintained with resources
+	provided by Alioth.
+
+	There is an Alioth project page at
+	<a class="ulink" href="http://alioth.debian.org/projects/pbuilder" target="_top">
+	  http://alioth.debian.org/projects/pbuilder</a>.  
+	Home page is also available, 
+	at <a class="ulink" href="http://pbuilder.alioth.debian.org/" target="_top">
+	  http://alioth.debian.org/projects/pbuilder</a>
+	which shows this text.
+	git repository is available through http, git, or (if you have an
+	account on alioth, ) ssh.
+      </p><pre class="screen">
+git-clone git://git.debian.org/git/pbuilder/pbuilder.git
+git-clone http://git.debian.org/git/pbuilder/pbuilder.git
+git-clone ssh://git.debian.org/git/pbuilder/pbuilder.git</pre><p>
+	Git commit message should have the first one line describing
+	what the commit does, formatted in the way debian/changelog is
+	formatted because it is copied verbatim to changelog via
+	git-dch. The second line is empty, and the rest should
+	describe the background and extra information related to
+	implementation of the commit.
+      </p><p>
+	Test-suites are available in <code class="filename">./testsuite/</code> directory.
+	Changes are expected not to break the test-suites.
+	<code class="filename">./run-test.sh</code> is a basic test-suite, which puts a summary in 
+	<code class="filename">run-test.log</code>, and <code class="filename">run-test-cdebootstrap.log</code>.
+	<code class="filename">./run-test-regression.sh</code> is a regression test-suite,
+	which puts the result in <code class="filename">run-test-regression.log</code>.
+	Currently, run-test.sh is ran automatically daily to ensure that pbuilder is working.
+      </p><div class="table"><a name="dirtestsuites"></a><p class="title"><b>Table 5.1. Directory structure of the testsuite</b></p><div class="table-contents"><table summary="Directory structure of the testsuite" border="1"><colgroup><col align="left"><col align="left"></colgroup><thead><tr><th align="left">Directory</th><th align="left">Meaning</th></tr></thead><tbody><tr><td align="left"><code class="filename">./testsuite/</code></td><td align="left">Directory for testsuite</td></tr><tr><td align="left"><code class="filename">./testsuite/run-test.sh</code></td><td align="left">Daily regression test to test against Debian Archive changes breaking pbuilder.</td></tr><tr><td align="left"><code class="filename">./testsuite/run-test.log</code></td><td align="left">A summary of testsuite</td></tr><tr><td align="left"><code class="filename">./testsuite/normal/</code></td><td align="left">Directory for testsuite results of running pbuilder with debootstrap</td></tr><tr><td align="left"><code class="filename">./testsuite/cdebootstrap/</code></td><td align="left">Directory for testsuite results of running pbuilder with cdebootstrap</td></tr><tr><td align="left"><code class="filename">./testsuite/run-regression.sh</code></td><td align="left">Regression testsuite, ran every time change is made to pbuilder to make sure there is no regression.</td></tr><tr><td align="left"><code class="filename">./testsuite/run-regression.log</code></td><td align="left">Summary of test result</td></tr><tr><td align="left"><code class="filename">./testsuite/regression/BugID-*.sh</code></td><td align="left">Regression tests, exit 0 for success, exit 1 for failure</td></tr><tr><td align="left"><code class="filename">./testsuite/regression/BugID-*</code></td><td align="left">Files used for the regression testsuite.</td></tr><tr><td align="left"><code class="filename">./testsuite/regression/log/BugID-*.sh.log</code></td><td align="left">Output of the regression test, output from the script is redirected by run-regression.sh</td></tr></tbody></table></div></div><br class="table-break"><p>
+	When making changes, changes should be documented in the Git
+	commit log.  git-dch will generate debian/changelog from the
+	commit log. Make the first line of your commit log meaningful,
+	and add any bug-closing information available.
+	debian/changelog should not be edited directly unless when
+	releasing a new version.
+      </p><p>
+	A TODO file is available in <code class="filename">debian/TODO</code>.
+	It's mostly not well-maintained, but hopefully it will be more
+	up-to-date when people start using it.  emacs todoo-mode is
+	used in editing the file.
+      </p><p>
+	When releasing a new version of <span class="command"><strong>pbuilder</strong></span>,
+	the version is tagged with the git tag
+	X.XXX (version number).
+	This is done with <span class="command"><strong>./git-tag.sh</strong></span> script available in the source tree.
+      </p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="otheruse"></a>Chapter 6. Other uses of pbuilder</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#chroot">1. Using pbuilder for small experiments</a></span></dt><dt><span class="sect1"><a href="#runningprograms">2. Running little programs inside the chroot</a></span></dt></dl></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="chroot"></a>1. Using pbuilder for small experiments</h2></div></div></div><p>
+	There are cases when some small experimenting is required, and
+	you do not want to damage the main system,
+	like when installing experimental library packages,
+	or compiling with experimental compilers.
+	For such cases, the <span class="command"><strong>pbuilder login</strong></span> command is available.
+      </p><p>
+	<span class="command"><strong>pbuilder login </strong></span> is a debugging feature for
+	<span class="command"><strong>pbuilder</strong></span> itself, but it also allows users to have a temporary chroot.
+      </p><p>
+	Note that the chroot is cleaned after logging out of the shell,
+	and mounting file systems inside it is considered harmful.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="runningprograms"></a>2. Running little programs inside the chroot</h2></div></div></div><p>
+	To facilitate using <span class="command"><strong>pbuilder</strong></span> for other uses,
+	<span class="command"><strong>pbuilder execute</strong></span> is available.
+	<span class="command"><strong>pbuilder execute </strong></span> will take a script
+	specified in the command-line argument, and
+	invoke the script inside the chroot.
+      </p><p>
+	The script can be useful for sequences of operations such as
+	installing ssh and adding a new user inside the chroot.
+      </p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="experimental"></a>Chapter 7. Experimental or wish-list features of pbuilder</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#lvm">1. Using LVM</a></span></dt><dt><span class="sect1"><a href="#cowdancer">2. Using cowdancer</a></span></dt><dt><span class="sect1"><a href="#withouttargz">3. Using pbuilder without tar.gz</a></span></dt><dt><span class="sect1"><a href="#inavserver">4. Using pbuilder in a vserver</a></span></dt><dt><span class="sect1"><a href="#ccache">5. Usage of ccache</a></span></dt></dl></div><p>
+      There are some advanced features, above that of the
+      basic feature of <span class="command"><strong>pbuilder</strong></span>, for some specific purposes.
+    </p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="lvm"></a>1. Using LVM</h2></div></div></div><p>
+	LVM2 has a useful snapshot function that features Copy-on-write images.
+	That could be used for <span class="command"><strong>pbuilder</strong></span> just as it can be used for
+	the user-mode-linux <span class="command"><strong>pbuilder</strong></span> port.
+	lvmpbuilder script in the examples directory implements such port.
+	The scripts and documentation can be found under 
+	<code class="filename">/usr/share/doc/pbuilder/examples/lvmpbuilder/</code>
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="cowdancer"></a>2. Using cowdancer</h2></div></div></div><p>
+	<span class="command"><strong>cowdancer</strong></span> allows copy-on-write semantics on
+	file system using hard links and hard-link-breaking-on-write
+	tricks.  <span class="command"><strong>pbuilder</strong></span> using
+	<span class="command"><strong>cowdancer</strong></span> seems to be much faster and it is
+	one ideal point for improvement.
+	<span class="command"><strong>cowbuilder</strong></span>, a wrapper for
+	<span class="command"><strong>pbuilder</strong></span> for using
+	<span class="command"><strong>cowdancer</strong></span> is available from
+	<span class="command"><strong>cowdancer</strong></span> package since 0.14
+      </p><p>
+	Example command-lines for cowbuilder look like the following.
+      </p><p>
+	</p><pre class="screen">
+# cowbuilder --create --distribution sid
+# cowbuilder --update --distribution sid
+# cowbuilder --build XXX.dsc</pre><p>
+      </p><p>
+	It is also possible to use cowdancer with pdebuild command.
+	Specify with command-line option <code class="option">--pbuilder</code>
+	or set it in PDEBUILD_PBUILDER configuration option.
+      </p><p>
+	</p><pre class="screen">
+$ pdebuild --pbuilder cowbuilder</pre><p>
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="withouttargz"></a>3. Using pbuilder without tar.gz</h2></div></div></div><p>
+	The <span class="command"><strong><code class="option">--no-targz</code></strong></span>
+	option of <span class="command"><strong>pbuilder</strong></span>
+	will allow usage of <span class="command"><strong>pbuilder</strong></span> in a different way
+	from conventional usage.
+	It will try to use an existing chroot,
+	and will not try to clean up after
+	working on it.
+	It is an operation mode more like
+	<span class="command"><strong>sbuild</strong></span>.
+      </p><p>
+	It should be possible to create base chroot images
+	for <span class="command"><strong>dchroot</strong></span> with the following commands:
+	</p><pre class="screen">
+# pbuilder create --distribution lenny --no-targz --basetgz /chroot/lenny
+# pbuilder create --distribution squeeze --no-targz --basetgz /chroot/squeeze
+# pbuilder create --distribution sid --no-targz --basetgz /chroot/sid</pre><p>
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="inavserver"></a>4. Using pbuilder in a vserver</h2></div></div></div><p>
+	It is possible to use <span class="command"><strong>pbuilder</strong></span> in a vserver
+	environment.  This requires either vserver-patches in version 2.1.1-rc14
+	or higher, or a Linux kernel version 2.6.16 or higher.
+      </p><p>
+	To use <span class="command"><strong>pbuilder</strong></span> in a vserver, you need to set the
+	<span class="command"><strong>secure_mount</strong></span> <span class="command"><strong>CAPS</strong></span> in the
+	<span class="command"><strong>ccapabilities</strong></span> of this vserver.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ccache"></a>5. Usage of ccache</h2></div></div></div><p>
+       By default <span class="command"><strong>pbuilder</strong></span> will use the C compiler cache
+       <span class="command"><strong>ccache</strong></span> to speed up repeated builds of the same
+       package (or packages that compile the same files multiple times for some
+       reason). Using <span class="command"><strong>ccache</strong></span> can speed up repeated building
+       of large packages dramatically, at the cost of some disk space and
+       bookkeeping.
+      </p><p>
+       To disable usage of <span class="command"><strong>ccache</strong></span> with
+       <span class="command"><strong>pbuilder</strong></span>, you should unset CCACHEDIR in your
+       pbuilderrc file.
+      </p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="refs"></a>Chapter 8. Reference materials</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#dirstructoutside">1. Directory structure outside the chroot</a></span></dt><dt><span class="sect1"><a href="#dirstructinside">2. Directory structure inside the chroot</a></span></dt></dl></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dirstructoutside"></a>1. Directory structure outside the chroot</h2></div></div></div><div class="table"><a name="id432051"></a><p class="title"><b>Table 8.1. Directory Structure outside the chroot </b></p><div class="table-contents"><table summary="Directory Structure outside the chroot " border="1"><colgroup><col align="left"><col align="left"></colgroup><thead><tr><th align="left">Directory</th><th align="left">Meaning</th></tr></thead><tbody><tr><td align="left"><code class="filename">/etc/pbuilderrc</code></td><td align="left">configuration file</td></tr><tr><td align="left"><code class="filename">/usr/share/pbuilder/pbuilderrc</code></td><td align="left">Default configuration</td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/base.tgz</code></td><td align="left">Default location pbuilder uses for base.tgz, the tar-ball containing a basic Debian installation
+	        with only the build-essential packages.
+	      </td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/build/PID/</code></td><td align="left">Default location pbuilder uses for chroot</td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/aptcache</code></td><td align="left">Default location <span class="command"><strong>pbuilder</strong></span> will use as apt cache, to store deb packages required during <span class="command"><strong>pbuilder</strong></span> build.</td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/ccache</code></td><td align="left">Default location <span class="command"><strong>pbuilder</strong></span> will use as
+cache location</td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/result</code></td><td align="left">Default location <span class="command"><strong>pbuilder</strong></span> puts the deb files and other files created after build</td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/pbuilder-umlresult</code></td><td align="left">Default location <span class="command"><strong>pbuilder-user-mode-linux</strong></span> puts the deb files and other files created after build </td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/pbuilder-mnt</code></td><td align="left">Default location <span class="command"><strong>pbuilder-user-mode-linux</strong></span> uses for mounting the COW file system, for chrooting.</td></tr><tr><td align="left"><code class="filename">/tmp</code></td><td align="left"><span class="command"><strong>pbuilder-user-mode-linux</strong></span> will mount tmpfs for work.</td></tr><tr><td align="left"><code class="filename">${HOME}/tmp/PID.cow</code></td><td align="left"><span class="command"><strong>pbuilder-user-mode-linux</strong></span> use this directory for location of COW file system.</td></tr><tr><td align="left"><code class="filename">${HOME}/uml-image</code></td><td align="left"><span class="command"><strong>pbuilder-user-mode-linux</strong></span> use this directory for user-mode-linux full disk image.</td></tr></tbody></table></div></div><br class="table-break"></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dirstructinside"></a>2. Directory structure inside the chroot</h2></div></div></div><div class="table"><a name="id432306"></a><p class="title"><b>Table 8.2. Directory Structure inside the chroot </b></p><div class="table-contents"><table summary="Directory Structure inside the chroot " border="1"><colgroup><col align="left"><col align="left"></colgroup><thead><tr><th align="left">Directory</th><th align="left">Meaning</th></tr></thead><tbody><tr><td align="left"><code class="filename">/etc/mtab</code></td><td align="left">
+		symlink to <code class="filename">/proc/mounts</code>.
+	      </td></tr><tr><td align="left"><code class="filename">/tmp/buildd</code></td><td align="left">Default place used in <span class="command"><strong>pbuilder</strong></span>
+		to place the Debian package to be processed.
+		<code class="filename">/tmp/buildd/packagename-version/</code>
+		will be the root directory of the package being
+		processed.  HOME environment variable is set to this
+		value inside chroot by pbuilder-buildpackage.
+		<code class="option">--inputfile</code> will place files here.
+	      </td></tr><tr><td align="left"><code class="filename">/run</code></td><td align="left">The
+	      script passed as an argument to
+	      <span class="command"><strong>pbuilder</strong></span> execute is passed on.
+	      </td></tr><tr><td align="left"><code class="filename">/tmp/hooks</code></td><td align="left">
+		The location of hooks.
+	      </td></tr><tr><td align="left"><code class="filename">/var/cache/apt/archives</code></td><td align="left">
+		<span class="command"><strong>pbuilder</strong></span> copies the content of this directory to and from 
+		the aptcache directory of outside chroot.
+	      </td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/ccache</code></td><td align="left">
+	        <span class="command"><strong>pbuilder</strong></span> bind-mounts this directory for use
+	        by ccache.
+	      </td></tr><tr><td align="left"><code class="filename">/tmp/XXXX</code></td><td align="left"><span class="command"><strong>pbuilder-user-mode-linux</strong></span> uses
+	      a script in <code class="filename">/tmp</code> to bootstrap into
+	      user-mode-linux</td></tr></tbody></table></div></div><br class="table-break"></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="id432491"></a>Chapter 9. Minor archaeological details</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#id432497">1. Documentation history </a></span></dt><dt><span class="sect1"><a href="#pbuilderbackgroundhistory">2. Possibly inaccurate Background History of pbuilder</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id432581">2.1. The Time Before pbuilder</a></span></dt><dt><span class="sect2"><a href="#birth">2.2. Birth of pbuilder</a></span></dt><dt><span class="sect2"><a href="#secondyear">2.3. And the second year of its life</a></span></dt><dt><span class="sect2"><a href="#fifthyear">2.4. Fifth year of pbuilder</a></span></dt></dl></dd></dl></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id432497"></a>1. Documentation history </h2></div></div></div><p>
+	This document was started on 28 Dec 2002 by
+	Junichi Uekawa, trying to document what is known
+	about <span class="command"><strong>pbuilder</strong></span>.
+      </p><p>
+	This documentation is available from the <span class="command"><strong>pbuilder</strong></span> source tar-ball,
+	and from the git repository of <span class="command"><strong>pbuilder</strong></span> (web-based access is possible).
+	A copy of this documentation can be found on the
+	<a class="ulink" href="http://pbuilder.alioth.debian.org/pbuilder-doc.html" target="_top">Alioth project page for pbuilder</a>.
+	<a class="ulink" href="http://pbuilder.alioth.debian.org/pbuilder-doc.pdf" target="_top">There is also a PDF version</a>.
+	The homepage for <span class="command"><strong>pbuilder</strong></span> is
+	<a class="ulink" href="http://pbuilder.alioth.debian.org/" target="_top">
+	  http://pbuilder.alioth.debian.org/
+	</a> hosted by alioth project.
+      </p><p>
+	Documentation is written using DocBook XML, 
+	with emacs PSGML mode, and using wysidocbookxml for live 
+	previewing.
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pbuilderbackgroundhistory"></a>2. Possibly inaccurate Background History of pbuilder</h2></div></div></div><p>
+	The following is a most possibly inaccurate account of how
+	<span class="command"><strong>pbuilder</strong></span> came to happen, and other attempts to
+	make something like <span class="command"><strong>pbuilder</strong></span> happen.
+	This part of the document was originally in the AUTHORS file,
+	to give credit to those who existed before <span class="command"><strong>pbuilder</strong></span>.
+      </p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id432581"></a>2.1. The Time Before pbuilder</h3></div></div></div><p>
+	  There was once dbuild, which was a shell script to build
+	  Debian packages from source. Lars Wirzenius wrote that
+	  script, and it was good, short, and simple (probably).
+	  There was nothing like build-depends then (I think), and it was simple.
+	  It could have been improved, I could only find references and no actual source.
+	</p><p>
+	  debbuild was probably written by James Troup. I don't know it
+	  because I have never seen the actual code, I could only find some
+	  references to it on the net, and mailing list logs.
+	</p><p>
+	  sbuild is a perl script to build Debian packages from source.
+	  It parses Build-Depends, and performs other miscellaneous checks,
+	  and has a lot of hacks to actually get things building,
+	  including a table of what package to use when virtual packages are
+	  specified (does it do that still?).
+	  It supports the use of a local database for packages which do not
+	  have build-dependencies. It was written by Ronan Hodek,
+	  and I think it was patched and fixed and extended by
+	  several people. It is part of wanna-build, and used extensively
+	  in the Debian buildd system. I think it was maintained
+	  mostly by Ryan Murray.
+	</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="birth"></a>2.2. Birth of pbuilder</h3></div></div></div><p>
+	  wanna-build (sbuild) was (at the time of year 2001) quite
+	  difficult to set up, and it was never a Debian
+	  package. dbuild was something that predated Build-Depends.
+	</p><p>
+	  Building packages from source using Build-Depends
+	  information within a chroot sounded trivial; and
+	  <span class="command"><strong>pbuilder</strong></span> was born. It was initially a shell script
+	  with only a few lines, which called debootstrap
+	  and chroot and dpkg-buildpackage in the same run,
+	  but soon, it was decided that that's too slow.
+	</p><p>
+	  Yes, and it took almost an year to get things somewhat
+	  right, and in the middle of the process, Debian 3.0
+	  was released. Yay.
+	  Debian 3.0 wasn't completely buildable with <span class="command"><strong>pbuilder</strong></span>,
+	  but the amount of packages which are not buildable
+	  is steadily decreasing (I hope).
+	</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="secondyear"></a>2.3. And the second year of its life</h3></div></div></div><p>
+	  Someone wanted <span class="command"><strong>pbuilder</strong></span> to not run as
+	  root, and as User-mode-linux has become more useful as time
+	  passed, I've started experimenting with
+	  <span class="command"><strong>pbuilder-user-mode-linux</strong></span>.
+	  <span class="command"><strong>pbuilder-user-mode-linux</strong></span> has not stayed
+	  functional as much as I would have liked, and bootstrapping
+	  <span class="command"><strong>user-mode-linux</strong></span> environment has been
+	  pretty hard, due to the quality of user-mode-linux code or
+	  packaging at that time, which kept on breaking network
+	  support in one way or the other.
+	</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="fifthyear"></a>2.4. Fifth year of pbuilder</h3></div></div></div><p>
+	  <span class="command"><strong>pbuilder</strong></span> is now widely adopted as a 'almost standard' tool
+	  for testing packages, and building packages in a pristine
+	  environment.  There are other similar tools that do similar
+	  tasks, but they do not share the exact same goal.  To
+	  commemorate this fact, <span class="command"><strong>pbuilder</strong></span> is now co-maintained with
+	  several people.
+	</p><p>
+	  <span class="command"><strong>sbuild</strong></span> is now a well-maintained Debian package within
+	  Debian, and with <span class="command"><strong>pbuilder</strong></span> being such a slow monster, some
+	  people prefer the approach of sbuild.  Development to use
+	  LVM-snapshots, cowloop, or cowdancer is hoped to improve the
+	  situation somewhat.
+	</p></div></div></div></div></body></html>

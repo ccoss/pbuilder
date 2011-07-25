@@ -1,0 +1,17 @@
+[OK]   create-sid-cdebootstrap
+[FAIL] build-sid-dsh
+[OK]   pdebuild-sid-dsh
+[FAIL] pdebuild-internal-sid-dsh
+[OK]   create-lenny-cdebootstrap
+[FAIL] build-lenny-dsh
+[OK]   pdebuild-lenny-dsh
+[FAIL] pdebuild-internal-lenny-dsh
+[OK]   update-lenny-squeeze
+[OK]   update-lenny-squeeze-sid
+[OK]   update-lenny-squeeze-sid-experimental
+[OK]   create-squeeze-cdebootstrap
+[FAIL] build-squeeze-dsh
+[OK]   pdebuild-squeeze-dsh
+[FAIL] pdebuild-internal-squeeze-dsh
+[OK]   update-squeeze-sid
+[OK]   update-squeeze-sid-experimental

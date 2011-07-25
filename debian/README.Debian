@@ -1,0 +1,53 @@
+pbuilder for Debian
+-------------------
+
+This is a personal builder.
+
+Try: 
+  pbuilder create --distribution woody
+to create the initial chroot build environment.
+
+  pbuilder update
+would update the tarball.
+
+
+pbuilder build some-random-.dsc 
+
+would build the file specified by the .dsc file in the chroot.
+
+
+If you were a Debian Developer doing some development
+of Debian packages, you may try invoking pdebuild from the Debian
+source directory, to save you from much typing.
+
+edit /etc/pbuilderrc if the default doesn't work, especially proxy.
+Editing the mirror location is also recommended, although the default 
+should work fine.
+
+Please report to the Debian Bug Tracking System against pbuilder
+if a package does not build, and it seems like a genuine bug of pbuilder 
+(i.e. you cannot work around the build failure in any way).
+Also, if something is missing and necessary on some arches, 
+please file a bug to "build-essential" for packages.
+
+
+Testsuite:
+	Regression test is done in testsuite/ directory of the 
+	pbuilder source package.
+
+	Most of the Debian archive seems to build with pbuilder;
+	keep up the good work.
+
+
+Further reading
+===============
+
+This documentation is very terse. I recommend reading
+pbuilder.8 and pbuilderrc.5 manual pages.
+There is also a HTML manual now, pbuilder-doc.html,
+which contains the FAQ and other entries.
+When they are incorrect or misleading, please send bugreports to the 
+Debian BTS.
+
+
+ -- Junichi Uekawa <dancer@debian.org>, Mon,  2 Nov 2009 00:02:09 +0900

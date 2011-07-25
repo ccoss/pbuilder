@@ -1,0 +1,308 @@
+#! /bin/bash 
+# this is sourced from pbuilder packages to process the optional parameters.
+#   pbuilder -- personal Debian package builder
+#   Copyright (C) 2001-2007 Junichi Uekawa
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+
+# This code is called for pbuilder and pbuilder inside pbuilder-uml; 
+# pbuilder-uml calls uml-checkparams.
+
+export PBUILDER_PKGLIBDIR="${PBUILDER_PKGLIBDIR:-$PBUILDER_ROOT/usr/lib/pbuilder}"
+
+. "$PBUILDER_PKGLIBDIR"/pbuilder-loadconfig
+. "$PBUILDER_PKGLIBDIR"/pbuilder-modules
+
+#default value for this option is !empty!
+INTERNAL_BUILD_UML=""
+TWICE=""
+CHROOTEXEC=""
+OVERRIDE_APTLINES="no"
+OVERRIDE_APTLINES_WARN="" # set this if --override-config option should be set.
+BINARY_ARCH="no"
+PBUILDER_BUILD_LOGFILE=
+PRESERVE_BUILDPLACE="no"
+unset EXTRA_CONFIGFILE || true
+PBUILDER_DEBUGMODE=
+SAVE_AFTER_LOGIN=
+#option for user-mode-linux only.
+IGNORE_UMOUNT=""
+
+while [ -n "$1" ]; do 
+    case "$1" in 
+	--basetgz) 
+	    case "${PBCURRENTCOMMANDLINEOPERATION}" in
+		create|--create)
+		    touch "$2";;
+	    esac
+	    if [ ! -f "$2" ]; then
+		log "E: File $2 does not exist"
+		exit 1
+	    fi
+	    BASETGZ=$(readlink -f "$2");
+	    shift; shift;
+	    ;;
+	--buildplace)
+	    if [ ! -d "$2" ] ; then
+		log "E: Directory $2 does not exist"
+		exit 1
+	    fi
+	    BUILDPLACE=$(readlink -f "$2");
+	    shift; shift;
+	    ;;
+	--mirror)
+	    MIRRORSITE="$2";
+	    OVERRIDE_APTLINES_WARN=yes
+	    shift; shift;
+	    ;;
+	--othermirror)
+	    OTHERMIRROR="$2";
+	    OVERRIDE_APTLINES_WARN=yes
+	    shift; shift;
+	    ;;
+	--http-proxy)
+	    export http_proxy="$2";
+	    shift; shift;
+	    ;;
+	--distribution)
+	    DISTRIBUTION="$2";
+	    OVERRIDE_APTLINES_WARN=yes
+	    shift; shift;
+	    ;;
+	--architecture)
+	    ARCHITECTURE="$2";
+	    shift; shift;
+	    ;;
+	--components)
+	    COMPONENTS="$2";
+	    OVERRIDE_APTLINES_WARN=yes
+	    shift; shift;
+	    ;;
+	--buildresult)
+	    if [ -n "$2" ]; then
+		if [ -d "$2" ]; then
+		    BUILDRESULT=$(readlink -f "$2");
+		else
+		    BUILDRESULT="$2"
+		    log "W: Build-result Directory $2 does not exist"
+		    # warn, but make it progress.
+		fi
+	    else
+		BUILDRESULT=
+	    fi
+	    shift; shift;
+	    ;;
+	--aptcache)
+	    if [ -n "$2" ]; then
+		if [ -d "$2" ]; then
+		    APTCACHE=$(readlink -f "$2");
+		else
+		    log "E: Directory $2 does not exist"
+		    exit 1
+		fi
+	    else
+		APTCACHE=
+	    fi
+	    shift; shift;
+	    ;;
+	--autocleanaptcache)
+	    AUTOCLEANAPTCACHE=yes
+	    shift;
+	    ;;
+	--removepackages)
+	    REMOVEPACKAGES="$2";
+	    shift; shift;
+	    ;;
+	--configfile)
+	    if [ ! -f "$2" ]; then
+		log "E: Config file $2 does not exist"
+		exit 1
+	    fi
+	    . "$2";
+	    EXTRA_CONFIGFILE[${#EXTRA_CONFIGFILE[@]}]="$2";
+	    shift; shift; 
+	    ;;
+	--extrapackages)
+	    EXTRAPACKAGES="$2";
+	    shift; shift;
+	    ;;
+	--hookdir)
+	    HOOKDIR="$2";
+	    shift; shift;
+	    ;;
+	--debemail)
+	    DEBEMAIL="$2";
+	    shift; shift;
+	    ;;
+	--debbuildopts)
+	    # append to DEBBUILDOPTS or reset to empty if $2 isn't set
+	    DEBBUILDOPTS="${2:+${DEBBUILDOPTS:+$DEBBUILDOPTS }$2}";
+	    shift; shift;
+	    ;;
+	--logfile)
+	    log "I: Logging to $2"
+	    exec > >(tee "$2") 2>&1
+	    PBUILDER_BUILD_LOGFILE=$(readlink -f "$2")
+	    shift; shift;
+	    ;;
+	--pkgname-logfile)
+	    PKGNAME_LOGFILE="yes"
+	    shift; 
+	    ;;
+	--aptconfdir)
+	    APTCONFDIR="$2";
+	    shift; shift;
+	    ;;
+	--timeout)
+	    TIMEOUT_TIME="$2"
+	    shift; shift;
+	    ;;
+	--help)
+	    showhelp
+	    ;;
+	--override-config)
+	    OVERRIDE_APTLINES="yes"
+	    shift;
+	    ;;
+	--binary-arch)
+	    BINARY_ARCH="yes"
+	    # XXX this might be overwriten by --debbuildopts ""
+	    DEBBUILDOPTS="${DEBBUILDOPTS} -B"
+	    shift;
+	    ;;
+	--preserve-buildplace)
+	    PRESERVE_BUILDPLACE="yes"
+	    shift;
+	    ;;
+	--bindmounts)
+	    BINDMOUNTS="${BINDMOUNTS} $2"
+	    shift; shift;
+	    ;;
+	--debootstrapopts)
+	    # specify this option to set --variant=buildd value to debootstrap
+	    DEBOOTSTRAPOPTS[${#DEBOOTSTRAPOPTS[@]}]="$2";
+	    shift; shift;
+	    ;;
+	--debootstrap)
+	    # Use this option to specify debootstrap/cdebootstrap
+	    DEBOOTSTRAP="$2";
+	    shift; shift;
+	    ;;
+	--save-after-login|--save-after-exec)
+	    SAVE_AFTER_LOGIN=yes;
+	    shift;
+	    ;;
+	--inputfile)
+	    if [ ! -f "$2" ]; then
+		log "E: Input file $2 does not exist"
+		exit 1
+	    fi
+	    INPUTFILE[${#INPUTFILE[@]}]="$2";
+	    shift; shift; 
+	    ;;
+	--outputfile)
+	    OUTPUTFILE[${#OUTPUTFILE[@]}]="$2";
+	    shift; shift; 
+	    ;;
+
+	## internal options.
+	--internal-chrootexec)
+	    # specify custom chrootexec function -- this is internal debugging function
+	    CHROOTEXEC="$2"
+	    shift; shift;
+	    ;;
+	--debug)
+	    PBUILDER_DEBUGMODE=yes
+	    set -x
+	    shift;
+	    ;;
+	--no-targz)
+	    # specify this option if I am running in no-targz mode
+	    log "I: Running in no-targz mode"
+	    INTERNAL_BUILD_UML="yes"
+	    shift; 
+	    ;;
+	--internal-build-uml)
+	    # specify this option if I am running inside UML.
+	    log "I: Running in pbuilder-user-mode-linux mode"
+	    INTERNAL_BUILD_UML="yes"
+	    IGNORE_UMOUNT="no"
+	    shift; 
+	    ;;
+	--twice)
+	    TWICE="yes"
+	    shift;
+	    ;;
+	--) # end of processing for this
+	    shift;
+	    break;
+	    ;;
+	--*)
+	    log "E: Unknown option [$1] was specified "
+	    exit 1;
+	    ;;
+	*)
+	    break;
+	    ;;
+  esac
+done
+
+BUILDPLACE=${BUILDPLACE?"Build root directory is not defined"}
+
+# the default is to add a PID in the buildplace specified in the config file.
+BASEBUILDPLACE="$BUILDPLACE"
+if [ "${INTERNAL_BUILD_UML}" != "yes" -a "${PRESERVE_BUILDPLACE}" != "yes" ]; then
+    BUILDPLACE="$BUILDPLACE/$$"
+fi
+if [ -z "${CHROOTEXEC}" ]; then
+    CHROOTEXEC="chroot $BUILDPLACE "
+fi
+
+# handle 'experimental' specially. -- required for raw pbuilder (create/update) only.
+if [ "$DISTRIBUTION" = "experimental" ]; then
+    DISTRIBUTION="sid"
+    EXPERIMENTAL="true"
+else 
+    EXPERIMENTAL=
+fi
+
+case "$PBCURRENTCOMMANDLINEOPERATION" in 
+    --login|login|--execute|execute|--pdebuild|pdebuild)
+	# don't do anything if it is "login", or pdebuild
+	;;
+    *)
+# line from kobras@debian.org
+	if [ "$DEBIAN_FRONTEND" = "noninteractive" -o "$DEBIAN_FRONTEND" = "Noninteractive" ]; then
+	    exec < /dev/null
+
+	    # set variables used in the upgrade option.
+	    FORCE_CONFNEW[0]='-o'
+	    FORCE_CONFNEW[1]='DPkg::Options::=--force-confnew'
+	else
+	    unset FORCE_CONFNEW || true
+	fi
+	;;
+esac
+
+if [ -n "$CCACHEDIR" ]; then
+    if [ -d "$CCACHEDIR" ]; then
+        BINDMOUNTS="$BINDMOUNTS $CCACHEDIR"
+    fi
+    export PATH="/usr/lib/ccache:$PATH"
+fi
+
+# sort BINDMOUNTS to ensure that deeper directories are mounted last
+BINDMOUNTS="$(for i in $BINDMOUNTS; do echo $i; done | sort -u)"

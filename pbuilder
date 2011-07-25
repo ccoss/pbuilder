@@ -1,0 +1,174 @@
+#! /bin/bash
+#   pbuilder -- personal Debian package builder
+#   Copyright (C) 2001-2007 Junichi Uekawa
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+# pbuilder by Junichi Uekawa <dancer@debian.org> 2001 Aug 25
+
+set -e 
+
+# export this so that programs know which command line
+# operation is currently done
+export PBCURRENTCOMMANDLINEOPERATION="$1"
+umask 0022
+
+case "$1" in
+    --create|create)
+	shift;
+	/usr/lib/pbuilder/pbuilder-createbuildenv "$@"
+	;;
+    --update|update)
+	shift ;
+	/usr/lib/pbuilder/pbuilder-updatebuildenv "$@"
+	;;
+    --build|build)
+	shift ;
+	/usr/lib/pbuilder/pbuilder-buildpackage "$@"
+	;;
+    --clean|clean)
+	shift;
+	. /usr/lib/pbuilder/pbuilder-checkparams
+	if [ -n "$BASEBUILDPLACE" ]; then 
+	    log "I: Cleaning [$BASEBUILDPLACE]"
+	    clean_subdirectories "$BASEBUILDPLACE" || true
+	fi
+	if [ -n "$APTCACHE" ]; then
+	    log "I: Cleaning [$APTCACHE]"
+	    rm "$APTCACHE"/* || true
+	fi
+	;;
+    --login|login)
+	shift 
+	. /usr/lib/pbuilder/pbuilder-checkparams
+	. /usr/lib/pbuilder/pbuilder-runhooks
+	extractbuildplace
+	trap umountproc_cleanbuildplace_trap exit sighup
+	copyinputfile "${BUILDPLACE}/tmp/buildd"
+	loadhooks
+	recover_aptcache
+	trap saveaptcache_umountproc_cleanbuildplace_trap exit sighup
+
+	if [ "${INTERNAL_BUILD_UML}" = "yes" ]; then
+	    log "I: entering the shell"
+	else
+	    log "I: entering the shell
+File extracted to: $BUILDPLACE
+"
+	fi
+	executehooks "F"
+	(${CHROOTEXEC} bin/bash -c 'exec -a -bash bin/bash')
+	RET=$?
+
+	save_aptcache
+
+	trap umountproc_cleanbuildplace_trap exit sighup
+
+	# saving the place afterwards
+	if [ "${SAVE_AFTER_LOGIN}" = "yes" ]; then
+	    if [ "${INTERNAL_BUILD_UML}" = "yes" ]; then
+		log "E: Invalid combination of internal-build-uml and save-after-login flags"
+		exit 1
+	    else
+		log "I: Saving the results, modifications to this session will persist"
+		unloadhooks
+		umountproc
+		trap cleanbuildplace_trap exit sighup
+		${CHROOTEXEC} /usr/bin/apt-get clean || true
+		create_basetgz
+		cleanbuildplace
+		trap - exit sighup
+		exit $RET
+	    fi
+	fi
+	umountproc_cleanbuildplace
+	trap - exit sighup
+	exit $RET
+	;;
+    --execute|execute)
+	# try to execute arbitrary program.
+	shift
+	. /usr/lib/pbuilder/pbuilder-checkparams
+	. /usr/lib/pbuilder/pbuilder-runhooks
+	EXECPROGRAM="$1"
+	shift
+	if [ ! -f "${EXECPROGRAM}" ]; then
+	    log "E: Command line parameter [$EXECPROGRAM] does not exist"
+	    exit 1;
+	fi;
+	extractbuildplace
+
+	trap umountproc_cleanbuildplace_trap exit sighup
+	copyinputfile "${BUILDPLACE}/tmp/buildd"
+	loadhooks
+	recover_aptcache
+	trap saveaptcache_umountproc_cleanbuildplace_trap exit sighup
+
+	RUNNAME="$BUILDPLACE/run"
+	cat "$EXECPROGRAM" > "$RUNNAME"
+	chmod a+x "$RUNNAME"
+	executehooks "F"
+	( ${CHROOTEXEC} /run "$@" )
+	RET=$?
+	rm -f "$RUNNAME"
+
+	save_aptcache
+	trap umountproc_cleanbuildplace_trap exit sighup
+
+	# saving the place afterwards
+	if [ "${SAVE_AFTER_LOGIN}" = "yes" ]; then
+	    if [ "${INTERNAL_BUILD_UML}" = "yes" ]; then
+		log "E: Invalid combination of internal-build-uml and save-after-login flags"
+	    else
+		log "I: Saving the results, modifications to this session will persist"
+		unloadhooks
+		umountproc
+		trap cleanbuildplace_trap exit sighup
+		${CHROOTEXEC} /usr/bin/apt-get clean || true
+		create_basetgz
+		cleanbuildplace
+		trap - exit sighup
+		exit $RET
+	    fi
+	fi
+	umountproc_cleanbuildplace
+	trap - exit sighup
+	exit $RET
+	;;
+    --dumpconfig|dumpconfig)
+	shift
+	. /usr/lib/pbuilder/pbuilder-checkparams
+	. /usr/lib/pbuilder/pbuilder-runhooks
+	extractbuildplace
+	trap umountproc_cleanbuildplace_trap exit sighup
+	loadhooks
+	executehooks "F"
+	log "I: start dump config"
+	log "I: set"
+	set;
+	log "I: env"
+	env;
+	log "I: end dump config"
+	;;
+    --debuild|debuild)
+	shift
+	"$0" execute "$@" /usr/lib/pbuilder/pdebuild-internal
+	;;
+    *)
+	. /usr/lib/pbuilder/pbuilder-modules
+	showhelp
+	;;
+esac
+

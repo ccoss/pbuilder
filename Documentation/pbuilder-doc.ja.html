@@ -1,0 +1,868 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>pbuilder &#21033;&#29992;&#12510;&#12491;&#12517;&#12450;&#12523;</title><link rel="stylesheet" href="pbuilder-doc.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.73.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book" lang="ja"><div class="titlepage"><div><div><h1 class="title"><a name="id261134"></a>pbuilder &#21033;&#29992;&#12510;&#12491;&#12517;&#12450;&#12523;</h1></div><div><h2 class="subtitle">&#21033;&#29992;&#12392;&#25805;&#20316;&#26041;&#27861;&#12395;&#12388;&#12356;&#12390;</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="surname">Uekawa</span> <span class="firstname">Junichi</span> [FAMILY Given]</h3></div></div></div><div><p class="releaseinfo">&#33609;&#31295;</p></div></div><hr></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="chapter"><a href="#introduction">1. pbuilder &#12398;&#32057;&#20171;</a></span></dt><dd><dl><dt><span class="sect1"><a href="#aim">1. pbuilder &#12398;&#30446;&#30340;</a></span></dt></dl></dd><dt><span class="chapter"><a href="#usingpbuilder">2. pbuilder &#12434;&#21033;&#29992;&#12377;&#12427;</a></span></dt><dd><dl><dt><span class="sect1"><a href="#creatingbase">1. base chroot &#12452;&#12513;&#12540;&#12472;&#12398; tar &#29577;&#12398;&#20316;&#25104;</a></span></dt><dt><span class="sect1"><a href="#basechroot">2. base.tgz &#12398;&#26356;&#26032;</a></span></dt><dt><span class="sect1"><a href="#buildpackagechroot">3. base.tgz &#12434;&#21033;&#29992;&#12375;&#12390;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12499;&#12523;&#12489;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#pdebuild">4. Debian Developer &#12398;&#12479;&#12452;&#12500;&#12531;&#12464;&#12434;&#30465;&#30053;&#12377;&#12427;&#12289;pdebuild</a></span></dt><dt><span class="sect1"><a href="#configfile">5. &#35373;&#23450;&#12501;&#12449;&#12452;&#12523;</a></span></dt><dt><span class="sect1"><a href="#nonrootchroot">6. chroot &#20869;&#37096;&#12391; root &#20197;&#22806;&#12391;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12499;&#12523;&#12489;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#backporting">7. pbuilder &#12434;&#12496;&#12483;&#12463;&#12509;&#12540;&#12488;&#12395;&#27963;&#29992;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#massbuild">8. &#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#22823;&#37327;&#12395;&#12499;&#12523;&#12489;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#autobackport">9. &#33258;&#21205;&#12496;&#12483;&#12463;&#12509;&#12540;&#12488;&#12473;&#12463;&#12522;&#12503;&#12488;</a></span></dt><dt><span class="sect1"><a href="#autotesting">10. pbuilder &#12434;&#33258;&#21205;&#12486;&#12473;&#12488;&#12395;&#21033;&#29992;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#altcompiler">11. pbuilder &#12391;&#12381;&#12398;&#20182;&#12398;&#12467;&#12531;&#12497;&#12452;&#12521;&#12391;&#12398;&#12499;&#12523;&#12489;&#12434;&#35430;&#39443;&#12377;&#12427;</a></span></dt></dl></dd><dt><span class="chapter"><a href="#pbuilder-uml">3. user-mode-linux &#12434; pbuilder &#12391;&#21033;&#29992;&#12377;&#12427;</a></span></dt><dd><dl><dt><span class="sect1"><a href="#user-mode-linux-config">1. user-mode-linux &#12398;&#35373;&#23450;</a></span></dt><dt><span class="sect1"><a href="#rootstrap">2. rootstrap &#12398;&#35373;&#23450;</a></span></dt><dt><span class="sect1"><a href="#pbuilderumlconfig">3. pbuilder-uml &#12398;&#35373;&#23450;</a></span></dt><dt><span class="sect1"><a href="#consideruml">4. pbuilder-user-mode-linux&#12434;&#23455;&#34892;&#12377;&#12427;&#22580;&#21512;&#12398;&#26908;&#35342;&#38917;&#30446;</a></span></dt><dt><span class="sect1"><a href="#paralleluml">5. pbuilder-user-mode-linux &#12434;&#35079;&#25968;&#21516;&#26178;&#12395;&#23455;&#34892;&#12373;&#12379;&#12427;</a></span></dt><dt><span class="sect1"><a href="#pbuilderumlwrap">6. Using pbuilder-user-mode-linux as a wrapper script to start up a virtual
+machine</a></span></dt></dl></dd><dt><span class="chapter"><a href="#faq">4. FAQ &#65288;&#12424;&#12367;&#12354;&#12427;&#36074;&#21839;&#65289; </a></span></dt><dd><dl><dt><span class="sect1"><a href="#pbuildercreatefail">1. pbuilder create &#12364;&#22833;&#25943;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#bindmountlimits">2. bind mount &#12391;&#12365;&#12394;&#12356;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;</a></span></dt><dt><span class="sect1"><a href="#shellafterfail">3. &#12499;&#12523;&#12489;&#22833;&#25943;&#12398;&#35519;&#26619;&#12398;&#12383;&#12417;&#12395; pbuilder &#29872;&#22659;&#12395;&#12525;&#12464;&#12452;&#12531;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#modifyupdate">4. &#29872;&#22659;&#12434;&#22793;&#26356;&#12377;&#12427;&#12383;&#12417;&#12395; pbuilder &#29872;&#22659;&#12395;&#12525;&#12464;&#12452;&#12531;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#BUILDRESULTUID">5. BUILDRESULTUID &#12434; sudo &#12398;&#12475;&#12483;&#12471;&#12519;&#12531;&#12395;&#36861;&#21152;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#tmpdir">6. $TMPDIR&#12398;&#20351;&#12356;&#26041;&#12395;&#12388;&#12356;&#12390;</a></span></dt><dt><span class="sect1"><a href="#DISTRIBUTIONSWITCH">7. Creating a shortcut for running <span class="command"><strong>pbuilder</strong></span> with a specific
+distribution</a></span></dt><dt><span class="sect1"><a href="#ENVVARDISTRIBUTIONSWITCH">8. Using environmental variables for running <span class="command"><strong>pbuilder</strong></span> for
+specific distribution
+      </a></span></dt><dt><span class="sect1"><a href="#usingspecialaptsources">9. Using special apt sources lists, and local packages</a></span></dt><dt><span class="sect1"><a href="#apt-getupdateonbuild-depend">10. How to get pbuilder to run apt-get update before trying to satisfy
+build-dependency</a></span></dt><dt><span class="sect1"><a href="#bashprompt">11. pbuilder login &#12391; bash &#12398;&#12503;&#12525;&#12531;&#12503;&#12488;&#12434;&#22793;&#26356;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#chrootmemo">12. Creating a chroot reminder</a></span></dt><dt><span class="sect1"><a href="#packagecachearchives">13. Using /var/cache/apt/archives for the package cache</a></span></dt><dt><span class="sect1"><a href="#stablebackport">14. pbuilder back ported to stable Debian releases</a></span></dt><dt><span class="sect1"><a href="#LOGNAME">15. Warning about LOGNAME not being defined</a></span></dt><dt><span class="sect1"><a href="#nobuildconflictessential">16. Cannot Build-conflict against an essential package</a></span></dt><dt><span class="sect1"><a href="#lninvalidcrossdevicelink">17. Avoiding the "ln: Invalid cross-device link" message</a></span></dt><dt><span class="sect1"><a href="#fakechroot">18. Using fakechroot</a></span></dt><dt><span class="sect1"><a href="#debconfinsidepbuilder">19. Using debconf inside pbuilder sessions</a></span></dt><dt><span class="sect1"><a href="#nodev">20. nodev mount options hinder pbuilder activity</a></span></dt><dt><span class="sect1"><a href="#faqslowpbuilder">21. pbuilder &#12364;&#36933;&#12356;</a></span></dt><dt><span class="sect1"><a href="#sponsor">22. Using pdebuild to sponsor package</a></span></dt><dt><span class="sect1"><a href="#sourcechanges">23. Why is there a source.changes file in ../?</a></span></dt><dt><span class="sect1"><a href="#amd64i386">24. amd64 and i386-mode</a></span></dt><dt><span class="sect1"><a href="#tmpfsforpbuilder">25. Using tmpfs for buildplace</a></span></dt><dt><span class="sect1"><a href="#id305633">26. svn-buildpackage &#12434; pbuilder &#12391;&#21033;&#29992;&#12377;&#12427;</a></span></dt></dl></dd><dt><span class="chapter"><a href="#develanddebug">5. Troubleshooting and development</a></span></dt><dd><dl><dt><span class="sect1"><a href="#bugreport">1. Reporting bugs </a></span></dt><dt><span class="sect1"><a href="#mailinglist">2. Mailing list</a></span></dt><dt><span class="sect1"><a href="#IRCchannel">3. IRC Channel</a></span></dt><dt><span class="sect1"><a href="#development">4. Information for pbuilder developers</a></span></dt></dl></dd><dt><span class="chapter"><a href="#otheruse">6. Other uses of pbuilder</a></span></dt><dd><dl><dt><span class="sect1"><a href="#chroot">1. pbuilder &#12434;&#23567;&#35215;&#27169;&#12394;&#23455;&#39443;&#12398;&#12383;&#12417;&#12395;&#27963;&#29992;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#runningprograms">2. Running little programs inside the chroot</a></span></dt></dl></dd><dt><span class="chapter"><a href="#experimental">7. &#23455;&#39443;&#30340;&#12394; pbuilder &#12398; wish-list &#30340;&#12394;&#27231;&#33021;</a></span></dt><dd><dl><dt><span class="sect1"><a href="#lvm">1. LVM&#12398;&#27963;&#29992;</a></span></dt><dt><span class="sect1"><a href="#cowdancer">2. cowdancer &#12398;&#27963;&#29992;</a></span></dt><dt><span class="sect1"><a href="#withouttargz">3. tar.gz &#12434;&#21033;&#29992;&#12375;&#12394;&#12356;&#12391; pbuilder &#12434;&#21033;&#29992;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#inavserver">4. pbuilder &#12434; vserver &#12391;&#21033;&#29992;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#ccache">5. Usage of ccache</a></span></dt></dl></dd><dt><span class="chapter"><a href="#refs">8. &#21442;&#32771;&#25991;&#29486;</a></span></dt><dd><dl><dt><span class="sect1"><a href="#dirstructoutside">1. chroot &#22806;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896;</a></span></dt><dt><span class="sect1"><a href="#dirstructinside">2. chroot &#20869;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896;</a></span></dt></dl></dd><dt><span class="chapter"><a href="#id306908">9. &#20123;&#32048;&#12394;&#36942;&#21435;&#12398;&#32076;&#32239;&#12398;&#35443;&#32048;</a></span></dt><dd><dl><dt><span class="sect1"><a href="#id306913">1. &#12510;&#12491;&#12517;&#12450;&#12523;&#12398;&#23653;&#27508; </a></span></dt><dt><span class="sect1"><a href="#pbuilderbackgroundhistory">2. Possibly inaccurate Background History of pbuilder</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id306997">2.1. The Time Before pbuilder</a></span></dt><dt><span class="sect2"><a href="#birth">2.2. pbuilder &#12398;&#35477;&#29983;</a></span></dt><dt><span class="sect2"><a href="#secondyear">2.3. &#12381;&#12375;&#12390;&#20108;&#24180;&#30446;&#12398;&#20154;&#29983;</a></span></dt><dt><span class="sect2"><a href="#fifthyear">2.4. pbuilder &#12398;5&#24180;&#30446;</a></span></dt></dl></dd></dl></dd></dl></div><div class="list-of-tables"><p><b>&#34920;&#30446;&#27425;</b></p><dl><dt>5.1. <a href="#dirtestsuites">&#12486;&#12473;&#12488;&#12473;&#12452;&#12540;&#12488;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896;</a></dt><dt>8.1. <a href="#id306460">chroot &#20869;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896; </a></dt><dt>8.2. <a href="#id306718">chroot &#20869;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896; </a></dt></dl></div><div class="chapter" lang="ja"><div class="titlepage"><div><div><h2 class="title"><a name="introduction"></a>&#31532;1&#31456; pbuilder &#12398;&#32057;&#20171;</h2></div></div></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="sect1"><a href="#aim">1. pbuilder &#12398;&#30446;&#30340;</a></span></dt></dl></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="aim"></a>1. pbuilder &#12398;&#30446;&#30340;</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> &#12399; Personal Builder
+&#12398;&#30053;&#12391;&#12377;&#12290;&#20491;&#20154;&#30340;&#12394;&#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12394;&#12393;&#12398;&#38283;&#30330;&#29872;&#22659;&#12391;&#12289;Debian&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12499;&#12523;&#12489;&#12377;&#12427;&#12383;&#12417;&#12398;&#12471;&#12473;&#12486;&#12512;&#12391;&#12377;&#12290;<span class="command"><strong>pbuilder</strong></span>
+&#12399;&#12497;&#12483;&#12465;&#12540;&#12472;&#12364; Debian
+&#12398;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#29872;&#22659;&#12398;&#12411;&#12392;&#12435;&#12393;&#12391;&#12499;&#12523;&#12489;&#12391;&#12365;&#12427;&#12371;&#12392;&#12434;&#30906;&#35469;&#12377;&#12427;&#12383;&#12417;&#12289;Debian&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12463;&#12522;&#12540;&#12531;&#12523;&#12540;&#12512;&#20869;&#37096;&#12391;&#33258;&#21205;&#12395;&#12499;&#12523;&#12489;&#12377;&#12427;&#12471;&#12473;&#12486;&#12512;&#12392;&#12375;&#12390;&#31777;&#21336;&#12395;&#21033;&#29992;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12371;&#12392;&#12434;&#30446;&#25351;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;&#12463;&#12522;&#12540;&#12531;&#12523;&#12540;&#12512;&#29872;&#22659;&#12399;&#26368;&#23567;&#38480;&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;
+chroot &#12395;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#12371;&#12392;&#12391;&#23455;&#29694;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;
+      </p><p>
+	Debian
+&#12487;&#12451;&#12473;&#12488;&#12522;&#12499;&#12517;&#12540;&#12471;&#12519;&#12531;&#12399;&#12477;&#12540;&#12473;&#12467;&#12540;&#12489;&#12388;&#12365;&#12398;&#12501;&#12522;&#12540;&#12477;&#12501;&#12488;&#12454;&#12455;&#12450;&#12395;&#12424;&#12426;&#27083;&#25104;&#12373;&#12428;&#12390;&#12356;&#12414;&#12377;&#12290;Debian&#12398;&#12300;main&#12301;&#12475;&#12463;&#12471;&#12519;&#12531;&#12395;&#12354;&#12427;&#12477;&#12501;&#12488;&#12454;&#12455;&#12450;&#12399;&#12289;Build-depend
+&#65288;&#12499;&#12523;&#12489;&#26178;&#20381;&#23384;&#38306;&#20418;&#65289;&#12392;&#12375;&#12390;&#25351;&#23450;&#12373;&#12428;&#12383;Debian&#12398;&#12300;main&#12301;&#12475;&#12463;&#12471;&#12519;&#12531;&#12395;&#12354;&#12427;&#12497;&#12483;&#12465;&#12540;&#12472;&#12398;&#12415;&#12364;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12373;&#12428;&#12390;&#12356;&#12427;&#29366;&#24907;&#12391;&#12499;&#12523;&#12489;&#12391;&#12365;&#12394;&#12369;&#12428;&#12400;&#12394;&#12426;&#12414;&#12379;&#12435;&#12290;
+      </p><p>
+	&#20027;&#12394;&#12427; <span class="command"><strong>pbuilder</strong></span>
+&#12398;&#30446;&#30340;&#12399;&#12289;&#20182;&#12398;&#33258;&#21205;&#12499;&#12523;&#12489;&#12471;&#12473;&#12486;&#12512;&#12392;&#12399;&#36949;&#12356;&#12414;&#12377;&#12290;&#12381;&#12428;&#12399;&#12289;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12391;&#12365;&#12427;&#12384;&#12369;&#12499;&#12523;&#12489;&#12391;&#12365;&#12427;&#12424;&#12358;&#12394;&#12371;&#12392;&#12434;&#30446;&#30340;&#12392;&#12375;&#12390;&#12356;&#12394;&#12356;&#12392;&#12371;&#12429;&#12391;&#12377;&#12290;&#12497;&#12483;&#12465;&#12540;&#12472;&#12364;&#20309;&#12434;&#24517;&#35201;&#12392;&#12375;&#12390;&#12356;&#12427;&#12398;&#12363;&#12434;&#24819;&#20687;&#12375;&#12424;&#12358;&#12392;&#12399;&#12375;&#12414;&#12379;&#12435;&#12290;&#12414;&#12383;&#36984;&#25246;&#12364;&#21487;&#33021;&#12391;&#12354;&#12428;&#12400;&#12289;&#26368;&#24746;&#12394;&#36984;&#25246;&#12434;&#12377;&#12427;&#22580;&#21512;&#12418;&#12354;&#12426;&#12414;&#12377;&#12290;
+      </p><p>
+	&#12371;&#12398;&#26041;&#37341;&#12434;&#25505;&#29992;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289; <span class="command"><strong>pbuilder</strong></span> &#12399;&#12289; <span class="command"><strong>pbuilder</strong></span>
+&#12391;&#35430;&#39443;&#12375;&#12383;&#12497;&#12483;&#12465;&#12540;&#12472;&#12399;&#12411;&#12392;&#12435;&#12393;&#12398;Debian&#12364;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12373;&#12428;&#12383;&#29872;&#22659;&#12391;&#12499;&#12523;&#12489;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#30906;&#35469;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;&#12290;&#12371;&#12428;&#12395;&#12424;&#12387;&#12390;Debian&#20840;&#20307;&#12392;&#12375;&#12390;&#12398;&#12477;&#12540;&#12473;&#12467;&#12540;&#12489;&#12398;&#12499;&#12523;&#12489;&#12375;&#12420;&#12377;&#12373;&#12398;&#21521;&#19978;&#12434;&#30446;&#25351;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;
+      </p><p>
+	Debian &#12434;&#12477;&#12540;&#12473;&#12363;&#12425;&#12499;&#12523;&#12489;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12377;&#12427;&#12392;&#12356;&#12358;&#30446;&#27161;&#12399;&#12411;&#12412;&#23436;&#20102;&#12375;&#12289;&#12424;&#12367;&#36914;&#25431;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;Debian
+3.0&#12398;&#26178;&#20195;&#12391;&#12399;&#12477;&#12540;&#12473;&#12363;&#12425;&#12499;&#12523;&#12489;&#12377;&#12427;&#12398;&#12395;&#21839;&#38988;&#12364;&#22810;&#25968;&#12354;&#12426;&#12414;&#12375;&#12383;&#12364;&#12289;&#26368;&#36817;&#12398;&#12522;&#12522;&#12540;&#12473;&#12391;&#12399;&#12414;&#12375;&#12395;&#12394;&#12387;&#12390;&#12365;&#12390;&#12356;&#12414;&#12377;&#12290;
+      </p></div></div><div class="chapter" lang="ja"><div class="titlepage"><div><div><h2 class="title"><a name="usingpbuilder"></a>&#31532;2&#31456; pbuilder &#12434;&#21033;&#29992;&#12377;&#12427;</h2></div></div></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="sect1"><a href="#creatingbase">1. base chroot &#12452;&#12513;&#12540;&#12472;&#12398; tar &#29577;&#12398;&#20316;&#25104;</a></span></dt><dt><span class="sect1"><a href="#basechroot">2. base.tgz &#12398;&#26356;&#26032;</a></span></dt><dt><span class="sect1"><a href="#buildpackagechroot">3. base.tgz &#12434;&#21033;&#29992;&#12375;&#12390;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12499;&#12523;&#12489;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#pdebuild">4. Debian Developer &#12398;&#12479;&#12452;&#12500;&#12531;&#12464;&#12434;&#30465;&#30053;&#12377;&#12427;&#12289;pdebuild</a></span></dt><dt><span class="sect1"><a href="#configfile">5. &#35373;&#23450;&#12501;&#12449;&#12452;&#12523;</a></span></dt><dt><span class="sect1"><a href="#nonrootchroot">6. chroot &#20869;&#37096;&#12391; root &#20197;&#22806;&#12391;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12499;&#12523;&#12489;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#backporting">7. pbuilder &#12434;&#12496;&#12483;&#12463;&#12509;&#12540;&#12488;&#12395;&#27963;&#29992;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#massbuild">8. &#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#22823;&#37327;&#12395;&#12499;&#12523;&#12489;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#autobackport">9. &#33258;&#21205;&#12496;&#12483;&#12463;&#12509;&#12540;&#12488;&#12473;&#12463;&#12522;&#12503;&#12488;</a></span></dt><dt><span class="sect1"><a href="#autotesting">10. pbuilder &#12434;&#33258;&#21205;&#12486;&#12473;&#12488;&#12395;&#21033;&#29992;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#altcompiler">11. pbuilder &#12391;&#12381;&#12398;&#20182;&#12398;&#12467;&#12531;&#12497;&#12452;&#12521;&#12391;&#12398;&#12499;&#12523;&#12489;&#12434;&#35430;&#39443;&#12377;&#12427;</a></span></dt></dl></div><p>
+      &#25805;&#20316;&#12395;&#12399;&#12289;&#12356;&#12367;&#12388;&#12363;&#12398;&#31777;&#21336;&#12394;&#12467;&#12510;&#12531;&#12489;&#12364;&#12354;&#12426;&#12414;&#12377;&#12290;<span class="command"><strong>pbuilder create</strong></span>&#12289; <span class="command"><strong>pbuilder
+update</strong></span>&#12289;&#12381;&#12375;&#12390; <span class="command"><strong>pbuilder build</strong></span>
+&#12467;&#12510;&#12531;&#12489;&#12364;&#12424;&#12367;&#20351;&#12431;&#12428;&#12414;&#12377;&#12290;&#12402;&#12392;&#12388;&#12389;&#12388;&#35211;&#12390;&#12356;&#12365;&#12414;&#12375;&#12423;&#12358;&#12290;
+    </p><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="creatingbase"></a>1. base chroot &#12452;&#12513;&#12540;&#12472;&#12398; tar &#29577;&#12398;&#20316;&#25104;</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder create</strong></span> will create a base chroot image tar-ball
+(base.tgz).  All other commands will operate on the resulting base.tgz If
+the Debian release to be created within chroot is not going to be "sid"
+(which is the default), the distribution code-name needs to be specified
+with the <span class="command"><strong><code class="option">--distribution</code></strong></span> command-line option.
+      </p><p>
+	<span class="command"><strong>debootstrap</strong></span> <sup>[<a name="id261546" href="#ftn.id261546" class="footnote">1</a>]</sup> is used to create the bare minimum Debian installation, and then
+build-essential packages are installed on top of the minimum installation
+using <span class="command"><strong>apt-get</strong></span> inside the chroot.
+      </p><p>
+	For fuller documentation of command-line options, see the pbuilder.8 manual
+page.  Some configuration will be required for
+<code class="filename">/etc/pbuilderrc</code> for the mirror site <sup>[<a name="id261572" href="#ftn.id261572" class="footnote">2</a>]</sup> to use, and proxy configuration may be required to allow access
+through HTTP.  See the pbuilderrc.5 manual page for details.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="basechroot"></a>2. base.tgz &#12398;&#26356;&#26032;</h2></div></div></div><p><span class="command"><strong>pbuilder update</strong></span> &#12467;&#12510;&#12531;&#12489;&#12364; base.tgz &#12434;&#26356;&#26032;&#12375;&#12414;&#12377;&#12290; chroot &#12434;&#23637;&#38283;&#12375;&#12289;
+<span class="command"><strong>apt-get update</strong></span> &#12392; <span class="command"><strong>apt-get dist-upgrade</strong></span>
+&#12434; chroot &#20869;&#37096;&#12391;&#23455;&#34892;&#12375;&#12289;base.tgz &#65288;&#12505;&#12540;&#12473;&#12398; tar &#29577;&#65289; &#12434;&#20316;&#25104;&#12375;&#12414;&#12377;&#12290;
+      </p><p>
+	It is possible to switch the distribution which the base.tgz is targeted at
+at this point.  Specify <span class="command"><strong><code class="option">--distribution <em class="parameter"><code>sid</code></em></code> <code class="option">--override-config</code></strong></span> to change the distribution to sid.  <sup>[<a name="id261635" href="#ftn.id261635" class="footnote">3</a>]</sup>
+      </p><p>
+	&#12467;&#12510;&#12531;&#12489;&#12521;&#12452;&#12531;&#12458;&#12503;&#12471;&#12519;&#12531;&#12398;&#35443;&#32048;&#12394;&#12489;&#12461;&#12517;&#12513;&#12531;&#12488;&#12395;&#12388;&#12356;&#12390;&#12399;&#12289;pbuilder.8 &#12510;&#12491;&#12517;&#12450;&#12523;&#12434;&#21442;&#29031;
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="buildpackagechroot"></a>3. base.tgz &#12434;&#21033;&#29992;&#12375;&#12390;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12499;&#12523;&#12489;&#12377;&#12427;</h2></div></div></div><p>
+	To build a package inside the chroot, invoke <span class="command"><strong>pbuilder build <code class="option">whatever.dsc</code></strong></span>.  <span class="command"><strong>pbuilder</strong></span> will extract the base.tgz to a
+temporary working directory, enter the directory with chroot, satisfy the
+build-dependencies inside chroot, and build the package.  The built packages
+will be moved to a directory specified with the <span class="command"><strong><code class="option">--buildresult</code></strong></span> command-line option.
+      </p><p>
+	The <span class="command"><strong><code class="option">--basetgz</code></strong></span> option can be used to specify which base.tgz to use.
+      </p><p>
+	<span class="command"><strong>pbuilder</strong></span> &#12399; base.tgz &#12363;&#12425;&#26032;&#12375;&#12356;
+chroot &#12452;&#12513;&#12540;&#12472;&#12434;&#23637;&#38283;&#12375;&#12414;&#12377;&#12290;&#65288;base.tgz &#12399;  <span class="command"><strong>pbuilder create</strong></span> &#12391;&#20316;&#25104;&#12373;&#12428;&#12289;
+<span class="command"><strong>pbuilder update</strong></span> &#12391;&#26356;&#26032;&#12373;&#12428;&#12414;&#12377;)&#12290; chroot &#12395;&#12399; Build-Depend&#38306;&#20418;&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12364;
+debian/control &#12434;&#35299;&#26512;&#12375;&#12390;  <span class="command"><strong>apt-get</strong></span> &#12434;&#23455;&#34892;&#12377;&#12427;&#12371;&#12392;&#12391;&#36861;&#21152;&#12373;&#12428;&#12414;&#12377;&#12290;
+      </p><p>
+	&#12467;&#12510;&#12531;&#12489;&#12521;&#12452;&#12531;&#12458;&#12503;&#12471;&#12519;&#12531;&#12398;&#35443;&#32048;&#12394;&#12489;&#12461;&#12517;&#12513;&#12531;&#12488;&#12395;&#12388;&#12356;&#12390;&#12399;&#12289;pbuilder.8 &#12510;&#12491;&#12517;&#12450;&#12523;&#12434;&#21442;&#29031;
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pdebuild"></a>4. Debian Developer &#12398;&#12479;&#12452;&#12500;&#12531;&#12464;&#12434;&#30465;&#30053;&#12377;&#12427;&#12289;pdebuild</h2></div></div></div><p>
+	<span class="command"><strong>pdebuild</strong></span>
+&#12399;&#12289;&#12354;&#12425;&#12422;&#12427;&#25805;&#20316;&#12398;&#20013;&#12391;&#12418;&#12418;&#12387;&#12392;&#12418;&#38971;&#32321;&#12395;&#34892;&#12431;&#12428;&#12427;&#12384;&#12429;&#12358;&#20316;&#26989;&#12434;&#31777;&#30053;&#21270;&#12377;&#12427;&#12383;&#12417;&#12398;&#12521;&#12483;&#12497;&#12540;&#12473;&#12463;&#12522;&#12503;&#12488;&#12391;&#12377;&#12290;Debian Developer&#12399; Debian
+&#12497;&#12483;&#12465;&#12540;&#12472;&#12398;&#12477;&#12540;&#12473;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12391; <span class="command"><strong>debuild</strong></span> &#12467;&#12510;&#12531;&#12489;&#12434;&#12358;&#12388;&#12371;&#12392;&#12391;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12499;&#12523;&#12489;&#12375;&#12414;&#12377;&#12290;
+<span class="command"><strong>pdebuild</strong></span> &#12399;&#21516;&#27096;&#12398;&#25805;&#20316;&#12434;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434; chroot &#20869;&#37096;&#12391;&#12499;&#12523;&#12489;&#12375;&#12289;
+&#29694;&#22312;&#12398;&#12484;&#12522;&#12540;&#12364; chroot &#20869;&#37096;&#12391;&#12418;&#12499;&#12523;&#12489;&#12377;&#12427;&#12371;&#12392;&#12434;&#30906;&#35469;&#12375;&#12414;&#12377;&#12290;
+      </p><p>
+	<span class="command"><strong>pdebuild</strong></span> calls <span class="command"><strong>dpkg-source</strong></span> to build
+the source packages, and then invokes <span class="command"><strong>pbuilder</strong></span> on the
+resulting source package.  However, unlike debuild, the resulting deb files
+will be found in the <span class="command"><strong><code class="option">--buildresult</code></strong></span> directory.
+      </p><p>
+	&#35443;&#32048;&#12399; pdebuild.1 &#12510;&#12491;&#12517;&#12450;&#12523;&#12506;&#12540;&#12472;&#12434;&#21442;&#29031;&#12375;&#12390;&#12367;&#12384;&#12373;&#12356;&#12290;
+      </p><p>
+	There is a slightly different mode of operation available in
+<span class="command"><strong>pdebuild</strong></span> since version 0.97. <span class="command"><strong>pdebuild</strong></span>
+usually runs <span class="command"><strong>debian/rules clean</strong></span> outside of the chroot;
+however, it is possible to change the behavior to run it inside the chroot
+with the <span class="command"><strong><code class="option">--use-pdebuild-internal</code></strong></span>.  It will try to bind mount the working directory inside chroot,
+and run <span class="command"><strong>dpkg-buildpackage</strong></span> inside.  It has the following
+characteristics, and is not yet the default mode of operation.
+      </p><div class="itemizedlist"><ul type="disc"><li><p>
+	    &#12477;&#12540;&#12473;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#20316;&#25104;&#12377;&#12427;&#38555;&#12395;&#12289;Build-Depend &#12434; chroot &#20869;&#37096;&#12391;&#28288;&#12383;&#12375;&#12414;&#12377;&#12290;
+(&#20197;&#21069;&#12398; <span class="command"><strong>pdebuild</strong></span> &#12391;&#12391;&#12365;&#12394;&#12363;&#12387;&#12383;&#12424;&#12356;&#28857;&#12391;&#12377;)&#12290;
+	  </p></li><li><p>&#20316;&#26989;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12395; chroot &#20869;&#37096;&#12363;&#12425;&#22793;&#26356;&#12434;&#21152;&#12360;&#12425;&#12428;&#12414;&#12377;&#12290;</p></li><li><p><span class="command"><strong>pdebuild</strong></span> &#12391;&#12499;&#12523;&#12489;&#12391;&#12365;&#12427;&#12371;&#12392;&#12399; <span class="command"><strong>pbuilder</strong></span>
+&#12391;&#24517;&#12378;&#21205;&#12367;&#12392;&#12356;&#12358;&#12371;&#12392;&#12364;&#20445;&#35388;&#12373;&#12428;&#12427;&#12431;&#12369;&#12391;&#12399;&#12394;&#12356;&#12391;&#12377;&#12290;</p></li><li><p>&#12477;&#12540;&#12473;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#20316;&#12427;&#12473;&#12486;&#12483;&#12503;&#33258;&#20307;&#12364;&#22833;&#25943;&#12375;&#12383;&#22580;&#21512;&#12395;&#12289;&#12381;&#12398; chroot &#12434;&#21033;&#29992;&#12377;&#12427;&#12475;&#12483;&#12471;&#12519;&#12531;&#12399;&#28961;&#39364;&#12395;&#32066;&#12431;&#12426;&#12414;&#12377;&#65288;chroot
+&#12398;&#20316;&#25104;&#12395;&#12399;&#26178;&#38291;&#12364;&#12363;&#12363;&#12427;&#12289;cowdancer &#31561;&#12391;&#25913;&#21892;&#12375;&#12414;&#12377;&#12290;)</p></li><li><p>Does not work in the same manner as it used to; for example, <span class="command"><strong><code class="option">--buildresult</code></strong></span> does not have any effect.</p></li><li><p>chroot &#20869;&#37096;&#12391;&#12398;&#12499;&#12523;&#12489;&#12399; chroot &#22806;&#37096;&#12391;&#12398;&#29694;&#22312;&#12398;&#12518;&#12540;&#12470;&#12391;&#23455;&#34892;&#12373;&#12428;&#12427;&#12290;
+	  </p></li></ul></div></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="configfile"></a>5. &#35373;&#23450;&#12501;&#12449;&#12452;&#12523;</h2></div></div></div><p>
+	&#35373;&#23450;&#12434;&#12377;&#12409;&#12390;&#12467;&#12510;&#12531;&#12489;&#12521;&#12452;&#12531;&#12391;&#25351;&#23450;&#12377;&#12427;&#12371;&#12392;&#12418;&#21487;&#33021;&#12391;&#12377;&#12290;&#12375;&#12363;&#12375;&#12289;&#20837;&#21147;&#12434;&#31777;&#20415;&#12395;&#12377;&#12427;&#12383;&#12417;&#12395;&#12289;&#35373;&#23450;&#12501;&#12449;&#12452;&#12523;&#12434;&#21033;&#29992;&#12377;&#12427;&#12371;&#12392;&#12418;&#12391;&#12365;&#12414;&#12377;&#12290;
+      </p><p>
+	<code class="filename">/etc/pbuilderrc</code> &#12392;
+<code class="filename">${HOME}/.pbuilderrc</code> &#12364; <span class="command"><strong>pbuilder</strong></span>
+&#12434;&#23455;&#34892;&#12377;&#12427;&#12392;&#35501;&#12415;&#36796;&#12414;&#12428;&#12414;&#12377;&#12290;&#21487;&#33021;&#12394;&#12458;&#12503;&#12471;&#12519;&#12531;&#12395;&#12388;&#12356;&#12390;&#12399;&#12289; pbuilderrc.5 &#12395;&#35299;&#35500;&#12373;&#12428;&#12390;&#12356;&#12414;&#12377;&#12290;
+      </p><p>
+	It is useful to use <code class="option">--configfile</code> option to load up a preset configuration file when switching between
+configuration files for different distributions.
+      </p><p>
+	Please note <code class="filename">${HOME}/.pbuilderrc</code> supersede system
+settings.  Caveats is that if you have some configuration, you may need to
+tweak the configuration to work with new versions of pbuilder when
+upgrading.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="nonrootchroot"></a>6. chroot &#20869;&#37096;&#12391; root &#20197;&#22806;&#12391;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12499;&#12523;&#12489;&#12377;&#12427;</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> &#12399;&#20381;&#23384;&#38306;&#20418;&#12434;&#20805;&#36275;&#12373;&#12379;&#12427;&#38555;&#12395;&#12399; root
+&#27177;&#38480;&#12434;&#24517;&#35201;&#12392;&#12375;&#12414;&#12377;&#12289;&#12375;&#12363;&#12375;&#12411;&#12392;&#12435;&#12393;&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12399;&#12499;&#12523;&#12489;&#26178;&#12395; root
+&#27177;&#38480;&#12434;&#24517;&#35201;&#12392;&#12399;&#12379;&#12378;&#12289;root&#12391;&#12399;&#12499;&#12523;&#12489;&#12391;&#12365;&#12394;&#12356;&#12497;&#12483;&#12465;&#12540;&#12472;&#12418;&#19968;&#37096;&#23384;&#22312;&#12375;&#12414;&#12377;&#12290;<span class="command"><strong>pbuilder </strong></span> &#12399;
+<span class="command"><strong>pbuilder </strong></span>
+&#20869;&#37096;&#23554;&#29992;&#12398;&#12518;&#12540;&#12470;&#12434;&#20316;&#25104;&#12375;&#12289;&#12381;&#12398;&#12518;&#12540;&#12470;ID&#12434;&#21033;&#29992;&#12375;&#12390;&#12499;&#12523;&#12489;&#12434;&#23455;&#34892;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;&#12290;root&#27177;&#38480;&#12364;&#24517;&#35201;&#12394;&#26178;&#12395;&#12399;<span class="command"><strong>fakeroot</strong></span>
+&#12467;&#12510;&#12531;&#12489;&#12434;&#21033;&#29992;&#12375;&#12414;&#12377;&#12290;
+      </p><p>
+	BUILDUSERID &#35373;&#23450;&#12458;&#12503;&#12471;&#12519;&#12531;&#12399;&#26082;&#23384;&#12398;&#12518;&#12540;&#12470;ID&#12392;&#30064;&#12394;&#12427;ID&#12395;&#35373;&#23450;&#12375;&#12390;&#12362;&#12365;&#12414;&#12375;&#12423;&#12358;&#12290;&#12381;&#12358;&#12377;&#12427;&#12392;&#12497;&#12483;&#12465;&#12540;&#12472;&#12364;
+<span class="command"><strong>pbuilder</strong></span>
+&#20869;&#37096;&#12391;&#12499;&#12523;&#12489;&#12375;&#12390;&#12356;&#12427;&#38555;&#12395;&#12289;chroot&#12288;&#22806;&#37096;&#12398;&#29872;&#22659;&#12395;&#24433;&#38911;&#12434;&#12354;&#12383;&#12360;&#12395;&#12367;&#12367;&#12394;&#12426;&#12414;&#12377;&#12290;BUILDUSERNAME &#12364;&#35373;&#23450;&#12373;&#12428;&#12390;&#12356;&#12427;&#22580;&#21512;&#12289;&#12381;&#12398;&#21517;&#21069;&#12434;
+<span class="command"><strong>pbuilder</strong></span> &#12399;&#21033;&#29992;&#12375;&#12289; chroot &#20869;&#37096;&#12391;root&#27177;&#38480;&#12391;&#21205;&#20316;&#12377;&#12427;&#20195;&#12431;&#12426;&#12395;&#12289;fakeroot
+&#12434;&#21033;&#29992;&#12375;&#12390;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12499;&#12523;&#12489;&#12375;&#12414;&#12377;&#12290;
+      </p><p>
+	fakeroot &#12398;&#26041;&#27861;&#12434;&#21033;&#29992;&#12375;&#12390;&#12356;&#12427;&#22580;&#21512;&#12391;&#12418;&#12289;<span class="command"><strong>pbuilder</strong></span> &#12399; root &#27177;&#38480;&#12364;&#24517;&#35201;&#12394;&#22580;&#38754;&#12391;&#12399; root
+&#27177;&#38480;&#12391;&#31292;&#20685;&#12375;&#12414;&#12377;&#12290;&#20363;&#12360;&#12400;&#12289;chroot&#20869;&#37096;&#12395;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#26178;&#12395;&#12399;<span class="command"><strong>pbuilder</strong></span> &#12399; root
+&#27177;&#38480;&#12391;&#31292;&#20685;&#12375;&#12414;&#12377;&#12290;
+      </p><p>
+	<span class="command"><strong>pbuilder</strong></span> &#12434; root &#27177;&#38480;&#12434;&#24517;&#35201;&#12392;&#12375;&#12394;&#12356;&#12391;&#21033;&#29992;&#12377;&#12427;&#26041;&#27861;&#12395;&#12388;&#12356;&#12390;&#12399;&#12289;  user-mode-linux
+&#12398;&#21033;&#29992;&#12364;&#24517;&#35201;&#12391;&#12377;&#12290; <a class="xref" href="#pbuilder-uml" title="&#31532;3&#31456; user-mode-linux &#12434; pbuilder &#12391;&#21033;&#29992;&#12377;&#12427;">&#31532;3&#31456;</a> &#12391;&#35500;&#26126;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="backporting"></a>7. pbuilder &#12434;&#12496;&#12483;&#12463;&#12509;&#12540;&#12488;&#12395;&#27963;&#29992;&#12377;&#12427;</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> &#12399;&#21476;&#12356;&#12487;&#12451;&#12473;&#12488;&#12522;&#12499;&#12517;&#12540;&#12471;&#12519;&#12531;&#12398;chroot
+&#12434;&#20316;&#25104;&#12375;&#12289;&#12381;&#12371;&#12391;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12499;&#12523;&#12489;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;Debian
+&#12398;&#26368;&#26032;&#29256;&#12398;&#12487;&#12451;&#12473;&#12488;&#12522;&#12499;&#12517;&#12540;&#12471;&#12519;&#12531;&#12363;&#12425;&#12477;&#12501;&#12488;&#12454;&#12456;&#12450;&#12434;&#12496;&#12483;&#12463;&#12509;&#12540;&#12488;&#12377;&#12427;&#12398;&#12395;&#21033;&#29992;&#12377;&#12427;&#12371;&#12392;&#12364;&#21487;&#33021;&#12391;&#12377;&#12290;&#12356;&#12367;&#12388;&#12363;&#12398;&#28857;&#12434;&#26908;&#35342;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12426;&#12289;&#27425;&#12398;&#29702;&#30001;&#12395;&#12424;&#12426;&#20840;&#33258;&#21205;&#12391;&#12496;&#12483;&#12463;&#12509;&#12540;&#12488;&#12377;&#12427;&#12371;&#12392;&#12399;&#29694;&#23455;&#30340;&#12391;&#12399;&#28961;&#12367;&#12289;&#25163;&#21205;&#12391;&#12398;&#20316;&#26989;&#12418;&#24517;&#35201;&#12395;&#12394;&#12427;&#12391;&#12375;&#12423;&#12358;:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>unstable&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12364; unstable &#12395;&#12375;&#12363;&#12394;&#12356;&#12497;&#12483;&#12465;&#12540;&#12472;&#12420;&#12289;unstable
+&#12395;&#12375;&#12363;&#12394;&#12356;&#12496;&#12540;&#12472;&#12519;&#12531;&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12395;&#20381;&#23384;&#12375;&#12390;&#12356;&#12427;&#22580;&#21512;&#12364;&#12354;&#12427;&#12290;&#12388;&#12414;&#12426;&#12289;stable &#12391;&#12399; Build-Depends:
+&#12434;&#20805;&#36275;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12394;&#12356;(&#12373;&#12425;&#12394;&#12427;&#12496;&#12483;&#12463;&#12509;&#12540;&#12488;&#12364;&#24517;&#35201;&#12395;&#12394;&#12427;)&#12290;</p></li><li><p>stable &#12487;&#12451;&#12473;&#12488;&#12522;&#12499;&#12517;&#12540;&#12471;&#12519;&#12531;&#12395;&#12399; unstable &#12391;&#20462;&#27491;&#12375;&#12390;&#12356;&#12427;&#12496;&#12464;&#12364;&#21547;&#12414;&#12428;&#12390;&#12362;&#12426;&#12289;&#12527;&#12540;&#12463;&#12450;&#12521;&#12454;&#12531;&#12489;&#12364;&#24517;&#35201;&#12395;&#12394;&#12427;&#12290;</p></li><li><p>unstable &#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12364; unstable &#19978;&#12391;&#12354;&#12387;&#12390;&#12418;&#12499;&#12523;&#12489;&#12375;&#12394;&#12356;&#22580;&#21512;&#12364;&#12354;&#12427;&#12290;</p></li></ul></div></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="massbuild"></a>8. &#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#22823;&#37327;&#12395;&#12499;&#12523;&#12489;&#12377;&#12427;</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span>
+&#12399;&#25805;&#20316;&#12364;&#12452;&#12531;&#12479;&#12521;&#12463;&#12486;&#12451;&#12502;&#12391;&#12399;&#12394;&#12356;&#12383;&#12417;&#12289;&#33258;&#21205;&#30340;&#12395;&#21205;&#12363;&#12377;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;<span class="command"><strong>pbuilder</strong></span>
+&#12434;&#35079;&#25968;&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12395;&#38306;&#12375;&#12390;&#12289;&#12452;&#12531;&#12479;&#12521;&#12463;&#12486;&#12451;&#12502;&#12376;&#12419;&#12394;&#12356;&#12424;&#12358;&#12395;&#23455;&#34892;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;&#12290;&#12381;&#12428;&#12434;&#12377;&#12427;&#12383;&#12417;&#12398;&#12473;&#12463;&#12522;&#12503;&#12488;&#12399;&#12356;&#12367;&#12388;&#12363;&#23384;&#22312;&#12375;&#12414;&#12377;&#12290;&#19978;&#24029;&#12399;2001&#24180;&#12363;&#12425;&#12381;&#12398;&#12424;&#12358;&#12394;&#12473;&#12463;&#12522;&#12503;&#12488;&#12434;&#23455;&#34892;&#12375;&#12289;
+<span class="command"><strong>pbuilder</strong></span> &#12391;&#12499;&#12523;&#12489;&#12391;&#12365;&#12394;&#12356;&#22580;&#21512;&#12395;&#12388;&#12356;&#12390;&#12496;&#12464;&#22577;&#21578;&#12434;&#12375;&#12390;&#12356;&#12414;&#12375;&#12383;&#12290;&#27425;&#12398;&#12424;&#12358;&#12394;&#21839;&#38988;&#12364;&#30330;&#35211;&#12373;&#12428;&#12414;&#12375;&#12383;:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>&#20381;&#23384;&#38306;&#20418;&#12434;&#20805;&#36275;&#12373;&#12379;&#12427;&#12383;&#12417;&#12398;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12399;&#38750;&#12452;&#12531;&#12479;&#12521;&#12463;&#12486;&#12451;&#12502;&#12395;&#34892;&#12431;&#12428;&#12427;&#24517;&#35201;&#12364;&#12354;&#12426;&#12414;&#12377;&#12364;&#12289;&#19968;&#37096;&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12399;&#12452;&#12531;&#12479;&#12521;&#12463;&#12486;&#12451;&#12502;&#12394;&#25805;&#20316;&#12364;&#12394;&#12356;&#12392;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12391;&#12365;&#12394;&#12356;&#12367;&#12425;&#12356;&#12395;&#22730;&#12428;&#12390;&#12356;&#12427;&#12418;&#12398;&#12364;&#12354;&#12426;&#12414;&#12377;&#65288;postgresql&#12394;&#12393;&#65289;.</p></li><li><p>&#12521;&#12452;&#12502;&#12521;&#12522;&#12497;&#12483;&#12465;&#12540;&#12472;&#12395;&#21839;&#38988;&#12364;&#12354;&#12387;&#12383;&#12426;&#12289;gcc/gcj/g++ &#12395;&#21839;&#38988;&#12364;&#12354;&#12427;&#22580;&#21512;&#12289;&#12414;&#12383; bison &#12418;&#12381;&#12358;&#12391;&#12377;&#12364;&#12289;&#22810;&#12367;&#12398;&#12499;&#12523;&#12489;&#22833;&#25943;&#12364;&#22577;&#21578;&#12373;&#12428;&#12414;&#12377;&#12290;
+(gcj-3.0 &#12395; "javac" &#12364;&#12394;&#12367;&#12394;&#12387;&#12383;&#12426;&#12289;bison &#12364;&#12424;&#12426;&#21427;&#23494;&#12395;&#12394;&#12387;&#12383;&#12426;&#12289;&#12394;&#12393;&#65289;
+	  </p></li><li><p>&#19968;&#37096;&#12398;&#20154;&#12399;&#12499;&#12523;&#12489;&#22833;&#25943;&#12398;&#22577;&#21578;&#12395;&#25973;&#23550;&#30340;&#12394;&#12398;&#12391;&#27880;&#24847;&#12375;&#12414;&#12375;&#12423;&#12358;&#12290;</p></li></ul></div><p>
+	2002&#24180;&#12371;&#12429;&#12398;<span class="command"><strong>pbuilder </strong></span>
+&#12398;&#23455;&#34892;&#12395;&#12424;&#12426;&#21021;&#26399;&#12398;&#12496;&#12464;&#12399;&#27927;&#12356;&#12384;&#12373;&#12428;&#12414;&#12375;&#12383;&#12290;&#12375;&#12363;&#12375;&#12289;&#12371;&#12398;&#12424;&#12358;&#12395;&#31227;&#34892;&#12395;&#38306;&#36899;&#12375;&#12383;Debian&#20840;&#20307;&#12395;&#24433;&#38911;&#12377;&#12427;&#12424;&#12358;&#12394;&#21839;&#38988;&#12399;&#12392;&#12365;&#12393;&#12365;&#30330;&#29983;&#12375;&#12414;&#12377;&#12290;&#22238;&#24112;&#12486;&#12473;&#12488;&#12395;&#12399;&#20385;&#20516;&#12364;&#12354;&#12427;&#12398;&#12391;&#12377;&#12290;
+      </p><p>
+	&#19978;&#24029;&#12364;&#21033;&#29992;&#12375;&#12383;&#12473;&#12463;&#12522;&#12503;&#12488;&#12399;&#20170; <span class="command"><strong>pbuilder</strong></span>
+&#12487;&#12451;&#12473;&#12488;&#12522;&#12499;&#12517;&#12540;&#12471;&#12519;&#12531;&#12395;&#21547;&#12414;&#12428;&#12390;&#12356;&#12414;&#12377;&#12290;<code class="filename">/usr/share/doc/pbuilder/examples/pbuildd/</code>
+&#12395;&#12354;&#12426;&#12289;&#35373;&#23450;&#12399;&#12289; <code class="filename">/etc/pbuilder/pbuildd-config.sh</code>
+&#12364;&#35373;&#23450;&#12501;&#12449;&#12452;&#12523;&#12391;&#12377;&#12290;<span class="command"><strong>pbuilder</strong></span>
+&#12395;&#12394;&#12428;&#12390;&#12356;&#12427;&#20154;&#12391;&#12354;&#12428;&#12400;&#31777;&#21336;&#12395;&#35373;&#23450;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12399;&#12378;&#12391;&#12377;&#12290;&#12375;&#12400;&#12425;&#12367;&#23455;&#34892;&#12373;&#12428;&#12390;&#12356;&#12383;&#12383;&#12417;&#12289;&#33258;&#20998;&#12398;&#12471;&#12473;&#12486;&#12512;&#12391;&#12418;&#23455;&#34892;&#12391;&#12365;&#12427;&#12391;&#12375;&#12423;&#12358;&#12290;&#12383;&#12384;&#12289;&#12414;&#12384;&#26032;&#12375;&#12356;&#12398;&#12391;&#21839;&#38988;&#12364;&#12354;&#12428;&#12400;
+Debian BTS &#12395;&#30331;&#37682;&#12375;&#12390;&#12367;&#12384;&#12373;&#12356;&#12290;
+      </p><p>
+	pbuildd &#12398;&#35373;&#23450;&#12395;&#12388;&#12356;&#12390;&#27671;&#12395;&#12375;&#12390;&#12362;&#12367;&#12392;&#12371;&#12429;&#12364;&#12356;&#12367;&#12388;&#12363;&#12354;&#12426;&#12414;&#12377;&#12290;
+      </p><div class="itemizedlist"><ul type="disc"><li><p>&#12499;&#12523;&#12489;&#12375;&#12394;&#12356;&#12497;&#12483;&#12465;&#12540;&#12472;&#12398;&#19968;&#35239;&#12501;&#12449;&#12452;&#12523; <code class="filename">./avoidlist</code> &#12364;&#23384;&#22312;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12426;&#12414;&#12377;&#12290; </p></li><li><p>&#33258;&#20998;&#12398;&#12450;&#12540;&#12461;&#12486;&#12463;&#12481;&#12515;&#21521;&#12369;&#12391;&#12394;&#12356;&#12418;&#12398;&#12434;&#21547;&#12417;&#12390;&#12289;&#12354;&#12425;&#12422;&#12427;&#12418;&#12398;&#12434;&#12499;&#12523;&#12489;&#12375;&#12424;&#12358;&#12392;&#12375;&#12414;&#12377;&#12290;</p></li><li><p>&#20219;&#24847;&#12398;&#12499;&#12523;&#12489;&#12473;&#12463;&#12522;&#12503;&#12488;&#12434;&#23455;&#34892;&#12375;&#12390;&#12356;&#12427;&#12383;&#12417;&#12289; root &#27177;&#38480;&#12391;&#23455;&#34892;&#12375;&#12394;&#12356;&#12383;&#12417;&#12395;&#12289; <span class="command"><strong>pbuilder</strong></span>
+&#12398;fakeroot &#12458;&#12503;&#12471;&#12519;&#12531;&#12434;&#21033;&#29992;&#12377;&#12427;&#12398;&#12364;&#12424;&#12356;&#12391;&#12375;&#12423;&#12358;&#12290;</p></li><li><p>&#12377;&#12409;&#12390;&#12398;&#12499;&#12523;&#12489;&#12364;&#26377;&#38480;&#26178;&#38291;&#12391;&#23436;&#20102;&#12377;&#12427;&#12371;&#12392;&#12364;&#20445;&#35388;&#12373;&#12428;&#12390;&#12356;&#12427;&#12431;&#12369;&#12391;&#12399;&#12354;&#12426;&#12414;&#12379;&#12435;&#12289;&#12381;&#12398;&#12383;&#12417;&#12479;&#12452;&#12512;&#12450;&#12454;&#12488;&#12434;&#28310;&#20633;&#12375;&#12390;&#12362;&#12367;&#12371;&#12392;&#12364;&#24517;&#35201;&#12363;&#12418;&#12375;&#12428;&#12414;&#12379;&#12435;&#12290;&#12381;&#12358;&#12375;&#12394;&#12356;&#12392;pbuildd&#12399;&#24746;&#12356;&#12499;&#12523;&#12489;&#12391;&#12378;&#12387;&#12392;&#24453;&#12385;&#29366;&#24907;&#12395;&#12394;&#12427;&#21487;&#33021;&#24615;&#12418;&#12354;&#12426;&#12414;&#12377;&#12290;</p></li><li><p>
+	    &#19968;&#37096;&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12399;&#22823;&#37327;&#12398;&#12487;&#12451;&#12473;&#12463;&#38936;&#22495;&#12434;&#24517;&#35201;&#12392;&#12375;&#12414;&#12377;&#12289;&#29694;&#26178;&#28857;&#12391;&#12399;&#26368;&#22823;&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12391;&#12354;&#12387;&#12390;&#12418;2GB&#12367;&#12425;&#12356;&#12364;&#21313;&#20998;&#12394;&#12424;&#12358;&#12391;&#12377;&#12290;&#12418;&#12375;&#12381;&#12358;&#12391;&#12394;&#12356;&#12392;&#12356;&#12358;&#29366;&#27841;&#12434;&#30330;&#35211;&#12375;&#12383;&#22580;&#21512;&#12399;&#12371;&#12398;&#25991;&#26360;&#12398;&#12513;&#12531;&#12486;&#12490;&#12395;&#36899;&#32097;&#12375;&#12390;&#12367;&#12384;&#12373;&#12356;&#12290;
+	  </p></li></ul></div></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="autobackport"></a>9. &#33258;&#21205;&#12496;&#12483;&#12463;&#12509;&#12540;&#12488;&#12473;&#12463;&#12522;&#12503;&#12488;</h2></div></div></div><p>
+	&#19968;&#37096;&#12398;&#20154;&#12399; <span class="command"><strong>pbuilder</strong></span> &#12434;&#19968;&#37096;&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#33258;&#21205;&#30340;&#12395; stable
+&#12487;&#12451;&#12473;&#12488;&#12522;&#12499;&#12517;&#12540;&#12471;&#12519;&#12531;&#12395;&#12496;&#12483;&#12463;&#12509;&#12540;&#12488;&#12377;&#12427;&#12383;&#12417;&#12395;&#21033;&#29992;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;
+      </p><p>
+	&#12393;&#12398;&#12424;&#12358;&#12395;&#23455;&#38555;&#12395;&#12420;&#12387;&#12390;&#12356;&#12427;&#12398;&#12363;&#24773;&#22577;&#12434;&#12367;&#12384;&#12373;&#12356;&#12289;&#12501;&#12451;&#12540;&#12489;&#12496;&#12483;&#12463;&#12420;&#24773;&#22577;&#12420;&#20363;&#12434;&#27475;&#36814;&#12375;&#12414;&#12377;&#12290;
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="autotesting"></a>10. pbuilder &#12434;&#33258;&#21205;&#12486;&#12473;&#12488;&#12395;&#21033;&#29992;&#12377;&#12427;</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> &#12399;&#12289;&#33258;&#21205;&#30340;&#12394;&#12486;&#12473;&#12488;&#12398;&#12383;&#12417;&#12395;&#21033;&#29992;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;&#12290;&#12501;&#12483;&#12463;&#12434;&#37197;&#32622;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12289;&#12381;&#12398;&#12501;&#12483;&#12463;&#12399;
+chroot &#20869;&#37096;&#12395;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12375;&#12383;&#12426;&#23455;&#34892;&#12375;&#12383;&#12426;&#12381;&#12398;&#20182;&#12398;&#12356;&#12429;&#12356;&#12429;&#12394;&#12371;&#12392;&#12434;&#23455;&#34892;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;&#12290;&#23455;&#34892;&#21487;&#33021;&#12394;&#12486;&#12473;&#12488;&#12392;&#12450;&#12452;&#12487;&#12450;&#12399;&#27425;&#12391;&#12377;:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>&#33258;&#21205;&#30340;&#12395;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12539;&#12450;&#12483;&#12503;&#12464;&#12524;&#12540;&#12489;&#12539;&#21066;&#38500;&#12539;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12539;&#12497;&#12540;&#12472;&#12539;&#12450;&#12483;&#12503;&#12464;&#12524;&#12540;&#12489;&#12539;&#12497;&#12540;&#12472;&#12377;&#12427;&#12424;&#12358;&#12394;&#12486;&#12473;&#12488;(&#20363;&#12392;&#12375;&#12390;&#12289;<code class="filename">B91dpkg-i</code>&#12364;&#37197;&#24067;&#12373;&#12428;&#12390;&#12356;&#12414;&#12377;)&#12289;&#12418;&#12375;&#12367;&#12399;&#20840;&#37096;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12391;&#12365;&#12427;&#12371;&#12392;&#12434;&#30906;&#35469;&#12377;&#12427;(<code class="filename">execute_installtest.sh</code>)&#12290;</p></li><li><p>&#33258;&#21205;&#30340;&#12395;lintian&#12434;&#23455;&#34892;&#12377;&#12427; (&#20363;&#12392;&#12375;&#12390;
+<code class="filename">/usr/share/doc/pbuilder/examples/B90lintian</code>&#12364;&#37197;&#24067;&#12373;&#12428;&#12390;&#12356;&#12427;)&#12290;</p></li><li><p>&#33258;&#21205;&#30340;&#12395;&#12497;&#12483;&#12465;&#12540;&#12472;&#12398; debian-test &#12434;&#34892;&#12358;? debian-test &#12497;&#12483;&#12465;&#12540;&#12472;&#12399; Debian &#12363;&#12425;&#21066;&#38500;&#12373;&#12428;&#12414;&#12375;&#12383;&#12290;
+<span class="command"><strong>pbuilder</strong></span> &#12391;&#12398;&#20195;&#26367;&#12399; debian/pbuilder-test
+&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12395;&#12354;&#12426;&#12414;&#12377;&#12290;B92test-pkg&#12473;&#12463;&#12522;&#12503;&#12488;&#12391;&#23455;&#35013;&#12373;&#12428;&#12390;&#12356;&#12414;&#12377;&#12290;</p></li></ul></div><p>
+	To use B92test-pkg script, first, add it to your hook directory.  <sup>[<a name="id303912" href="#ftn.id303912" class="footnote">4</a>]</sup>.  The test files are shell scripts placed in
+<code class="filename">debian/pbuilder-test/NN_name</code> (where NN is number)
+following run-parts standard<sup>[<a name="id303929" href="#ftn.id303929" class="footnote">5</a>]</sup> for file names.  After a successful build, packages are first
+tested for installation and removal, and then each test is ran inside the
+chroot.  The current directory is the top directory of the source-code.
+This means you can expect to be able to use ./debian/ directory from inside
+your scripts.
+      </p><p>
+	pbuilder-test &#12434;&#21033;&#29992;&#12377;&#12427;&#12473;&#12463;&#12522;&#12503;&#12488;&#20363;&#12399;
+<code class="filename">/usr/share/doc/pbuilder/examples/pbuilder-test</code>&#20197;&#19979;&#12395;&#37197;&#24067;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="altcompiler"></a>11. pbuilder &#12391;&#12381;&#12398;&#20182;&#12398;&#12467;&#12531;&#12497;&#12452;&#12521;&#12391;&#12398;&#12499;&#12523;&#12489;&#12434;&#35430;&#39443;&#12377;&#12427;</h2></div></div></div><p>
+	Most packages are compiled with <span class="command"><strong>gcc</strong></span> or
+<span class="command"><strong>g++</strong></span> and using the default compiler version, which was gcc
+2.95 for Debian GNU/Linux 3.0 (i386).  However, Debian 3.0 was distributed
+with other compilers, under package names such as <span class="command"><strong>gcc-3.2</strong></span>
+for gcc compiler version 3.2.  It was therefore possible to try compiling
+packages against different compiler versions.
+<span class="command"><strong>pentium-builder</strong></span> provides an infrastructure for using a
+different compiler for building packages than the default gcc, by providing
+a wrapper script called gcc which calls the real gcc.  To use
+<span class="command"><strong>pentium-builder</strong></span> in <span class="command"><strong>pbuilder</strong></span>, it is
+possible to set up the following in the configuration:
+	</p><pre class="screen">
+EXTRAPACKAGES="pentium-builder gcc-3.2 g++-3.2"
+export DEBIAN_BUILDARCH=athlon
+export DEBIAN_BUILDGCCVER=3.2</pre><p>
+      </p><p>
+	It will instruct <span class="command"><strong>pbuilder</strong></span> to install the
+<span class="command"><strong>pentium-builder</strong></span> package and also the GCC 3.2 compiler
+packages inside the chroot, and set the environment variables required for
+<span class="command"><strong>pentium-builder</strong></span> to function.
+      </p></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.id261546" href="#id261546" class="para">1</a>] </sup>debootstrap &#12363; cdebootstrap &#12363;&#36984;&#25246;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;</p></div><div class="footnote"><p><sup>[<a name="ftn.id261572" href="#id261572" class="para">2</a>] </sup>
+	    &#20844;&#38283;&#12511;&#12521;&#12540;&#12395;&#22810;&#25968;&#12398;&#12450;&#12463;&#12475;&#12473;&#36000;&#33655;&#12434;&#12363;&#12369;&#12394;&#12356;&#12383;&#12417;&#12289;&#12511;&#12521;&#12540;&#12399;&#12525;&#12540;&#12459;&#12523;&#12511;&#12521;&#12540;&#12391;&#12354;&#12427;&#12371;&#12392;&#12364;&#26395;&#12414;&#12375;&#12356;&#12391;&#12377;&#12290;apt-proxy &#12394;&#12393;&#12398;&#12484;&#12540;&#12523;&#12398;&#27963;&#29992;&#12434;&#25512;&#22888;&#12375;&#12414;&#12377;&#12290;
+	  </p></div><div class="footnote"><p><sup>[<a name="ftn.id261635" href="#id261635" class="para">3</a>] </sup>&#12450;&#12483;&#12503;&#12464;&#12524;&#12540;&#12489;&#12375;&#12363;&#12469;&#12509;&#12540;&#12488;&#12373;&#12428;&#12390;&#12356;&#12414;&#12379;&#12435;&#12290;Debian&#12399;&#12480;&#12454;&#12531;&#12464;&#12524;&#12540;&#12489;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12390;&#12356;&#12414;&#12379;&#12435;&#65288;&#29694;&#26178;&#28857;&#12391;&#12399;&#65311;&#65289;&#12290;</p></div><div class="footnote"><p><sup>[<a name="ftn.id303912" href="#id303912" class="para">4</a>] </sup><span class="command"><strong>--hookdir /usr/share/doc/pbuilder/examples</strong></span>
+&#12467;&#12510;&#12531;&#12489;&#12521;&#12452;&#12531;&#12458;&#12503;&#12471;&#12519;&#12531;&#12434;&#25351;&#23450;&#12377;&#12427;&#12371;&#12392;&#12391;&#12377;&#12409;&#12390;&#12398;&#12469;&#12531;&#12503;&#12523;&#12501;&#12483;&#12463;&#12434;&#21033;&#29992;&#12377;&#12427;&#12371;&#12392;&#12364;&#21487;&#33021;&#12391;&#12377;&#12290;</p></div><div class="footnote"><p><sup>[<a name="ftn.id303929" href="#id303929" class="para">5</a>] </sup> run-parts(8) &#12434;&#21442;&#29031;&#12375;&#12390;&#12367;&#12384;&#12373;&#12356;&#12290;&#20363;&#12360;&#12400;&#12289;&#12501;&#12449;&#12452;&#12523;&#21517;&#12395; '.' &#12399;&#12405;&#12367;&#12417;&#12425;&#12428;&#12414;&#12379;&#12435;&#12290;
+	  </p></div></div></div><div class="chapter" lang="ja"><div class="titlepage"><div><div><h2 class="title"><a name="pbuilder-uml"></a>&#31532;3&#31456; user-mode-linux &#12434; pbuilder &#12391;&#21033;&#29992;&#12377;&#12427;</h2></div></div></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="sect1"><a href="#user-mode-linux-config">1. user-mode-linux &#12398;&#35373;&#23450;</a></span></dt><dt><span class="sect1"><a href="#rootstrap">2. rootstrap &#12398;&#35373;&#23450;</a></span></dt><dt><span class="sect1"><a href="#pbuilderumlconfig">3. pbuilder-uml &#12398;&#35373;&#23450;</a></span></dt><dt><span class="sect1"><a href="#consideruml">4. pbuilder-user-mode-linux&#12434;&#23455;&#34892;&#12377;&#12427;&#22580;&#21512;&#12398;&#26908;&#35342;&#38917;&#30446;</a></span></dt><dt><span class="sect1"><a href="#paralleluml">5. pbuilder-user-mode-linux &#12434;&#35079;&#25968;&#21516;&#26178;&#12395;&#23455;&#34892;&#12373;&#12379;&#12427;</a></span></dt><dt><span class="sect1"><a href="#pbuilderumlwrap">6. Using pbuilder-user-mode-linux as a wrapper script to start up a virtual
+machine</a></span></dt></dl></div><p>
+      It is possible to use user-mode-linux by invoking
+<span class="command"><strong>pbuilder-user-mode-linux</strong></span> instead of
+<span class="command"><strong>pbuilder</strong></span>.  <span class="command"><strong>pbuilder-user-mode-linux</strong></span>
+doesn't require root privileges, and it uses the copy-on-write (COW) disk
+access method of <span class="command"><strong>User-mode-linux</strong></span> which typically makes it
+much faster than the traditional <span class="command"><strong>pbuilder</strong></span>.
+    </p><p>
+      <span class="command"><strong>User-mode-linux</strong></span> is a somewhat less proven platform than
+the standard Unix tools which <span class="command"><strong>pbuilder</strong></span> relies on
+(<span class="command"><strong>chroot</strong></span>, <span class="command"><strong>tar</strong></span>, and
+<span class="command"><strong>gzip</strong></span>) but mature enough to support
+<span class="command"><strong>pbuilder-user-mode-linux</strong></span> since its version 0.59.  And
+since then, <span class="command"><strong>pbuilder-user-mode-linux</strong></span> has seen a rapid
+evolution.
+    </p><p>
+      The configuration of <span class="command"><strong>pbuilder-user-mode-linux</strong></span> goes in
+three steps:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>user-mode-linux &#12398;&#35373;&#23450;</p></li><li><p>rootstrap &#12398;&#35373;&#23450;</p></li><li><p>pbuilder-uml &#12398;&#35373;&#23450;</p></li></ul></div><p>
+    </p><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="user-mode-linux-config"></a>1. user-mode-linux &#12398;&#35373;&#23450;</h2></div></div></div><p>
+	user-mode-linux isn't completely trivial to set up.  It would probably be
+useful to acquaint yourself with it a bit before attempting to use
+<span class="command"><strong>rootstrap</strong></span> or
+<span class="command"><strong>pbuilder-user-mode-linux</strong></span>.  For details, read
+<code class="filename">/usr/share/doc/uml-utilities/README.Debian</code> and the
+<span class="command"><strong>user-mode-linux</strong></span> documentation.  (It's in a separate
+package, user-mode-linux-doc.)
+      </p><p>
+	<span class="command"><strong>user-mode-linux</strong></span> requires the user to be in the uml-net
+group in order to configure the network unless you are using slirp.
+      </p><p>
+	If you compile your own kernel, you may want to verify that you enable
+TUN/TAP support, and you might want to consider the SKAS patch.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="rootstrap"></a>2. rootstrap &#12398;&#35373;&#23450;</h2></div></div></div><p>
+	<span class="command"><strong>rootstrap</strong></span> is a wrapper around debootstrap.  It creates a
+Debian disk image for use with UML.  To configure rootstrap, there are
+several requirements.
+      </p><div class="itemizedlist"><ul type="disc"><li><p>rootstrap&#12288;&#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12375;&#12414;&#12377;&#12290;</p></li><li><p>
+	    TUN/TAP only: add the user to the uml-net group to allow access to the
+network
+	    </p><pre class="screen">adduser dancer uml-net</pre><p>
+          </p></li><li><p>TUN/TAP&#12434;&#21033;&#29992;&#12375;&#12390;&#12356;&#12427;&#22580;&#21512;: &#12459;&#12540;&#12493;&#12523;&#12364; TUN/TAP
+&#12452;&#12531;&#12479;&#12501;&#12455;&#12540;&#12473;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12390;&#12356;&#12427;&#12371;&#12392;&#12434;&#30906;&#35469;&#12375;&#12390;&#12367;&#12384;&#12373;&#12356;&#12290;&#24517;&#35201;&#12391;&#12354;&#12428;&#12400;&#12459;&#12540;&#12493;&#12523;&#12434;&#12522;&#12499;&#12523;&#12489;&#12375;&#12390;&#12367;&#12384;&#12373;&#12356;&#12290;
+	  </p></li><li><p>Set up <code class="filename">/etc/rootstrap/rootstrap.conf</code>.  For example, if
+the current host is 192.168.1.2, changing following entries to something
+like this seems to work.
+	    </p><pre class="screen">
+transport=tuntap
+interface=eth0
+gateway=192.168.1.1
+mirror=http://192.168.1.2:8081/debian
+host=192.168.1.198
+uml=192.168.1.199
+netmask=255.255.255.0</pre><p>
+	    Some experimentation with configuration and running <span class="command"><strong>rootstrap
+~/test.uml</strong></span> to actually test it would be handy.
+	  </p><p>
+	    Using slirp requires less configuration.  The default configuration comes
+with a working example.
+	  </p></li></ul></div></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pbuilderumlconfig"></a>3. pbuilder-uml &#12398;&#35373;&#23450;</h2></div></div></div><p>
+	&#20197;&#19979;&#12398;&#35373;&#23450;&#12364;&#24517;&#35201;&#12391;&#12377;:
+	</p><div class="itemizedlist"><ul type="disc"><li><p>pbuilder-uml &#12434;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;</p></li><li><p>
+	      Set up the configuration file
+<code class="filename">/etc/pbuilder/pbuilder-uml.conf</code> in the following
+manner. It will be different for slirp.
+	      </p><pre class="screen">
+MY_ETH0=tuntap,,,192.168.1.198
+UML_IP=192.168.1.199
+UML_NETMASK=255.255.255.0
+UML_NETWORK=192.168.1.0
+UML_BROADCAST=255.255.255.255
+UML_GATEWAY=192.168.1.1
+PBUILDER_UML_IMAGE="/home/dancer/uml-image"</pre><p>
+	      Also, it needs to match the rootstrap configuration.
+	    </p></li><li><p>
+	      Make sure BUILDPLACE is writable by the user.  Change BUILDPLACE in the
+configuration file to a place where the user has access.
+	    </p></li><li><p>Run <span class="command"><strong>pbuilder-user-mode-linux <code class="option">create --distribution sid</code></strong></span> to create the image.</p></li><li><p>Try running <span class="command"><strong>pbuilder-user-mode-linux build</strong></span>.</p></li></ul></div><p>
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="consideruml"></a>4. pbuilder-user-mode-linux&#12434;&#23455;&#34892;&#12377;&#12427;&#22580;&#21512;&#12398;&#26908;&#35342;&#38917;&#30446;</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder-user-mode-linux</strong></span> emulates most of
+<span class="command"><strong>pbuilder</strong></span>, but there are some differences.
+      </p><div class="itemizedlist"><ul type="disc"><li><p>	
+	    <span class="command"><strong>pbuilder-user-mode-linux</strong></span> does not support all options of
+<span class="command"><strong>pbuilder</strong></span> properly yet. This is a problem, and will be
+addressed as specific areas are discovered.
+	  </p></li><li><p>
+	    /tmp is handled differently inside
+<span class="command"><strong>pbuilder-user-mode-linux</strong></span>.  In
+<span class="command"><strong>pbuilder-user-mode-linux</strong></span>, <code class="filename">/tmp</code> is
+mounted as tmpfs inside UML, so accessing files under
+<code class="filename">/tmp</code> from outside user-mode-linux does not work.  It
+affects options like <span class="command"><strong><code class="option">--configfile</code></strong></span>, and when trying to build packages placed under
+<code class="filename">/tmp</code>.
+	  </p></li></ul></div></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paralleluml"></a>5. pbuilder-user-mode-linux &#12434;&#35079;&#25968;&#21516;&#26178;&#12395;&#23455;&#34892;&#12373;&#12379;&#12427;</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder-user-mode-linux</strong></span>
+&#12434;&#21516;&#19968;&#12471;&#12473;&#12486;&#12512;&#19978;&#12391;&#21516;&#26178;&#12395;&#35079;&#25968;&#23455;&#34892;&#12373;&#12379;&#12427;&#12395;&#12399;&#12356;&#12367;&#12388;&#12363;&#27880;&#24847;&#12377;&#12427;&#12409;&#12365;&#28857;&#12364;&#12354;&#12426;&#12414;&#12377;&#12290;
+
+      </p><div class="itemizedlist"><ul type="disc"><li><p>The create and update methods must not be run when a build is in progress,
+or the COW file will be invalidated.</p></li><li><p>
+	    If you are not using slirp, user-mode-linux processes which are running in
+parallel need to have different IP addresses.  Just trying to run the
+<span class="command"><strong>pbuilder-user-mode-linux</strong></span> several times will result in
+failure to access the network.  But something like the following will work:
+	    </p><pre class="screen">
+for IP in 102 103 104 105; do
+  xterm -e pbuilder-user-mode-linux build --uml-ip 192.168.0.$IP \
+    20030107/whizzytex_1.1.1-1.dsc &amp;
+done</pre><p>
+	    When using slirp, this problem does not exist.
+	  </p></li></ul></div></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pbuilderumlwrap"></a>6. Using pbuilder-user-mode-linux as a wrapper script to start up a virtual
+machine</h2></div></div></div><p>
+	It is possible to use <span class="command"><strong>pbuilder-user-mode-linux</strong></span> for other
+uses than just building Debian packages.  <span class="command"><strong>pbuilder-user-mode-linux
+	<code class="option">login</code></strong></span> will let a user use a shell inside the user-mode-linux
+<span class="command"><strong>pbuilder</strong></span> base image, and
+<span class="command"><strong>pbuilder-user-mode-linux
+	<code class="option">execute</code></strong></span> will allow the user to execute a script inside the image.
+      </p><p>
+	You can use the script to install ssh and add a new user, so that it is
+possible to access inside the user-mode-linux through ssh.
+      </p><p>
+	Note that it is not possible to use a script from <code class="filename">/tmp</code>
+due to the way <span class="command"><strong>pbuilder-user-mode-linux</strong></span> mounts a tmpfs at
+<code class="filename">/tmp</code>.
+      </p><p>
+	The following example script may be useful in starting a sshd inside
+user-mode-linux.
+      </p><pre class="screen">
+#!/bin/bash
+
+apt-get install -y ssh xbase-clients xterm
+echo "enter root password"
+passwd
+cp /etc/ssh/sshd_config{,-}
+sed 's/X11Forwarding.*/X11Forwarding yes/' /etc/ssh/sshd_config- &gt; /etc/ssh/sshd_config
+
+/etc/init.d/ssh restart
+ifconfig
+echo "Hit enter to finish"
+read</pre></div></div><div class="chapter" lang="ja"><div class="titlepage"><div><div><h2 class="title"><a name="faq"></a>&#31532;4&#31456; FAQ &#65288;&#12424;&#12367;&#12354;&#12427;&#36074;&#21839;&#65289; </h2></div></div></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="sect1"><a href="#pbuildercreatefail">1. pbuilder create &#12364;&#22833;&#25943;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#bindmountlimits">2. bind mount &#12391;&#12365;&#12394;&#12356;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;</a></span></dt><dt><span class="sect1"><a href="#shellafterfail">3. &#12499;&#12523;&#12489;&#22833;&#25943;&#12398;&#35519;&#26619;&#12398;&#12383;&#12417;&#12395; pbuilder &#29872;&#22659;&#12395;&#12525;&#12464;&#12452;&#12531;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#modifyupdate">4. &#29872;&#22659;&#12434;&#22793;&#26356;&#12377;&#12427;&#12383;&#12417;&#12395; pbuilder &#29872;&#22659;&#12395;&#12525;&#12464;&#12452;&#12531;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#BUILDRESULTUID">5. BUILDRESULTUID &#12434; sudo &#12398;&#12475;&#12483;&#12471;&#12519;&#12531;&#12395;&#36861;&#21152;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#tmpdir">6. $TMPDIR&#12398;&#20351;&#12356;&#26041;&#12395;&#12388;&#12356;&#12390;</a></span></dt><dt><span class="sect1"><a href="#DISTRIBUTIONSWITCH">7. Creating a shortcut for running <span class="command"><strong>pbuilder</strong></span> with a specific
+distribution</a></span></dt><dt><span class="sect1"><a href="#ENVVARDISTRIBUTIONSWITCH">8. Using environmental variables for running <span class="command"><strong>pbuilder</strong></span> for
+specific distribution
+      </a></span></dt><dt><span class="sect1"><a href="#usingspecialaptsources">9. Using special apt sources lists, and local packages</a></span></dt><dt><span class="sect1"><a href="#apt-getupdateonbuild-depend">10. How to get pbuilder to run apt-get update before trying to satisfy
+build-dependency</a></span></dt><dt><span class="sect1"><a href="#bashprompt">11. pbuilder login &#12391; bash &#12398;&#12503;&#12525;&#12531;&#12503;&#12488;&#12434;&#22793;&#26356;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#chrootmemo">12. Creating a chroot reminder</a></span></dt><dt><span class="sect1"><a href="#packagecachearchives">13. Using /var/cache/apt/archives for the package cache</a></span></dt><dt><span class="sect1"><a href="#stablebackport">14. pbuilder back ported to stable Debian releases</a></span></dt><dt><span class="sect1"><a href="#LOGNAME">15. Warning about LOGNAME not being defined</a></span></dt><dt><span class="sect1"><a href="#nobuildconflictessential">16. Cannot Build-conflict against an essential package</a></span></dt><dt><span class="sect1"><a href="#lninvalidcrossdevicelink">17. Avoiding the "ln: Invalid cross-device link" message</a></span></dt><dt><span class="sect1"><a href="#fakechroot">18. Using fakechroot</a></span></dt><dt><span class="sect1"><a href="#debconfinsidepbuilder">19. Using debconf inside pbuilder sessions</a></span></dt><dt><span class="sect1"><a href="#nodev">20. nodev mount options hinder pbuilder activity</a></span></dt><dt><span class="sect1"><a href="#faqslowpbuilder">21. pbuilder &#12364;&#36933;&#12356;</a></span></dt><dt><span class="sect1"><a href="#sponsor">22. Using pdebuild to sponsor package</a></span></dt><dt><span class="sect1"><a href="#sourcechanges">23. Why is there a source.changes file in ../?</a></span></dt><dt><span class="sect1"><a href="#amd64i386">24. amd64 and i386-mode</a></span></dt><dt><span class="sect1"><a href="#tmpfsforpbuilder">25. Using tmpfs for buildplace</a></span></dt><dt><span class="sect1"><a href="#id305633">26. svn-buildpackage &#12434; pbuilder &#12391;&#21033;&#29992;&#12377;&#12427;</a></span></dt></dl></div><p>
+      Here, known problems and frequently asked questions are documented. This
+portion was initially available in README.Debian file, but moved here.
+    </p><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pbuildercreatefail"></a>1. pbuilder create &#12364;&#22833;&#25943;&#12377;&#12427;</h2></div></div></div><p>
+	It often happens that <span class="command"><strong>pbuilder</strong></span> cannot create the latest
+chroot.  Try upgrading <span class="command"><strong>pbuilder</strong></span> and debootstrap.  It is
+currently only possible to create software that handles the past. Future
+prediction is a feature which may be added later after we have become
+comfortable with the past.
+      </p><p>
+	There are people who occasionally back port debootstrap to stable versions;
+hunt for them.
+      </p><p>
+	When there are errors with the debootstrap phase, the debootstrap script
+needs to be fixed.  <span class="command"><strong>pbuilder</strong></span> does not provide a way to
+work around debootstrap.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="bindmountlimits"></a>2. bind mount &#12391;&#12365;&#12394;&#12356;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;</h2></div></div></div><p>
+	Because of the way <span class="command"><strong>pbuilder</strong></span> works, there are several
+directories which cannot be bind-mounted when running
+<span class="command"><strong>pbuilder</strong></span>.  The directories include
+<code class="filename">/tmp</code>, <code class="filename">/var/cache/pbuilder</code>, and
+system directories such as <code class="filename">/etc</code> and
+<code class="filename">/usr</code>.  The recommendation is to use directories under
+the user's home directory for bind-mounts.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="shellafterfail"></a>3. &#12499;&#12523;&#12489;&#22833;&#25943;&#12398;&#35519;&#26619;&#12398;&#12383;&#12417;&#12395; pbuilder &#29872;&#22659;&#12395;&#12525;&#12464;&#12452;&#12531;&#12377;&#12427;</h2></div></div></div><p>
+	It is possible to invoke a shell session after a build failure.  Example
+hook script are provided as <code class="filename">C10shell</code> and
+<code class="filename">C11screen</code> scripts.  C10shell script will start bash
+inside chroot, and C11screen script will start GNU screen inside the chroot.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="modifyupdate"></a>4. &#29872;&#22659;&#12434;&#22793;&#26356;&#12377;&#12427;&#12383;&#12417;&#12395; pbuilder &#29872;&#22659;&#12395;&#12525;&#12464;&#12452;&#12531;&#12377;&#12427;</h2></div></div></div><p>
+	It is sometimes necessary to modify the chroot environment.
+<span class="command"><strong>login</strong></span> will remove the contents of the chroot after
+logout.  It is possible to invoke a shell using hook scripts.
+<span class="command"><strong>pbuilder update</strong></span> executes 'E' scripts, and a sample for
+invoking a shell is provided as <code class="filename">C10shell</code>.
+      </p><pre class="screen">
+$ mkdir ~/loginhooks
+$ cp C10shell ~/loginhooks/E10shell
+$ sudo pbuilder update --hookdir ~/loginhooks/E10shell</pre><p>
+	It is also possible to add <code class="option">--save-after-exec</code>
+	and/or <code class="option">--save-after-login</code> options to the <span class="command"><strong>pbuilder login</strong></span> session to accomplish the
+goal.  It is possible to add the <code class="option">--uml-login-nocow</code> option to <span class="command"><strong>pbuilder-user-mode-linux <code class="option">login</code></strong></span> session as well.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="BUILDRESULTUID"></a>5. BUILDRESULTUID &#12434; sudo &#12398;&#12475;&#12483;&#12471;&#12519;&#12531;&#12395;&#36861;&#21152;&#12377;&#12427;</h2></div></div></div><p>
+	It is possible to set
+	</p><pre class="screen">BUILDRESULTUID=$SUDO_UID</pre><p> in pbuilderrc to set the proper BUILDRESULTUID when using
+<span class="command"><strong>sudo</strong></span>.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tmpdir"></a>6. $TMPDIR&#12398;&#20351;&#12356;&#26041;&#12395;&#12388;&#12356;&#12390;</h2></div></div></div><p>
+	If you are setting $TMPDIR to an unusual value, of other than
+<code class="filename">/tmp</code>, you will find that some errors may occur inside
+the chroot, such as <span class="command"><strong>dpkg-source</strong></span> failing.
+      </p><p>There are two options, you may install a hook to create that directory, or
+set
+	</p><pre class="screen">export TMPDIR=/tmp</pre><p>
+	in pbuilderrc. Take your pick.
+      </p><p>
+	An example script is provided as <code class="filename">examples/D10tmp</code> with
+<span class="command"><strong>pbuilder</strong></span>.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="DISTRIBUTIONSWITCH"></a>7. Creating a shortcut for running <span class="command"><strong>pbuilder</strong></span> with a specific
+distribution</h2></div></div></div><p>
+	When working with multiple chroots, it would be nice to work with scripts
+that reduce the amount of typing.  An example script
+<code class="filename">pbuilder-distribution.sh</code> is provided as an example.
+Invoking the script as <code class="filename">pbuilder-squeeze</code> will invoke
+<span class="command"><strong>pbuilder</strong></span> with a squeeze chroot.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ENVVARDISTRIBUTIONSWITCH"></a>8. Using environmental variables for running <span class="command"><strong>pbuilder</strong></span> for
+specific distribution
+      </h2></div></div></div><p>      This section<sup>[<a name="id304862" href="#ftn.id304862" class="footnote">6</a>]</sup> describes briefly a way to setup and use multiple pbuilder
+setups by creating a pbuilderrc configuration in your home path
+(<code class="filename">$HOME/.pbuilderrc</code>)  and using the variable "DIST" when
+running pbuilder or pdebuild.
+</p><p>      First, setup <code class="filename">$HOME/.pbuilderrc</code> to look like:</p><p>
+	</p><pre class="screen">
+if [ -n "${DIST}" ]; then
+        BASETGZ="`dirname $BASETGZ`/$DIST-base.tgz"
+        DISTRIBUTION="$DIST"
+        BUILDRESULT="/var/cache/pbuilder/$DIST/result/"
+        APTCACHE="/var/cache/pbuilder/$DIST/aptcache/"
+fi
+</pre><p>Then, whenever you wish to use pbuilder for a particular distro, assign a
+value to "DIST" that is one of the distros available for Debian or any
+Debian based distro you happen to be running (i.e. whatever is found under
+/usr/lib/debootstrap/scripts).
+      </p><p>Here's some examples on running pbuilder or pdebuild:
+</p><pre class="screen">
+DIST=gutsy sudo pbuilder create
+
+DIST=sid sudo pbuilder create --mirror http://http.us.debian.org/debian
+
+DIST=gutsy sudo pbuilder create \
+        --othermirror "deb http://archive.ubuntu.com/ubuntu gutsy universe \
+        multiverse"
+
+DIST=gutsy sudo pbuilder update
+
+DIST=sid sudo pbuilder update --override-config --mirror \
+http://http.us.debian.org/debian \
+--othermirror "deb http://http.us.debian.org/debian sid contrib non-free"
+
+DIST=gutsy pdebuild
+</pre></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="usingspecialaptsources"></a>9. Using special apt sources lists, and local packages</h2></div></div></div><p>
+	If you have some very specialized requirements on your apt setup inside
+<span class="command"><strong>pbuilder</strong></span>, it is possible to specify that through the
+<span class="command"><strong><code class="option">--othermirror</code></strong></span> option.  Try something like: <span class="command"><strong><code class="option">--othermirror "deb http://local/mirror stable main|deb-src
+http://local/source/repository ./"</code></strong></span>
+      </p><p>
+	To use the local file system instead of HTTP, it is necessary to do
+bind-mounting.  <span class="command"><strong><code class="option">--bindmounts</code></strong></span> is a command-line option useful for such cases.
+      </p><p>
+	It might be convenient to use your built packages from inside the chroot.
+It is possible to automate the task with the following configuration.
+First, set up pbuilderrc to bindmount your build results directory.
+      </p><p>
+	</p><pre class="screen">BINDMOUNTS="/var/cache/pbuilder/result"</pre><p>
+      </p><p>
+	Then, add the following hook
+      </p><p>
+	</p><pre class="screen">
+# cat /var/cache/pbuilder/hooks/D70results
+#!/bin/sh
+cd /var/cache/pbuilder/result/
+/usr/bin/dpkg-scanpackages . /dev/null &gt; /var/cache/pbuilder/result/Packages
+/usr/bin/apt-get update</pre><p>
+      </p><p>
+	This way, you can use <code class="filename">deb
+file:/var/cache/pbuilder/result</code>
+      </p><p>
+	
+To add new apt-key inside chroot:
+	
+      </p><p>
+	</p><pre class="screen">
+sudo pbuilder --login --save-after-login
+# apt-key add - &lt;&lt;EOF
+...public key goes here...
+EOF
+# logout
+</pre></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="apt-getupdateonbuild-depend"></a>10. How to get pbuilder to run apt-get update before trying to satisfy
+build-dependency</h2></div></div></div><p>
+	You can use hook scripts for this.  D scripts are run before satisfying
+build-dependency.
+      </p><p>
+	<a class="ulink" href="http://lists.debian.org/debian-devel/2006/05/msg00550.html" target="_top">
+This snippet comes from Ondrej Sury.  </a>
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="bashprompt"></a>11. pbuilder login &#12391; bash &#12398;&#12503;&#12525;&#12531;&#12503;&#12488;&#12434;&#22793;&#26356;&#12377;&#12427;</h2></div></div></div><p>
+	To make distinguishing bash prompts inside <span class="command"><strong>pbuilder</strong></span>
+easier, it is possible to set environment variables such as PS1 inside
+<code class="filename">pbuilderrc</code>
+      </p><p>
+	With versions of bash more recent than 2.05b-2-15, the value of the
+debian_chroot variable, if set, is included in the value of PS1 (the Bash
+prompt)  inside the chroot.  In prior versions of bash,<sup>[<a name="id305065" href="#ftn.id305065" class="footnote">7</a>]</sup> setting PS1 in pbuilderrc worked.
+      </p><p>example of debian_chroot</p><pre class="screen">
+	export debian_chroot="pbuild$$"</pre><p>example of PS1</p><pre class="screen">
+	export PS1="pbuild chroot 32165 # "</pre></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="chrootmemo"></a>12. Creating a chroot reminder</h2></div></div></div><p>
+	Bash prompts will help you remember that you are inside a chroot.  There are
+other cases where you may want other signs of being inside a chroot.  Check
+out the <code class="filename">examples/F90chrootmemo</code> hook script.  It will
+create a file called <code class="filename">/CHROOT</code> inside your chroot. 
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="packagecachearchives"></a>13. Using /var/cache/apt/archives for the package cache</h2></div></div></div><p>
+	For the help of low-bandwidth systems, it is possible to use
+<code class="filename">/var/cache/apt/archives</code> as the package cache.  Just
+specify it instead of the default
+<code class="filename">/var/cache/pbuilder/aptcache</code>.
+      </p><p>
+	It is however not possible to do so currently with the user-mode-linux
+version of <span class="command"><strong>pbuilder</strong></span>, because
+<code class="filename">/var/cache/apt/archives</code> is usually only writable by
+root.
+      </p><p>
+	Use of dedicated tools such as apt-proxy is recommended, since caching of
+packages would benefit the system outside the scope of
+<span class="command"><strong>pbuilder</strong></span>.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="stablebackport"></a>14. pbuilder back ported to stable Debian releases</h2></div></div></div><p>
+	Currently stable back port of pbuilder is available at backports.org.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="LOGNAME"></a>15. Warning about LOGNAME not being defined</h2></div></div></div><p>
+	You might see a lot of warning messages when running
+<span class="command"><strong>pbuilder</strong></span>.
+      </p><p>
+	</p><pre class="screen">
+	dpkg-genchanges: warning: no utmp entry available and LOGNAME not defined; using uid of process (1234)</pre><p>
+      </p><p>
+	It is currently safe to ignore this warning message.  Please report back if
+you find any problem with having LOGNAME unset.  Setting LOGNAME caused a
+few problems when invoking <span class="command"><strong>chroot</strong></span>. For example, dpkg
+requires getpwnam to succeed inside chroot, which means LOGNAME and the
+related user information have to be set up inside chroot.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="nobuildconflictessential"></a>16. Cannot Build-conflict against an essential package</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> does not currently allow Build-Conflicts against
+essential packages.  It should be obvious that essential packages should not
+be removed from a working Debian system, and a source package should not try
+to force removal of such packages on people building the package.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="lninvalidcrossdevicelink"></a>17. Avoiding the "ln: Invalid cross-device link" message</h2></div></div></div><p>
+	By default, <span class="command"><strong>pbuilder</strong></span> uses hard links to manage the
+<span class="command"><strong>pbuilder</strong></span> package cache.  It is not possible to make hard
+links across different devices; and thus this error will occur, depending on
+your set up.  If this happens, set </p><pre class="screen">APTCACHEHARDLINK=no</pre><p> in your pbuilderrc file. Note that packages in <span class="command"><strong>APTCACHE</strong></span>
+will be copied into chroot local cache, so plan for enough space on
+<span class="command"><strong>BUILDPLACE</strong></span> device.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="fakechroot"></a>18. Using fakechroot</h2></div></div></div><p>
+	It is possible to use <span class="command"><strong>fakechroot</strong></span> instead of being root to
+run <span class="command"><strong>pbuilder</strong></span>; however, several things make this
+impractical.  <span class="command"><strong>fakechroot</strong></span> overrides library loads and
+tries to override default libc functions when providing the functionality of
+virtual <span class="command"><strong>chroot</strong></span>.  However, some binaries do no use libc to
+function, or override the overriding provided by
+<span class="command"><strong>fakechroot</strong></span>.  One example is <span class="command"><strong>ldd</strong></span>.
+Inside <span class="command"><strong>fakechroot</strong></span>, <span class="command"><strong>ldd</strong></span> will check the
+library dependency outside of the chroot, which is not the expected
+behavior.
+      </p><p>
+	To work around the problem, debootstrap has a
+	<code class="option">--variant fakechroot</code> option.  Use that, so that ldd and ldconfig are overridden.
+      </p><p>
+	Make sure you have set your LD_PRELOAD path correctly, as described in the
+fakechroot manpage.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="debconfinsidepbuilder"></a>19. Using debconf inside pbuilder sessions</h2></div></div></div><p>
+	To use debconf inside <span class="command"><strong>pbuilder</strong></span>, setting DEBIAN_FRONTEND
+to &#12300;<span class="quote">readline</span>&#12301; in <code class="filename">pbuilderrc</code> should work.
+Setting it to &#12300;<span class="quote">dialog</span>&#12301; should also work, but make sure whiptail
+or dialog is installed inside the chroot.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="nodev"></a>20. nodev mount options hinder pbuilder activity</h2></div></div></div><p>
+	If you see messages such as this when building a chroot, you are mounting
+the file system with the nodev option.
+      </p><pre class="screen">
+	/var/lib/dpkg/info/base-files.postinst: /dev/null: Permission denied</pre><p>
+	You will also have problems if you mount the file system with the noexec
+option, or nosuid.  Make sure you do not have these flags set when mounting
+the file system for <code class="filename">/var/cache/pbuilder</code> or $BUILDPLACE.
+      </p><p>
+	This is not a problem when using <span class="command"><strong>user-mode-linux</strong></span>.
+      </p><p>
+	See <a class="ulink" href="http://bugs.debian.org/316135" target="_top"> 316135 </a> for example.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="faqslowpbuilder"></a>21. pbuilder &#12364;&#36933;&#12356;</h2></div></div></div><p>
+	<span class="command"><strong>pbuilder</strong></span> is often slow. The slowest part of
+<span class="command"><strong>pbuilder</strong></span> is extracting the tar.gz every time
+<span class="command"><strong>pbuilder</strong></span> is invoked. That can be avoided by using
+<span class="command"><strong>pbuilder-user-mode-linux</strong></span>.
+<span class="command"><strong>pbuilder-user-mode-linux</strong></span> uses COW file system, and thus
+does not need to clean up and recreate the root file system.
+      </p><p>
+	<span class="command"><strong>pbuilder-user-mode-linux</strong></span> is slower in executing the
+actual build system, due to the usual <span class="command"><strong>user-mode-linux</strong></span>
+overhead for system calls. It is more friendly to the hard drive.
+      </p><p>
+	<span class="command"><strong>pbuilder</strong></span> with cowdancer is also an alternative that
+improves speed of pbuilder startup.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="sponsor"></a>22. Using pdebuild to sponsor package</h2></div></div></div><p>
+	To sign a package marking for sponsorship, it is possible to use<span class="command"><strong><code class="option"> --auto-debsign</code></strong></span> and <span class="command"><strong><code class="option">--debsign-k</code></strong></span> options of <span class="command"><strong>pdebuild</strong></span>.
+      </p><pre class="screen">
+	<span class="command"><strong>pdebuild  <code class="option">--auto-debsign </code> <code class="option">--debsign-k </code><em class="parameter"><code>XXXXXXXX</code></em></strong></span></pre></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="sourcechanges"></a>23. Why is there a source.changes file in ../?</h2></div></div></div><p>
+	When running <span class="command"><strong>pdebuild</strong></span>, <span class="command"><strong>pbuilder</strong></span> will
+run dpkg-buildpackage to create a Debian source package to pass it on to
+<span class="command"><strong>pbuilder</strong></span>.  File named XXXX_YYY_source.changes is what
+remains from that process.  It is harmless unless you try to upload it to
+the Debian archive.
+      </p><p>
+	This behavior is different when running through <code class="option">--use-pdebuild-internal</code>
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="amd64i386"></a>24. amd64 and i386-mode</h2></div></div></div><p>
+	amd64 architectures are capable of running binaries in i386 mode.  It is
+possible to use <span class="command"><strong>pbuilder</strong></span> to run packages, using
+<span class="command"><strong>linux32</strong></span> and <span class="command"><strong>debootstrap <code class="option">--arch</code></strong></span> option.  Specifically, a command-line option like the following
+will work.
+      </p><p>
+	</p><pre class="screen">
+<span class="command"><strong>pbuilder create --distribution sid --debootstrapopts --arch --debootstrapopts i386 \
+  --basetgz /var/cache/pbuilder/base-i386.tgz --mirror http://ftp.jp.debian.org/debian</strong></span>
+<span class="command"><strong>linux32 pbuilder build --basetgz /var/cache/pbuilder/base-i386.tgz</strong></span></pre><p>
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tmpfsforpbuilder"></a>25. Using tmpfs for buildplace</h2></div></div></div><p>
+	To improve speed of operation, it is possible to use tmpfs for pbuilder
+build location.  Mount tmpfs to
+<code class="filename">/var/cache/pbuilder/build</code>, and set
+	</p><pre class="screen">APTCACHEHARDLINK=no</pre><p>.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id305633"></a>26. svn-buildpackage &#12434; pbuilder &#12391;&#21033;&#29992;&#12377;&#12427;</h2></div></div></div><p>
+	pdebuild command can be used with svn-buildpackage --svn-builder
+command-line option.  <sup>[<a name="id305645" href="#ftn.id305645" class="footnote">8</a>]</sup>
+      </p><pre class="screen">
+alias svn-cowbuilder="svn-buildpackage --svn-builder='pdebuild --pbuilder cowbuilder"</pre></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.id304862" href="#id304862" class="para">6</a>] </sup>This part of the documentation contributed by Andres Mejia</p><p>
+	    This example was taken from a wiki (<a class="ulink" href="https://wiki.ubuntu.com/PbuilderHowto" target="_top">https://wiki.ubuntu.com/PbuilderHowto</a>).
+      </p></div><div class="footnote"><p><sup>[<a name="ftn.id305065" href="#id305065" class="para">7</a>] </sup>Debian 3.0 &#20197;&#21069;&#12398;bash </p></div><div class="footnote"><p><sup>[<a name="ftn.id305645" href="#id305645" class="para">8</a>] </sup><a class="ulink" href="http://upsilon.cc/~zack/blog/posts/2007/09/svn-cowbuilder/" target="_top">
+Zack has posted an example on his blog.  </a></p></div></div></div><div class="chapter" lang="ja"><div class="titlepage"><div><div><h2 class="title"><a name="develanddebug"></a>&#31532;5&#31456; Troubleshooting and development</h2></div></div></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="sect1"><a href="#bugreport">1. Reporting bugs </a></span></dt><dt><span class="sect1"><a href="#mailinglist">2. Mailing list</a></span></dt><dt><span class="sect1"><a href="#IRCchannel">3. IRC Channel</a></span></dt><dt><span class="sect1"><a href="#development">4. Information for pbuilder developers</a></span></dt></dl></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="bugreport"></a>1. Reporting bugs </h2></div></div></div><p>
+	To report bugs, it would be important to have a log of what's going wrong.
+Most of the time, adding a <span class="command"><strong><code class="option">--debug</code></strong></span> option and re-running the session should do the trick.  Please
+send the log of such session along with your problem to ease the debugging
+process.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="mailinglist"></a>2. Mailing list</h2></div></div></div><p>
+	There is a mailing list for <span class="command"><strong>pbuilder</strong></span> on alioth
+(pbuilder-maint@lists.alioth.debian.org).  You can subscribe through the
+alioth web interface.  <a class="ulink" href="http://alioth.debian.org/mail/?group_id=30778" target="_top">
+http://alioth.debian.org/mail/?group_id=30778</a>.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="IRCchannel"></a>3. IRC Channel</h2></div></div></div><p>
+	For coordination and communication, IRC channel #pbuilder on irc.oftc.net is
+used.  Please log your intent there when you are going to start doing some
+changes and committing some change.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="development"></a>4. Information for pbuilder developers</h2></div></div></div><p>
+	This section tries to document current development practices and how things
+generally operate in development.
+      </p><p>
+	<span class="command"><strong>pbuilder</strong></span> is co-maintained with resources provided by
+Alioth.  There is an Alioth project page at <a class="ulink" href="http://alioth.debian.org/projects/pbuilder" target="_top">
+http://alioth.debian.org/projects/pbuilder</a>.  Home page is also
+available, at <a class="ulink" href="http://pbuilder.alioth.debian.org/" target="_top">
+http://alioth.debian.org/projects/pbuilder</a> which shows this text.
+git repository is available through http, git, or (if you have an account on
+alioth, ) ssh.
+      </p><pre class="screen">
+git-clone git://git.debian.org/git/pbuilder/pbuilder.git
+git-clone http://git.debian.org/git/pbuilder/pbuilder.git
+git-clone ssh://git.debian.org/git/pbuilder/pbuilder.git</pre><p>
+	Git commit message should have the first one line describing what the commit
+does, formatted in the way debian/changelog is formatted because it is
+copied verbatim to changelog via git-dch. The second line is empty, and the
+rest should describe the background and extra information related to
+implementation of the commit.
+      </p><p>
+	Test-suites are available in <code class="filename">./testsuite/</code> directory.
+Changes are expected not to break the test-suites.
+<code class="filename">./run-test.sh</code> is a basic test-suite, which puts a
+summary in <code class="filename">run-test.log</code>, and
+<code class="filename">run-test-cdebootstrap.log</code>.
+<code class="filename">./run-test-regression.sh</code> is a regression test-suite,
+which puts the result in <code class="filename">run-test-regression.log</code>.
+Currently, run-test.sh is ran automatically daily to ensure that pbuilder is
+working.
+      </p><div class="table"><a name="dirtestsuites"></a><p class="title"><b>&#34920; 5.1. &#12486;&#12473;&#12488;&#12473;&#12452;&#12540;&#12488;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896;</b></p><div class="table-contents"><table summary="&#12486;&#12473;&#12488;&#12473;&#12452;&#12540;&#12488;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896;" border="1"><colgroup><col align="left"><col align="left"></colgroup><thead><tr><th align="left">&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;</th><th align="left">&#24847;&#21619;</th></tr></thead><tbody><tr><td align="left"><code class="filename">./testsuite/</code></td><td align="left">&#12486;&#12473;&#12488;&#12473;&#12452;&#12540;&#12488;&#12408;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;</td></tr><tr><td align="left"><code class="filename">./testsuite/run-test.sh</code></td><td align="left">Daily regression test to test against Debian Archive changes breaking
+pbuilder.</td></tr><tr><td align="left"><code class="filename">./testsuite/run-test.log</code></td><td align="left">A summary of testsuite</td></tr><tr><td align="left"><code class="filename">./testsuite/normal/</code></td><td align="left">Directory for testsuite results of running pbuilder with debootstrap</td></tr><tr><td align="left"><code class="filename">./testsuite/cdebootstrap/</code></td><td align="left">Directory for testsuite results of running pbuilder with cdebootstrap</td></tr><tr><td align="left"><code class="filename">./testsuite/run-regression.sh</code></td><td align="left">Regression testsuite, ran every time change is made to pbuilder to make sure
+there is no regression.</td></tr><tr><td align="left"><code class="filename">./testsuite/run-regression.log</code></td><td align="left">Summary of test result</td></tr><tr><td align="left"><code class="filename">./testsuite/regression/BugID-*.sh</code></td><td align="left">Regression tests, exit 0 for success, exit 1 for failure</td></tr><tr><td align="left"><code class="filename">./testsuite/regression/BugID-*</code></td><td align="left">&#22238;&#24112;&#12486;&#12473;&#12488;&#12473;&#12452;&#12540;&#12488;&#12395;&#21033;&#29992;&#12373;&#12428;&#12427;&#12501;&#12449;&#12452;&#12523;</td></tr><tr><td align="left"><code class="filename">./testsuite/regression/log/BugID-*.sh.log</code></td><td align="left">&#22238;&#24112;&#12486;&#12473;&#12488;&#12398;&#20986;&#21147;&#12289; run-regression.sh &#12395;&#12424;&#12426;&#12473;&#12463;&#12522;&#12503;&#12488;&#12398;&#20986;&#21147;&#12364;&#12522;&#12480;&#12452;&#12524;&#12463;&#12488;&#12373;&#12428;&#12427;</td></tr></tbody></table></div></div><br class="table-break"><p>
+	When making changes, changes should be documented in the Git commit log.
+git-dch will generate debian/changelog from the commit log. Make the first
+line of your commit log meaningful, and add any bug-closing information
+available.  debian/changelog should not be edited directly unless when
+releasing a new version.
+      </p><p>
+	A TODO file is available in <code class="filename">debian/TODO</code>.  It's mostly
+not well-maintained, but hopefully it will be more up-to-date when people
+start using it.  emacs todoo-mode is used in editing the file.
+      </p><p>
+	When releasing a new version of <span class="command"><strong>pbuilder</strong></span>, the version is
+tagged with the git tag X.XXX (version number).  This is done with
+<span class="command"><strong>./git-tag.sh</strong></span> script available in the source tree.
+      </p></div></div><div class="chapter" lang="ja"><div class="titlepage"><div><div><h2 class="title"><a name="otheruse"></a>&#31532;6&#31456; Other uses of pbuilder</h2></div></div></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="sect1"><a href="#chroot">1. pbuilder &#12434;&#23567;&#35215;&#27169;&#12394;&#23455;&#39443;&#12398;&#12383;&#12417;&#12395;&#27963;&#29992;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#runningprograms">2. Running little programs inside the chroot</a></span></dt></dl></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="chroot"></a>1. pbuilder &#12434;&#23567;&#35215;&#27169;&#12394;&#23455;&#39443;&#12398;&#12383;&#12417;&#12395;&#27963;&#29992;&#12377;&#12427;</h2></div></div></div><p>
+	There are cases when some small experimenting is required, and you do not
+want to damage the main system, like when installing experimental library
+packages, or compiling with experimental compilers.  For such cases, the
+<span class="command"><strong>pbuilder login</strong></span> command is available.
+      </p><p>
+	<span class="command"><strong>pbuilder login </strong></span> is a debugging feature for
+<span class="command"><strong>pbuilder</strong></span> itself, but it also allows users to have a
+temporary chroot.
+      </p><p>
+	Note that the chroot is cleaned after logging out of the shell, and mounting
+file systems inside it is considered harmful.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="runningprograms"></a>2. Running little programs inside the chroot</h2></div></div></div><p>
+	To facilitate using <span class="command"><strong>pbuilder</strong></span> for other uses,
+<span class="command"><strong>pbuilder execute</strong></span> is available.  <span class="command"><strong>pbuilder execute
+</strong></span> will take a script specified in the command-line argument, and
+invoke the script inside the chroot.
+      </p><p>
+	The script can be useful for sequences of operations such as installing ssh
+and adding a new user inside the chroot.
+      </p></div></div><div class="chapter" lang="ja"><div class="titlepage"><div><div><h2 class="title"><a name="experimental"></a>&#31532;7&#31456; &#23455;&#39443;&#30340;&#12394; pbuilder &#12398; wish-list &#30340;&#12394;&#27231;&#33021;</h2></div></div></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="sect1"><a href="#lvm">1. LVM&#12398;&#27963;&#29992;</a></span></dt><dt><span class="sect1"><a href="#cowdancer">2. cowdancer &#12398;&#27963;&#29992;</a></span></dt><dt><span class="sect1"><a href="#withouttargz">3. tar.gz &#12434;&#21033;&#29992;&#12375;&#12394;&#12356;&#12391; pbuilder &#12434;&#21033;&#29992;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#inavserver">4. pbuilder &#12434; vserver &#12391;&#21033;&#29992;&#12377;&#12427;</a></span></dt><dt><span class="sect1"><a href="#ccache">5. Usage of ccache</a></span></dt></dl></div><p>
+      There are some advanced features, above that of the basic feature of
+<span class="command"><strong>pbuilder</strong></span>, for some specific purposes.
+    </p><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="lvm"></a>1. LVM&#12398;&#27963;&#29992;</h2></div></div></div><p>
+	LVM2 has a useful snapshot function that features Copy-on-write images.
+That could be used for <span class="command"><strong>pbuilder</strong></span> just as it can be used
+for the user-mode-linux <span class="command"><strong>pbuilder</strong></span> port.  lvmpbuilder
+script in the examples directory implements such port.  The scripts and
+documentation can be found under
+<code class="filename">/usr/share/doc/pbuilder/examples/lvmpbuilder/</code>
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="cowdancer"></a>2. cowdancer &#12398;&#27963;&#29992;</h2></div></div></div><p>
+	<span class="command"><strong>cowdancer</strong></span> allows copy-on-write semantics on file system
+using hard links and hard-link-breaking-on-write tricks.
+<span class="command"><strong>pbuilder</strong></span> using <span class="command"><strong>cowdancer</strong></span> seems to be
+much faster and it is one ideal point for improvement.
+<span class="command"><strong>cowbuilder</strong></span>, a wrapper for <span class="command"><strong>pbuilder</strong></span> for
+using <span class="command"><strong>cowdancer</strong></span> is available from
+<span class="command"><strong>cowdancer</strong></span> package since 0.14
+      </p><p>
+	Example command-lines for cowbuilder look like the following.
+      </p><p>
+	</p><pre class="screen">
+# cowbuilder --create --distribution sid
+# cowbuilder --update --distribution sid
+# cowbuilder --build XXX.dsc</pre><p>
+      </p><p>
+	It is also possible to use cowdancer with pdebuild command.  Specify with
+command-line option <code class="option">--pbuilder</code>
+	or set it in PDEBUILD_PBUILDER configuration option.
+      </p><p>
+	</p><pre class="screen">
+$ pdebuild --pbuilder cowbuilder</pre><p>
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="withouttargz"></a>3. tar.gz &#12434;&#21033;&#29992;&#12375;&#12394;&#12356;&#12391; pbuilder &#12434;&#21033;&#29992;&#12377;&#12427;</h2></div></div></div><p>
+	The <span class="command"><strong><code class="option">--no-targz</code></strong></span> option of <span class="command"><strong>pbuilder</strong></span> will allow usage of
+<span class="command"><strong>pbuilder</strong></span> in a different way from conventional usage.  It
+will try to use an existing chroot, and will not try to clean up after
+working on it.  It is an operation mode more like <span class="command"><strong>sbuild</strong></span>.
+      </p><p>
+	It should be possible to create base chroot images for
+<span class="command"><strong>dchroot</strong></span> with the following commands:
+	</p><pre class="screen">
+# pbuilder create --distribution lenny --no-targz --basetgz /chroot/lenny
+# pbuilder create --distribution squeeze --no-targz --basetgz /chroot/squeeze
+# pbuilder create --distribution sid --no-targz --basetgz /chroot/sid</pre><p>
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="inavserver"></a>4. pbuilder &#12434; vserver &#12391;&#21033;&#29992;&#12377;&#12427;</h2></div></div></div><p>
+	It is possible to use <span class="command"><strong>pbuilder</strong></span> in a vserver environment.
+This requires either vserver-patches in version 2.1.1-rc14 or higher, or a
+Linux kernel version 2.6.16 or higher.
+      </p><p>
+	To use <span class="command"><strong>pbuilder</strong></span> in a vserver, you need to set the
+<span class="command"><strong>secure_mount</strong></span> <span class="command"><strong>CAPS</strong></span> in the
+<span class="command"><strong>ccapabilities</strong></span> of this vserver.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ccache"></a>5. Usage of ccache</h2></div></div></div><p>
+       By default <span class="command"><strong>pbuilder</strong></span> will use the C compiler cache
+<span class="command"><strong>ccache</strong></span> to speed up repeated builds of the same package
+(or packages that compile the same files multiple times for some
+reason). Using <span class="command"><strong>ccache</strong></span> can speed up repeated building of
+large packages dramatically, at the cost of some disk space and bookkeeping.
+      </p><p>
+       To disable usage of <span class="command"><strong>ccache</strong></span> with
+<span class="command"><strong>pbuilder</strong></span>, you should unset CCACHEDIR in your pbuilderrc
+file.
+      </p></div></div><div class="chapter" lang="ja"><div class="titlepage"><div><div><h2 class="title"><a name="refs"></a>&#31532;8&#31456; &#21442;&#32771;&#25991;&#29486;</h2></div></div></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="sect1"><a href="#dirstructoutside">1. chroot &#22806;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896;</a></span></dt><dt><span class="sect1"><a href="#dirstructinside">2. chroot &#20869;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896;</a></span></dt></dl></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dirstructoutside"></a>1. chroot &#22806;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896;</h2></div></div></div><div class="table"><a name="id306460"></a><p class="title"><b>&#34920; 8.1. chroot &#20869;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896; </b></p><div class="table-contents"><table summary="chroot &#20869;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896; " border="1"><colgroup><col align="left"><col align="left"></colgroup><thead><tr><th align="left">&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;</th><th align="left">&#24847;&#21619;</th></tr></thead><tbody><tr><td align="left"><code class="filename">/etc/pbuilderrc</code></td><td align="left">&#35373;&#23450;&#12501;&#12449;&#12452;&#12523;</td></tr><tr><td align="left"><code class="filename">/usr/share/pbuilder/pbuilderrc</code></td><td align="left">&#12487;&#12501;&#12457;&#12523;&#12488;&#35373;&#23450;</td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/base.tgz</code></td><td align="left">Default location pbuilder uses for base.tgz, the tar-ball containing a basic
+Debian installation with only the build-essential packages.
+	      </td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/build/PID/</code></td><td align="left">pbuilder &#12364;&#12487;&#12501;&#12457;&#12523;&#12488;&#12391;chroot &#12398;&#12383;&#12417;&#12395;&#21033;&#29992;&#12377;&#12427;&#22580;&#25152;</td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/aptcache</code></td><td align="left">Default location <span class="command"><strong>pbuilder</strong></span> will use as apt cache, to store
+deb packages required during <span class="command"><strong>pbuilder</strong></span> build.</td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/ccache</code></td><td align="left">Default location <span class="command"><strong>pbuilder</strong></span> will use as cache location</td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/result</code></td><td align="left">Default location <span class="command"><strong>pbuilder</strong></span> puts the deb files and other
+files created after build</td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/pbuilder-umlresult</code></td><td align="left">Default location <span class="command"><strong>pbuilder-user-mode-linux</strong></span> puts the deb
+files and other files created after build </td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/pbuilder-mnt</code></td><td align="left">Default location <span class="command"><strong>pbuilder-user-mode-linux</strong></span> uses for
+mounting the COW file system, for chrooting.</td></tr><tr><td align="left"><code class="filename">/tmp</code></td><td align="left"><span class="command"><strong>pbuilder-user-mode-linux</strong></span> will mount tmpfs for work.</td></tr><tr><td align="left"><code class="filename">${HOME}/tmp/PID.cow</code></td><td align="left"><span class="command"><strong>pbuilder-user-mode-linux</strong></span> use this directory for location
+of COW file system.</td></tr><tr><td align="left"><code class="filename">${HOME}/uml-image</code></td><td align="left"><span class="command"><strong>pbuilder-user-mode-linux</strong></span> use this directory for
+user-mode-linux full disk image.</td></tr></tbody></table></div></div><br class="table-break"></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dirstructinside"></a>2. chroot &#20869;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896;</h2></div></div></div><div class="table"><a name="id306718"></a><p class="title"><b>&#34920; 8.2. chroot &#20869;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896; </b></p><div class="table-contents"><table summary="chroot &#20869;&#37096;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896; " border="1"><colgroup><col align="left"><col align="left"></colgroup><thead><tr><th align="left">&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;</th><th align="left">&#24847;&#21619;</th></tr></thead><tbody><tr><td align="left"><code class="filename">/etc/mtab</code></td><td align="left">
+		 <code class="filename">/proc/mounts</code>&#12408;&#12398;&#12471;&#12531;&#12508;&#12522;&#12483;&#12463;&#12522;&#12531;&#12463;&#12290;
+	      </td></tr><tr><td align="left"><code class="filename">/tmp/buildd</code></td><td align="left">Default place used in <span class="command"><strong>pbuilder</strong></span> to place the Debian
+package to be processed.
+<code class="filename">/tmp/buildd/packagename-version/</code> will be the root
+directory of the package being processed.  HOME environment variable is set
+to this value inside chroot by pbuilder-buildpackage.
+		<code class="option">--inputfile</code> will place files here.
+	      </td></tr><tr><td align="left"><code class="filename">/run</code></td><td align="left">The script passed as an argument to <span class="command"><strong>pbuilder</strong></span> execute is
+passed on.
+	      </td></tr><tr><td align="left"><code class="filename">/tmp/hooks</code></td><td align="left">
+		&#12501;&#12483;&#12463;&#12398;&#22580;&#25152;&#12290;
+	      </td></tr><tr><td align="left"><code class="filename">/var/cache/apt/archives</code></td><td align="left">
+		<span class="command"><strong>pbuilder</strong></span> &#12399; chroot &#22806;&#37096;&#12398; aptcache &#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12363;&#12425;&#12467;&#12500;&#12540;&#12375;&#12390;&#12365;&#12383;&#12426;&#12289;chroot
+&#22806;&#37096;&#12398; aptcache &#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12408;&#12467;&#12500;&#12540;&#12375;&#12383;&#12426;&#12375;&#12414;&#12377;&#12290;
+	      </td></tr><tr><td align="left"><code class="filename">/var/cache/pbuilder/ccache</code></td><td align="left">
+	        <span class="command"><strong>pbuilder</strong></span> bind-mounts this directory for use by ccache.
+	      </td></tr><tr><td align="left"><code class="filename">/tmp/XXXX</code></td><td align="left"><span class="command"><strong>pbuilder-user-mode-linux</strong></span> &#12399; <code class="filename">/tmp</code>
+&#12398;&#12473;&#12463;&#12522;&#12503;&#12488;&#12434;&#21033;&#29992;&#12375;&#12390;  user-mode-linux &#12395;&#12502;&#12540;&#12488;&#12473;&#12488;&#12521;&#12483;&#12503;&#12375;&#12414;&#12377;&#12290;</td></tr></tbody></table></div></div><br class="table-break"></div></div><div class="chapter" lang="ja"><div class="titlepage"><div><div><h2 class="title"><a name="id306908"></a>&#31532;9&#31456; &#20123;&#32048;&#12394;&#36942;&#21435;&#12398;&#32076;&#32239;&#12398;&#35443;&#32048;</h2></div></div></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="sect1"><a href="#id306913">1. &#12510;&#12491;&#12517;&#12450;&#12523;&#12398;&#23653;&#27508; </a></span></dt><dt><span class="sect1"><a href="#pbuilderbackgroundhistory">2. Possibly inaccurate Background History of pbuilder</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id306997">2.1. The Time Before pbuilder</a></span></dt><dt><span class="sect2"><a href="#birth">2.2. pbuilder &#12398;&#35477;&#29983;</a></span></dt><dt><span class="sect2"><a href="#secondyear">2.3. &#12381;&#12375;&#12390;&#20108;&#24180;&#30446;&#12398;&#20154;&#29983;</a></span></dt><dt><span class="sect2"><a href="#fifthyear">2.4. pbuilder &#12398;5&#24180;&#30446;</a></span></dt></dl></dd></dl></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id306913"></a>1. &#12510;&#12491;&#12517;&#12450;&#12523;&#12398;&#23653;&#27508; </h2></div></div></div><p>
+	This document was started on 28 Dec 2002 by Junichi Uekawa, trying to
+document what is known about <span class="command"><strong>pbuilder</strong></span>.
+      </p><p>
+	This documentation is available from the <span class="command"><strong>pbuilder</strong></span> source
+tar-ball, and from the git repository of <span class="command"><strong>pbuilder</strong></span>
+(web-based access is possible).  A copy of this documentation can be found
+on the <a class="ulink" href="http://pbuilder.alioth.debian.org/pbuilder-doc.html" target="_top">Alioth project
+page for pbuilder</a>.  <a class="ulink" href="http://pbuilder.alioth.debian.org/pbuilder-doc.pdf" target="_top">There is also a PDF
+version</a>.  The homepage for <span class="command"><strong>pbuilder</strong></span> is <a class="ulink" href="http://pbuilder.alioth.debian.org/" target="_top"> http://pbuilder.alioth.debian.org/
+</a> hosted by alioth project.
+      </p><p>
+	Documentation is written using DocBook XML, with emacs PSGML mode, and using
+wysidocbookxml for live previewing.
+      </p></div><div class="sect1" lang="ja"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pbuilderbackgroundhistory"></a>2. Possibly inaccurate Background History of pbuilder</h2></div></div></div><p>
+	The following is a most possibly inaccurate account of how
+<span class="command"><strong>pbuilder</strong></span> came to happen, and other attempts to make
+something like <span class="command"><strong>pbuilder</strong></span> happen.  This part of the
+document was originally in the AUTHORS file, to give credit to those who
+existed before <span class="command"><strong>pbuilder</strong></span>.
+      </p><div class="sect2" lang="ja"><div class="titlepage"><div><div><h3 class="title"><a name="id306997"></a>2.1. The Time Before pbuilder</h3></div></div></div><p>
+	  There was once dbuild, which was a shell script to build Debian packages
+from source. Lars Wirzenius wrote that script, and it was good, short, and
+simple (probably).  There was nothing like build-depends then (I think), and
+it was simple.  It could have been improved, I could only find references
+and no actual source.
+	</p><p>
+	  debbuild was probably written by James Troup. I don't know it because I have
+never seen the actual code, I could only find some references to it on the
+net, and mailing list logs.
+	</p><p>
+	  sbuild is a perl script to build Debian packages from source.  It parses
+Build-Depends, and performs other miscellaneous checks, and has a lot of
+hacks to actually get things building, including a table of what package to
+use when virtual packages are specified (does it do that still?).  It
+supports the use of a local database for packages which do not have
+build-dependencies. It was written by Ronan Hodek, and I think it was
+patched and fixed and extended by several people. It is part of wanna-build,
+and used extensively in the Debian buildd system. I think it was maintained
+mostly by Ryan Murray.
+	</p></div><div class="sect2" lang="ja"><div class="titlepage"><div><div><h3 class="title"><a name="birth"></a>2.2. pbuilder &#12398;&#35477;&#29983;</h3></div></div></div><p>
+	  wanna-build (sbuild) was (at the time of year 2001) quite difficult to set
+up, and it was never a Debian package. dbuild was something that predated
+Build-Depends.
+	</p><p>
+	  Building packages from source using Build-Depends information within a
+chroot sounded trivial; and <span class="command"><strong>pbuilder</strong></span> was born. It was
+initially a shell script with only a few lines, which called debootstrap and
+chroot and dpkg-buildpackage in the same run, but soon, it was decided that
+that's too slow.
+	</p><p>
+	  Yes, and it took almost an year to get things somewhat right, and in the
+middle of the process, Debian 3.0 was released. Yay.  Debian 3.0 wasn't
+completely buildable with <span class="command"><strong>pbuilder</strong></span>, but the amount of
+packages which are not buildable is steadily decreasing (I hope).
+	</p></div><div class="sect2" lang="ja"><div class="titlepage"><div><div><h3 class="title"><a name="secondyear"></a>2.3. &#12381;&#12375;&#12390;&#20108;&#24180;&#30446;&#12398;&#20154;&#29983;</h3></div></div></div><p>
+	  Someone wanted <span class="command"><strong>pbuilder</strong></span> to not run as root, and as
+User-mode-linux has become more useful as time passed, I've started
+experimenting with <span class="command"><strong>pbuilder-user-mode-linux</strong></span>.
+<span class="command"><strong>pbuilder-user-mode-linux</strong></span> has not stayed functional as
+much as I would have liked, and bootstrapping
+<span class="command"><strong>user-mode-linux</strong></span> environment has been pretty hard, due to
+the quality of user-mode-linux code or packaging at that time, which kept on
+breaking network support in one way or the other.
+	</p></div><div class="sect2" lang="ja"><div class="titlepage"><div><div><h3 class="title"><a name="fifthyear"></a>2.4. pbuilder &#12398;5&#24180;&#30446;</h3></div></div></div><p>
+	  <span class="command"><strong>pbuilder</strong></span> is now widely adopted as a 'almost standard'
+tool for testing packages, and building packages in a pristine environment.
+There are other similar tools that do similar tasks, but they do not share
+the exact same goal.  To commemorate this fact, <span class="command"><strong>pbuilder</strong></span>
+is now co-maintained with several people.
+	</p><p>
+	  <span class="command"><strong>sbuild</strong></span> is now a well-maintained Debian package within
+Debian, and with <span class="command"><strong>pbuilder</strong></span> being such a slow monster, some
+people prefer the approach of sbuild.  Development to use LVM-snapshots,
+cowloop, or cowdancer is hoped to improve the situation somewhat.
+	</p></div></div></div></div></body></html>

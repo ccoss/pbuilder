@@ -1,0 +1,3636 @@
+2007-12-24  Junichi Uekawa  <dancer@debian.org>
+
+	* This changelog is no longer maintained, see git log for details.
+	For brief user-oriented list of changes, see debian/changelog
+
+2007-12-18  Loïc Minier <lool@dooz.org>
+
+	* pbuilder-updatebuildenv: Run apt-get autoremove after upgrade.
+
+2007-12-16  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/B92test-pkg: try to skip package test which do not have any test.
+
+2007-11-24  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): create etc/apt/apt.conf.d/
+
+2007-11-23  Loïc Minier <lool@dooz.org>
+
+	* pbuilder-satisfydepends-aptitude: Pass -o
+	APT::Install-Recommends=false to aptitude as --without-recommends
+	doesn't seem to be enough with the new APT.
+
+2007-11-07  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/random-manual-test-material/build-depends-on-experimental/bde_0.1.dsc:
+	add sample files for easier testing.
+
+	* pbuilder-satisfydepends-experimental: add APTFLAG here also.
+
+	* pbuilder-satisfydepends-classic: add APTFLAG, which is "-o
+	APT::Install-Recommends=false" to toggle recommends
+	installation. This option is ignored by etch apt, so should be
+	harmless.
+
+	* pbuilder-modules (APT): install Install-Recommends "false"
+	configuration to /etc/apt/apt.conf.d/15pbuilder.  Move
+	experimental configuration to there from /etc/apt/apt.conf to
+	/etc/apt/apt.conf.d/15pbuilder.
+
+2007-10-25  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc: set default value for COMPONENTS, so that
+	qemubuilder and others can depend on it being set.
+
+2007-10-15  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: change 'pbuilder --help' command-line format
+	to be prepended with '--'
+
+	* Makefile: update makefile to install bash_completion
+
+	* bash_completion.pbuilder: add bash_completion
+
+2007-09-10  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder: return return codes for --login and --execute
+
+2007-09-06  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: add svn-buildpackage example.
+
+2007-08-28  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5 (Example): document
+	pbuilder-satisfydepends-aptitude as the default.
+
+	* pbuilder-updatebuildenv: install aptitude per default.
+	* pbuilder-createbuildenv: install aptitude per default.
+
+	* pbuilder-satisfydepends-classic: rename to '-classic'.
+
+2007-08-20  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile: update makefile to install lvmbuilder
+
+	* examples/lvmpbuilder/lvmbuilder: update with new version.
+	
+2007-07-27  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: add document on example usage of
+	pbuilderrc with DIST env-var.
+
+2007-07-22  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: refer to example file.
+
+	* examples/pbuilderrc.ccache: create example file.
+
+2007-07-16  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/debconf7/develcycle.dot: change diagram to contain
+	testing pbuilder-generated package before debsign and dput.
+
+2007-06-23  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile: install lvmpbuilder scripts as example.
+
+	* Documentation/pbuilder-doc.xml: document the files
+
+	* Makefile: install pbuilder-test sample files.
+
+	* examples/pbuilder-test/README: install pbuilder-test sample files.
+	000_prepinstall
+	001_apprun
+	002_libfile
+	002_sample.c
+	003_makecheck
+	004_ldd
+
+	* examples/pbuilder-distribution.sh: $@ -> "$@"
+
+2007-06-17  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: fix incorrect banners in execution example.
+	reorganize command-line parameters to be prepended with a '--', in
+	par with cowdancer which uses getopt_long. getopt_long requires
+	the '--'.
+
+2007-06-16  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder: rm "$APTCACHE"/*, instead of cleaning subdirectories. 
+	Subdirectories shouldn't usually be created.
+
+2007-06-15  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: reorganize to maintain same ordering as pbuilder.8
+
+	* pbuilder.8: reorganize the ordering of options.
+
+2007-06-07  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile (install): install rebuild example scripts.
+
+	* examples/rebuild/getlist: 
+	* examples/rebuild/buildall: 
+	* examples/rebuild/README: add example rebuilding script.
+	
+2007-06-05  Junichi Uekawa  <dancer@debian.org>
+
+	* AUTHORS: add people
+
+2007-06-04  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: 
+	* Documentation/pbuilder-doc.ja.po: reviewed and updated.
+
+	* examples/C11screen: 
+	* examples/C10shell: try installing vim and less, and cd to the source directory. 
+	Inspired by Lo-lan-do.
+
+2007-06-01  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/random-manual-test-material/control.test: move the debian/control file which
+	was originally used for testing to here, not under debian/
+
+	* pbuilder-satisfydepends-aptitude: 
+	* pbuilder-satisfydepends-experimental: run dpkg-architecture inside chroot.
+
+2007-05-31  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-runhooks: add documentation on usage of BUILDPLACE when
+	already inside chroot.
+
+	* pdebuild-internal: run hooks A, B, C and D in pdebuild-internal.
+
+2007-05-28  Loic Minier <lool@dooz.org>
+
+	* debian/control: list amd64 in pbuilder-uml's Architectures; thanks
+	Mattia Dongili.
+
+2007-05-28  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/C10shell: 
+	* examples/C11screen: 2> /dev/tty,  also.
+
+	* testsuite/run-test.sh: add workaround for tzdata output which is
+	different every time it's invoked.
+
+	* Documentation/Makefile: use dblatex for building PDF document.
+
+2007-05-27  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: remove reference to
+	netfort.gr.jp page.
+
+	* pbuilder.8, etc.: fix home page URL to point to
+	pbuilder.alioth.debian.org, not netfort.gr.jp, and add reference
+	to pbuilder-doc.html
+
+	* pbuilder-createbuildenv: pbuilder seems to always finish with 'Aborting with error', fix that.
+	* pbuilder-updatebuildenv: 
+
+	the following gives 0, 1 as output:
+	
+	function a_called()
+	{
+	        echo $?
+	}
+
+	function a ()
+	{
+	        a_called
+	}
+
+	trap a exit
+
+	false
+	:
+	a
+	exit 1
+	
+	
+	* pbuilder-buildpackage-funcs: set LOGNAME when build user is
+	created inside chroot.
+
+	* testsuite/run-test.sh: fix scripting for less diffs.
+
+	* pdebuild.1: fix from 
+
+	* Documentation/pbuilder-doc.xml: add documentation about
+	C11screen.
+
+	* Makefile: install the new example.
+
+	* examples/C11screen: add new hook, which might be more useful,
+	call GNU screen instead of bash.
+
+	* pbuilder-updatebuildenv: 
+	* pbuilder-createbuildenv: exit 0 at end.
+
+	* pbuilder-buildpackage (BUILD_PID): explicitly call trap to
+	untrap unexpected exit cases. Unexpected cases should exit 1, 
+	expected exit cases should exit 0.
+
+	* pbuilder-user-mode-linux: change all 'trap' functions to be postfixed with _trap
+
+	* pbuilder-createbuildenv: 
+	* pbuilder-updatebuildenv: trap sighup as well as exit.
+
+	* pdebuild.1: document the new behavior.
+
+	* pdebuild: create ../pkg_ver_arch.build file per default,
+	matching debuild.
+
+	* pdebuild-checkparams (BASEBUILDPLACE): use
+	"${PBUILDER_BUILD_LOGFILE}" variable
+
+	* testsuite/run-test.sh: process logs to reduce diff.
+
+	* pbuilder-buildpackage: 
+	* pbuilder-buildpackage-funcs: 
+	* pbuilder-createbuildenv: 
+	* pbuilder-updatebuildenv: 
+	* pbuilder-user-mode-linux: trap sighup as well as exit.
+
+2007-05-17  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: Make some references to 'base
+	chroot image tar-ball' to explicitly refer to 'base.tgz'
+
+	* pdebuild.1: 
+	* pbuilder.8: 
+	* pbuilder-user-mode-linux.1: update documentation.
+
+	* pdebuild-uml-checkparams: use tee for --logfile
+
+	* pdebuild-checkparams: 
+	* pbuilder-checkparams: 
+	* pbuilder-buildpackage: use tee so that user can see what's being logged.
+
+2007-05-14  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.ja.po: 
+	* Documentation/Makefile: start implementing Japanese version of manual
+
+2007-05-10  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/debconf7/pbuilder.tex: add references to other works.
+
+	* Documentation/pbuilder-doc.xml: add more explanation about B92test-pkg
+
+2007-05-05  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update and clarify documentation.
+
+
+2007-04-29  Loic Minier <lool@dooz.org>
+
+	* pbuilder-satisfydepends-aptitude: Pass --without-recommends to
+	aptitude.
+
+2007-04-22  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/execute_installtest.sh: update install test so that it can handle more than one packages.
+
+2007-04-22  Loic Minier <lool@dooz.org>
+
+	* pbuilder-satisfydepends-aptitude: Pass
+	Aptitude::ProblemResolver::StepScore and
+	Aptitude::CmdLine::Ignore-Trust-Violations flags to aptitude to
+	help resolve complex situations relatively common in experimental and
+	support unsigned repositories like we do for apt-get.
+
+2007-04-17  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/rules: remove amd64 from build rules.
+
+	* testsuite/run-test.sh (HOOKOPTION): change upgrade testing
+	procedure
+
+2007-04-16  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/B92test-pkg: change comment to clarify.
+
+	* pdebuild.1: documentation update: note --debbuildopts and
+	--debootstrapopts have different ways of specifying multiple
+	options. This probably needs really fixing, but that will happen sometime later.
+
+	* pbuilder.8: ditto.
+
+2007-04-11  Junichi Uekawa  <dancer@debian.org>
+
+	* AUTHORS, etc: remove $Id$, which is CVS specific
+
+2007-04-10  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update documentation
+
+	* pbuilder-modules: say lenny instead of sarge
+
+	* pbuilder.8: lenny is supported architecture, not sarge
+
+	* pbuilderrc: make lenny default
+
+	* testsuite/run-test.sh: add lenny
+
+2007-04-03  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile: install pbuilder-satisfydepends-funcs,
+	pbuilder-satisfydepends-checkparams
+
+2007-04-02  Loic Minier <lool@dooz.org>
+	* pbuilder-satisfydepends-aptitude: check whether the dummy
+	dependencies package was truly installed or error out; catches
+	situation where "aptitude" did not keep the dummy package but claimed
+	the installation was successful.
+
+2007-04-01  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux.1, etc.: 409135: SEE ALSO fix.
+
+2007-04-01  Loic Minier <lool@dooz.org>
+
+	* pbuilder-satisfydepends*:
+	- Modularize with new -funcs and -checkparams shared sources.
+	- New pbuilder-satisfydepends-aptitude resolver based on aptitude.
+	- Cleanups.
+
+2007-03-31  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: spacing fix.
+
+	* pbuilder-modules: re-refix. 391915
+	"The fix for #391915 as applied in 0.165 isn't quite correct,
+	it still has an unconditional rm -f "$BUILDPLACE/etc/$a" outside
+	the check for an existing /etc/$a to copy into its place."
+	From Paul TBBle Hampson <Paul.Hampson@Pobox.com>
+
+2007-03-30  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux : '-n "${PBUILDER_COW}"' is not a good
+	 condition since it will change default behavior for pbuilder create/update.
+	Just use UML_IP=dhcp for condition.
+
+2007-03-29  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-uml.conf.5: 
+	* pbuilder-user-mode-linux.1: add documentation for 'dhcp' option.
+
+	* pbuilder-user-mode-linux: allow network dhcp configuration 
+	415544
+	From: Paul TBBle Hampson <Paul.Hampson@Pobox.com>
+
+2007-03-28  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: make more vivid notes on what is
+	executed inside the user-mode-linux
+
+	* pbuilder-modules: for pbuilder-user-mode-linux; only warn if
+	host network configuration files are not available, and assume it
+	is correct inside the chroot, and give out a W: warning.
+	From: Paul TBBle Hampson <Paul.Hampson@Pobox.com>
+
+	* debuild-pbuilder.1, pbuilder-uml.conf.5,
+	pbuilder-user-mode-linux.1, pbuilder.8, pbuilderrc.5,
+	pdebuild-user-mode-linux.1, pdebuild.1: 409135: Fix 'SEE ALSO'
+	spacing.
+
+2007-03-27  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder, et al: Copyrigjht 2007 update.
+	warning/ error message sent to >&2 consistently.
+
+	* pdebuild: 399484: Use $BUILDRESULT with pdebuild-internal
+	"Anderson Lizardo" <anderson.lizardo@gmail.com>
+
+2007-03-21  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/rules (binary-arch): create similar for amd64.
+
+	* debian/control (Architecture): try having amd64 package for
+	pbuilder-uml
+
+2007-03-20  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage: build-dep resolution cannot determine the
+	architecture being built on when building under fakeroot, reported
+	and patch submitted by Paul TBBle Hampson.
+	
+2007-01-31  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-satisfydepends: run dpkg-architecture inside chroot.
+
+2007-01-30  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: Mattia Dongili: "As rootstrap allows
+	this configuration it would be nice if pbuilder-uml was aware of
+	it too and mount /lib/modules early enough to avoid errors and
+	warnings."
+
+2007-01-22  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc: default is now --variant=buildd for debootstrap option
+
+2007-01-20  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: add EXAMPLES section
+
+	* pdebuild.1: add EXAMPLES section
+
+	* debuild-pbuilder.1: add EXAMPLES section.
+
+2007-01-13  Junichi Uekawa  <dancer@debian.org>
+
+	* git-tag.sh: 
+	* debuild.sh: tools for git repository package building.
+
+	* Documentation/pbuilder-doc.xml: Add references to git repository.
+
+2007-01-04  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: Fix the situation where "cowbuilder --update
+	--override-config --mirror $mirror" fails to clean up.
+
+2006-12-17  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-createbuildenv: use FORCE_CONFNEW in 'pbuilder create'
+	also, since dist-upgrade here may cause configuration file change
+	if enough change exists. e.g.  when OTHERMIRROR is set to
+	backports.org
+
+	* pbuilder: remove '/run' after 'execute'
+
+2006-12-09  Loic Minier <lool@dooz.org>
+
+	* pbuilder-satisfydepends-experimental: small optimization: move
+	COMPARESTRING and DEPSVERSION computation out of the per-version loop;
+	quote COMPARESTRING properly.
+	* pbuilder-satisfydepends-experimental: small optimization: return the
+	exact requested version when a strictly versionned dependency is used.
+
+2006-11-14  Loic Minier <lool@dooz.org>
+
+	* testsuite/regression/run-test-satisfy-depends.sh: log error
+	messages with E:, not I:.
+
+2006-11-13  Loic Minier <lool@dooz.org>
+
+	* Documentation/pbuilder-doc.xml: describe workaround of using
+	backports.org to use cowdancer for sarge; fixes #394710.
+
+2006-11-06  Loic Minier <lool@dooz.org>
+
+	* debuild-pbuilder, pbuilder-buildpackage-funcs, pdebuild-internal:
+	use $PBUILDERSATISFYDEPENDSCMD instead of
+	/usr/lib/pbuilder/pbuilder-satisfydepends.
+	* pbuilderrc: set PBUILDERSATISFYDEPENDSCMD to
+	/usr/lib/pbuilder/pbuilder-satisfydepends by default.
+	* pbuilderrc.5: document PBUILDERSATISFYDEPENDSCMD.
+	* debian/TODO: alternatives implementation of pbuilder-satisfydepends
+	now possible.
+	* pdebuild-checkparams, pdebuild-uml-checkparams, pdebuild-internal:
+	add a new --pbuildersatisfydepends flag to override
+	PBUILDERSATISFYDEPENDSCMD
+	* pdebuild: pass --pbuildersatisfydepends to pdebuild-internal.
+	* pbuilder-modules, pdebuild.1: document --pbuildersatisfydepends.
+	* pbuilder-satisfydepends: drop an useless invocation of awk.
+	* pbuilder-satisfydepends-experimental, Makefile: alternate
+	implementation of pbuilder-satisfydepends which supports pulling
+	build-deps with a version on the apt-get command-line; this is derived
+	from pbuilder-satisfydepends with the following changes:
+	- Add and use new package_versions() and candidate_version() helpers;
+	  the former returns all versions of a package available via APT, the
+	  later APT's candidate version.
+	- For versionned build-deps, when building the "apt-get install"
+	  command, try APT's candidate version or all available versions
+	  available from APT in ascending order (the reverse order of
+	  apt-cache's output); checkbuilddep_versiondeps() isn't used for this
+	  part of the process anymore, but it is still used to honor
+	  build-conflicts.
+	- Recover from APT errors caused by unsufficient dependencies
+	  ("libfoo-dev Depends: bar but baz is to be installed") and missing
+	  dependencies libfoo-dev Depends: bar but it is not going to be
+	  installed", or simply "libfoo-dev Depends: bar"); this permits
+	  simply listing build-deps when uploading to experimental; achieved
+	  by moving the version matching logic in the new
+	  versioneddep_to_aptcmd() helper.
+	* pbuilderrc, pbuilderrc.5: document the availability of the alternate
+	implementation.
+
+2006-11-03  Loic Minier <lool@dooz.org>
+
+	* pdebuild-internal: install the passwd package before calling
+	groupadd and useradd.
+
+2006-10-30  Loic Minier <lool@dooz.org>
+
+	* pbuilder-modules: add sanity checks during umount_one(); ignore
+	umount errors of the type "umount: /foobar: not mounted" and "umount:
+	/foobar: not found" as retries will be useless anyway, and these
+	errors shouldn't cause data loss; fixes #391390.
+	* pbuilder-modules: umount selinux and bind mounts first.
+	* testsuite/satisfydepends/gtk2-engines_*.changelog,
+	testsuite/satisfydepends/gtk2-engines_*.control,
+	testsuite/run-test-satisfy-depends.log,
+	testsuite/run-test-satisfy-depends.sh: move to testsuite/regression
+	and adapt to the regression suite layout.
+
+2006-10-29  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: developer info is updated.
+
+2006-10-28  Loic Minier <lool@dooz.org>
+
+	* testsuite/run-test-satisfy-depends.sh,
+	testsuite/satisfydepends/debian/rules: new testsuite scripts to
+	test pbuilder-satisfydepends.
+	* testsuite/satisfydepends/gtk2-engines_*.changelog,
+	testsuite/satisfydepends/gtk2-engines_*.control: initial test data.
+	* testsuite/run-test-satisfy-depends.log: initial test results.
+	* testsuite/run-test-satisfy-depends.sh: fix invocation from CVS
+	checkout by only copying debian/rules and not debian/*.
+
+2006-10-27  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update developers documentation.
+
+2006-10-24  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/E50-initscripts-2.86.ds1-7.workaround.sh: workaround
+	postinst which mounts /lib/init/rw
+
+	* Documentation/pbuilder-doc.xml: remove the note saying that
+	pbuilder-user-mode-linux is not available.
+
+2006-10-23  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: s/cowdancer/cowbuilder/
+
+2006-09-16  Junichi Uekawa  <dancer@debian.org>
+
+	* added patch from Mattia Dongili <malattia@linux.it> for pbuilder-uml.
+	diffstat /tmp/pbuilder-uml.diff 
+	debian/rules             |   16 ++++++++++++++--
+	pbuilder-checkparams     |    2 +-
+	pbuilder-uml-checkparams |    2 +-
+	pbuilder-user-mode-linux |   20 +++++++++++++++-----
+	pdebuild-uml-checkparams |    2 +-
+	pdebuild-user-mode-linux |    2 +-
+	6 files changed, 33 insertions(+), 11 deletions(-)
+
+2006-09-03  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/B90linda, etc.: add notice that it's usable for hookdir.
+
+2006-09-02  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-checkparams (BASEBUILDPLACE): support --login, --execute, --pdebuild
+
+2006-08-25  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: support for selinux.
+
+2006-08-20  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-checkparams: sort and reverse-sort bindmounts
+	* pbuilder-modules: 
+
+2006-08-15  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/control (Recommends): recommend cowdancer, for those
+	people who complain about speed.
+
+	* debian/TODO: update the TODO file for a change.
+
+	* pbuilder-checkparams: PKGNAME_LOGFILE option support 
+	* pbuilderrc: PKGNAME_LOGFILE option support 
+	* pbuilderrc.5: PKGNAME_LOGFILE option support 
+
+2006-07-23  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update documentation on fakechroot.
+
+2006-06-26  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild-internal: export DEBBUILDOPTS
+
+2006-06-17  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh: remove sarge from test target, since I
+	know it fails every time.
+
+2006-06-15  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/pbuilder-test/01_pbuilder_create: test against sid rather
+	than sarge for now, since amd64 sarge doesn't work.
+
+2006-06-11  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild-checkparams: do not error out if buildresult directory
+	does not exist.
+
+	* pbuilder-buildpackage: actually do error-checking.
+
+	* pbuilder-checkparams: do not error out if buildresult directory
+	does not exist.
+
+	* pbuilder-buildpackage: actually create buildresult dir, the
+	condition was wrong.
+
+2006-06-05  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild-internal: -p for 'su'
+
+2006-06-04  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: spellfix
+	* pbuilder-user-mode-linux.1: spellfix
+
+	* Documentation/pbuilder-doc.xml: add note on tmpfs building.
+
+2006-06-01  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): silence ln -s for /etc/mtab
+
+2006-05-31  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder: update address of GPL, and generally update copyright dates.
+
+	* debian/copyright (Copyright): update copyright info.
+
+2006-05-29  Matt Kraai  <kraai@debian.org>
+
+	* pdebuild.1: Fix a misspelling of pdebuild.
+
+2006-05-28  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux.1: uppercase url->URL
+
+	* pbuilder.8: ditto
+
+	* pdebuild.1: From comment from Sesse, note that the
+	default place build results are placed is
+	/var/cache/pbuilder/result.
+
+2006-05-27  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: document cowdancer and pdebuild
+	cowdancer option.
+
+2006-05-24  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage-funcs: quiet down cowprotect, it's giving
+	out useless output, like the following:
+
+	Copying back the cached apt archive contents
+	/var/cache/pbuilder/build/cow.12278/etc/passwd
+	/var/cache/pbuilder/build/cow.12278/etc/group
+	Copying source file
+
+	
+	* pbuilder.8: fix pbuilder execute command-line specification to
+	reflect that script can receive command-line parameters.
+
+	* pdebuild: add a in invocation to pbuilder execute "--", to avoid
+	reorder in cowbuilder, and still work with pbuilder.
+
+	* pdebuild.1: document --pbuilder option.
+
+	* pbuilderrc.5: document the new option
+
+	* pdebuild-checkparams: --pbuilder option. Use pbuilder as default.
+	It is possible to use cowbuilder.
+
+	* pbuilder: add --XXX options as compatibility options for cowbuilder.
+
+	* pdebuild (ARCHITECTURE): use PDEBUILD_PBUILDER instead of calling pbuilder directly,
+	and use cowdancer-compatible command-line options.
+
+	* Documentation/pbuilder-doc.xml: generally spellcheck, and revise.
+
+	* pdebuild.1: spellcheck
+
+	* pdebuild-user-mode-linux.1: spellcheck
+
+	* pbuilderrc.5: spellcheck
+
+	* pbuilder-modules: remove mention of potato/woody, since they
+	probably don't work
+	(pbuilder-options): remove potato/woody.
+
+	* pbuilder.8: remove woody from supported list of distributions,
+	we know dpkg from then doesn't really work with modern kernel.
+	(well, they do, but I don't want this documented/advertised)
+	
+	* pbuilder-user-mode-linux.1: spellcheck
+
+	* pbuilder.8: spellcheck
+
+2006-05-22  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: update TODO, amd64-x86 cross build is documented and functional.
+
+	* pbuilder-satisfydepends: keep the original behavior until dpkg
+	change is verified.
+
+2006-05-17  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: minor updates to the
+	documentation.
+
+2006-05-15  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: document method for adding local
+	repository.
+
+	* pbuilder-satisfydepends: add support for new dpkg-dev construct
+	for linux-any etc. patch by Peter Eisentraut.
+
+	* THANKS: update thanks text for a change.
+
+	* pbuilderrc.5: undocument the restriction that --buildresult
+	option needs to be specified for pdebuild, and BUILDRESULT cannot
+	be used.
+
+	I should probably warn that the directory should be absolute.
+
+	* pdebuild.1: fix man a bit to make --buildresult option doc
+	unambiguous.
+
+	* pbuilder-modules: fix pdebuild command options.
+
+2006-04-22  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update docs on user-mode-linux usage.
+	add reference to PDF version.
+
+	* pdebuild: give --uid/--gid options to pdebuild-internal
+
+2006-04-01  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild: directory is moved after command-line is parsed.
+	This should fix a few weird behaviors wrt relative directories, and 
+	allow --help to work if there is no debian/ directory
+
+2006-03-31  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-satisfydepends: spelling mistake, thanks pryzbyj for
+	telling me. daner->dancer
+
+2006-03-22  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: spelling fix: s/extention/extension/
+
+	* pbuilderrc:
+
+	* pbuilder.8: 
+
+2006-03-18  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/regression/287477-pkgname-logfile.sh: create regression
+
+	* pbuilder.8: update documentation of --pkgname-logfile
+
+	* pbuilder-buildpackage: allow chown, and add support for PKGNAME_LOGFILE_EXTENTION.
+	
+	* pbuilderrc (PKGNAME_LOGFILE_EXTENTION): add
+
+	* pbuilderrc.5: document
+
+2006-03-17  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage (BUILDRESULTGID): chown/chgrp buildresult logfiles
+
+2006-03-08  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: apply necessary formatting edition.
+
+	* Documentation/Makefile (%.pdf): create PDF documentation out of pbuilder-doc.
+
+	* Documentation/pbuilder-doc.xml: update amd64->i386 cross debootstrap command-line option.
+	apparently, the --arch=i386 notation doesn't seem to work anymore.
+
+2006-02-23  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): remove NONUSMIRRORSITE
+
+	* pbuilder.8: 
+	* pbuilder-user-mode-linux.1: remove --nonusmirror
+
+	* pbuilder-uml-checkparams: remove --nonusmirror
+
+	* pbuilder-checkparams: remove --nonusmirror
+
+	* pbuilder-modules (pbuilder-options): remove reference to  --nonusmirror [non-US mirror location] option.
+
+	* pbuilderrc (MIRRORSITE): remove non-US
+
+	* testsuite/regression/344089-initscripts-inetd-workaround-check.sh: remove, bugs are all resolved.
+
+2006-02-12  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-updatebuildenv: 
+	* pbuilder-createbuildenv: 
+	* pbuilder: move apt-get clean after umountproc, so that you can
+	probably bind-mount /var/cache/apt/archives
+
+2006-02-11  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-satisfydepends: quote echo INSTALLPKGMULTI
+
+	* pbuilder: apt-get clean after save_aptcache.
+
+	* pbuilderrc.5: document that EXTRAPACKAGES is a space-delimited list.
+
+2006-01-30  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile: install the script
+
+	* examples/G50-initscripts-2.86.ds1-11-cdebootstrap0.3.9.sh: implement workaround.
+
+	* pbuilder.8: document G hook.
+
+	* pbuilder-createbuildenv: add G hook
+
+	* testsuite/run-test.sh: use the workaround dir for testing.
+
+	* Makefile: install workaround hooks to
+	/usr/share/doc/pbuilder/examples/workaround
+
+2006-01-24  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/B92test-pkg: improve the script a bit; do not fail if
+	apt-get install of a previous version fails, and cd to the package
+	directory before test starts.
+
+2006-01-13  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: update notes on cowdancer.
+
+	* Documentation/pbuilder-doc.xml (BINDMOUNTS): add note on regression testing.
+
+2006-01-12  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: replace ../project/experimental with experimental
+
+2006-01-06  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: document that there are default values for BUILDRESULTUID
+
+	* pbuilder-buildpackage (BUILDRESULTGID, BUILDRESULTUID): set
+	default values here.
+
+	* pbuilder-modules (pbuilder-options): --debootstrap= is not a
+	valid option, change to --debootstrap[space]
+
+2005-12-21  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile (install): 
+	* examples/B91debc: 
+	* examples/B90list-missing: from q-funk. 343894
+
+	* testsuite/run-regression.sh: add results display.
+
+	* testsuite/run-test.sh: add results display
+
+	* testsuite/run-test-uml.sh: add results display.
+
+	* testsuite/run-regression.sh: run tests in numerical order of bug reports.
+
+	* testsuite/regression/344089-workaround-check.sh: create a regression test
+
+	* testsuite/run-test.sh: use
+	/usr/share/doc/pbuilder/examples/344089 for hookdir.
+
+	* Makefile: no longer install libc6 workaround which is outdated,
+	and install the initscripts workaround to 
+	/usr/share/doc/pbuilder/examples/344089
+
+	* examples/E50-initscripts-2.86.ds1-7.workaround.sh: add a
+	workaround for #344089, and #262627
+
+2005-12-19  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild-internal: export HOME with a decent value.
+
+	* Documentation/pbuilder-doc.xml: document that $HOME is set to
+	/tmp/buildd, since that seems to be the case in
+	pbuilder-buildpackage
+
+2005-12-12  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/regression/342665-config: config used for the regression test.
+	This is to address 342665
+
+	* testsuite/regression/342665-pbuilder-ccache.sh: regression testsuite.
+
+	* Documentation/pbuilder-doc.xml: update FAQ to note that ccache dir needs
+	to be writable from user within chroot.
+
+	* testsuite/run-regression.sh: add
+
+2005-12-09  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: update TODO.
+
+2005-12-05  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild-user-mode-linux:
+	* pdebuild-uml-checkparams:
+	* pdebuild-checkparams: 
+	* pdebuild: readlink -e instead of readlink -f 
+
+	* pbuilder-uml-checkparams: readlink -e  instead of readlink -f
+
+	* pbuilder-modules: readlink -e instead of readlink -f
+
+	* pbuilder-createbuildenv: quote HOOKDIR and readlink -e instead of readlink -f.
+
+	* pbuilder-checkparams:
+	* pbuilder-buildpackage: use readlink -e here.
+	
+	* pbuilder-buildpackage-funcs:	use readlink -e  instead of readlink -f. 338976, reopened as 342117
+	thanks to Markus Kolb
+	
+	* pbuilder-buildpackage-funcs: 'install' was missing from apt-get for EXTRAPACKAGES handling. Fix.
+
+	* pbuilderrc: make fakeroot default.
+
+	* Documentation/pbuilder-doc.xml: update a note on pdebuild-internal is ran as the outside user uid.
+
+	* pdebuild-internal: Add a note what I'm doing.
+
+2005-12-04  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: note TODO item.
+
+	* pdebuild-internal: Revert to use of --force-yes, since --allow-unauthenticated does not work in sarge
+	* pbuilder-updatebuildenv: 
+	* pbuilder-satisfydepends: 
+	* pbuilder-createbuildenv: 
+	* pbuilder-buildpackage-funcs: 
+	* examples/execute_installtest.sh:
+	* examples/B92test-pkg: 
+	* examples/B91dpkg-i:
+	* examples/B90linda: 
+
+	* pbuilder-createbuildenv: implement --no-targz for pbuilder create.
+
+	* pbuilder-buildpackage-funcs: #338976; SUTOUSER check is bogus.
+	Only add a user when there is a user to add.
+
+	* pdebuild-internal: use --allow-unauthenticated option rather than --force-yes to apt-get install
+	* pbuilder-updatebuildenv: 
+	* pbuilder-satisfydepends: 
+	* pbuilder-createbuildenv: 
+	* pbuilder-buildpackage-funcs: 
+
+	* examples/execute_installtest.sh: --allow-unauthenticated option to apt-get install
+	* examples/B92test-pkg: 
+	* examples/B91dpkg-i:
+	* examples/B90linda: 
+
+2005-12-01  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: add notes on ccache+pbuilder.
+
+	* pbuilder-buildpackage: preserve environment when
+	running as root. Thanks to Mike Hommey
+
+2005-11-28  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh: run pdebuild-internal on one directory 
+	and use another directory for build place.
+	I don't know why but it's started to fail running since 28 Nov..?
+	pdebuild internal sid fails to umount the bind-mount. -- this was
+	fixed in 29 Nov run. Strange.
+
+2005-11-16  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage-funcs: test if /etc/shadow already exists
+	before trying to change it.
+	fix typo.
+
+2005-11-11  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): policy-rc.d: allow x11-common to run.
+	337541
+
+2005-11-03  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test-experimental.sh:
+	* testsuite/run-test-experimental.log: experimental test no longer
+	works since apt with gpg checking is default, remove it.
+	
+	* debian/TODO: remove todo item on /etc/mtab documentation.
+
+	* Documentation/pbuilder-doc.xml: document /etc/mtab is a 
+	symlink to /proc/mounts
+	spellcheck.
+
+	* debian/control (Depends): cdebootstrap or debootstrap
+
+	* pbuilder-createbuildenv: change inconsistent error message
+	Check and report error state when debootstrap specified in DEBOOTSTRAP option
+	does not exist.
+
+2005-11-02  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: update.
+
+	* pbuilder-modules: ln -s is protected with ||true, 
+	since /etc/mtab may already exist.
+
+	* debian/TODO: update TODO.
+
+2005-10-28  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: update.
+
+	* Documentation/pbuilder-doc.xml: Update documentation on 
+	pbuilder on amd64
+	document TODO file.
+
+2005-10-26  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: update
+
+	* testsuite/run-test.sh (testbuild): --resolve-deps removed.
+	debootstrap 0.3.2 runs --resolve-deps per default.
+
+2005-10-20  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild: apply patch from Jonas Smedegaard (#312121)
+	and change -P to -[bB]
+
+2005-10-19  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh (testbuild): Change to use resolve-deps in testsuite for 
+	debootstrap.
+
+2005-10-18  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: updated TODO file; with hopefully a better tracking of debian bugs.
+
+2005-10-14  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update documentation to include 
+	IRC channel specification
+
+2005-10-09  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update documentation on development
+	policy.
+
+2005-10-08  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: reviewed and updated documentation.
+	Added development, and bugreporting section, which should be 
+	filled up later, if possible.
+
+	* debian/README.Debian: update README
+
+	* pbuilder.8: refer to --debug option from --preserve-buildplace.
+
+2005-10-06  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh (testbuild): add debootstrapopts, --verbose.
+
+2005-10-04  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage-funcs: Add comment on what cowprotect is there for.
+
+2005-09-30  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: #325318, from Osamu Aoki;
+	clarify about precedence in configuration options.
+
+	* pbuilder-modules:
+	* pbuilder-updatebuildenv:  apply patch to place -maxdepth before other args.
+
+2005-09-04  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: Add notes on cowdancer.
+	updates notes to note that it's hosted at alioth now.
+
+	* Documentation/Makefile (preview): create target for preview with
+	mozilla firefox.
+
+2005-08-29  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild.1: update semantics; left-to-right
+	* pbuilder.8: update semantics; left-to-right
+
+2005-08-28  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc: SHELL variable is set a default value.
+
+2005-08-19  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage-funcs: do cow thing, with cowprotect, for cowdancer.	
+
+2005-08-17  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: update the TODO list.
+
+	* pbuilder-buildpackage-funcs: pass ${CHROOTEXEC} value directly to pbuilder-satisfydepends.
+
+	* pbuilder-satisfydepends (CONTINUE_FAIL): add --internal-chrootexec
+
+2005-08-15  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder: $CHROOTEXEC instead of direct invocation of 'chroot' 
+	  command.
+	  satisfydepends needs the CHROOTEXEC support.
+
+	  I want to support setting CHROOTEXEC so that I can hook
+	  'chroot XXX cow-shell' instead of 'chroot XXX'
+
+2005-08-07  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/control: allow cdebootstrap dependency.
+
+	* testsuite/run-test.sh: complicate the process by testing both
+	  cdebootstrap and debootstrap.
+
+	* pbuilder.8: document --debootstrap 
+
+	* pbuilder-checkparams: --debootstrap
+
+	* pbuilder-modules: --debootstrap
+
+	* pbuilder-createbuildenv: unset DEBOOTSTRAPSCRIPT instead of setting
+	"". The number of parameter given to cdebootstrap changes.
+	since DEBOOTSTRAPSCRIPT are not supported by cdebootstrap, 
+	Giving cdebootstrap this parameter caused it to fail.
+
+	* pbuilderrc.5: Document DEBOOTSTRAP
+
+	* pbuilderrc (DEBOOTSTRAP): new option.
+
+	* pbuilder-createbuildenv (DEBOOTSTRAPSCRIPT): call ${DEBOOTSTRAP} instead of calling debootstrap directly.
+
+2005-07-28  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/Makefile (%.html): update make rule to successfully fail on error.
+
+2005-07-14  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage: change the use of su, to 
+	allow su design change. Bug: 317264
+
+2005-07-13  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: added a reference 
+	to bug 316135
+
+2005-07-11  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: clarify documentation to lighten the requirement of 
+	BUILDUSERID
+
+2005-07-10  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux.1: 
+	* pdebuild-user-mode-linux.1: 
+	* pdebuild.1: 
+	* pbuilder.8: use \- for dash.
+
+2005-07-03  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh (RESULTFILE): remove vmstat and iostat. I don't really need them; 
+	and add test for etch.
+
+	* debian/TODO: add TODO
+
+2005-07-02  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.log: failure to run pdebuild-internal-sid-dsh 
+	  is correct; until fixed pbuilder is in archive proper, it 
+	  will fail.
+
+	* debian/changelog: prepare for release.
+
+	* debian/TODO: updated todo list.
+
+	* pdebuild-internal: add missing --force-yes to pbuilder install.
+
+2005-06-25  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: use configured PATH instead of hard-coded PATH.
+
+	* pbuilder-buildpackage: preserve PATH in su,
+	pass -p option. This fixes the problem with env-var preservation.
+
+2005-06-20  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc: set PATH in the configuration file.
+	* pbuilder-buildpackage: do not set PATH inside pbuilder-buildpackage
+
+2005-06-12  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-uml-checkparams: add --othermirror option to uml.
+
+	* pbuilder-user-mode-linux.1: add othermirror documentation.
+
+	* pbuilderrc.5: synchronize --othermirror documentation.
+	* pbuilder.8: 
+
+	* testsuite/test-pdebuild.sh: add a sample command-line that should
+	work.
+
+	* pbuilder-modules (pbuilder-options): 
+	find '-xdev' is an option, not an evaluation, and so moved it around
+	since newer find now complains.
+	Marc Dequ竪nes (Duck) <Duck@DuckCorp.org> and "Artur R. Czechowski" <arturcz@hell.pl>
+	#312913
+
+2005-06-08  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuildd/install-test.sh: imported from pbuilder-buildd tree.
+
+2005-06-05  Junichi Uekawa  <dancer@debian.org>
+
+	* debuild-pbuilder.1: 
+	* pbuilder-uml.conf.5: 
+	* pbuilderrc.5: 
+	* pdebuild.1: 
+	* pdebuild-user-mode-linux.1: 
+	* pbuilder.8: add \% escape for URL.
+
+2005-06-04  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild-internal: implement with user-adding.
+
+	* pbuilder.8: document --help option
+
+	* pdebuild.1: document the --help option.
+
+	* pdebuild-checkparams: add --help
+
+	* debian/pbuilder-uml.files: move to uml.
+	* Makefile: install
+	* pdebuild-user-mode-linux: use pdebuild-uml-checkparams
+
+	* pdebuild-uml-checkparams: add --debsign-k
+
+	* pbuilder-uml-checkparams: pdebuild options remove.
+
+	* pdebuild-uml-checkparams: --buildresult
+
+	* pdebuild.1: add --logfile option to documentation.
+
+	* pdebuild-checkparams: --logfile option implemented for pdebuild.
+
+	* Makefile (install): install
+
+	* pdebuild: use pdebuild-checkparams instead.
+
+	* pbuilder-checkparams: split 
+	* pdebuild-checkparams: new file.
+	
+	* pbuilder-updatebuildenv: fix typo
+
+	* pbuilder.8: document --autocleanaptcache
+
+	* pbuilder-updatebuildenv: 
+	* pbuilder-checkparams (AUTOCLEANAPTCACHE): support auto-clean of aptcache
+	(IGNORE_UMOUNT): add --autocleanaptcache
+
+	* debian/pbuilder-test/01_pbuilder_create: use sarge.
+
+	* examples/B92test-pkg: fix after testing so that it works.
+
+	* debian/pbuilder-test/03_pbuilder_build: fix typo.
+
+2005-06-03  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test-experimental.sh: created a testsuite.
+
+	* pbuilder-updatebuildenv: update copyright year
+
+	* pbuilder-checkparams (BASEBUILDPLACE): move distribution 'experimental'
+	checking here, instead of 'create' target.
+
+	* pbuilder-createbuildenv: update copyright year.
+
+	* pbuilder-modules: add etch.
+	* pbuilder.8: add 'etch' for list of supported architectures, and 
+	  make it the default.
+
+	* examples/pbuilder-distribution.sh:
+	* pbuilder-buildpackage-funcs:
+	* pbuilder-createbuildenv:
+	* pbuilder-modules:
+	* pbuilder-satisfydepends:
+	* pbuilder-updatebuildenv:
+	* pbuilder.8: patch Emanuele Rocca <ema@debian.org> to support 
+	  'experimental' for distribution.
+
+2005-05-07  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: Document testsuite.
+
+	* debian/pbuilder-test/03_pbuilder_build: add
+	* debian/pbuilder-test/02_pbuilder_update: add
+	* debian/pbuilder-test/01_pbuilder_create: update
+
+2005-05-02  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: trim trailing spaces on lines
+	Added documentation on directory structure of pbuilder.
+
+2005-05-01  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/pbuilder-test/01_pbuilder_create: an example script to test pbuilder.
+
+	* Makefile (install): install
+	* examples/B92test-pkg: a generic interface script to test a package.
+
+2005-04-22  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage: call save_aptcache after running final B hook
+	  on build.
+
+2005-04-16  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild.1: 
+	* pdebuild-user-mode-linux.1: add note that key-id is required in 
+	--debsign-k.
+
+	* pbuilder-modules: document signing-related options in pbuilder-options.
+
+	* pdebuild-user-mode-linux: 
+	* pdebuild: implement keyid specification.
+	
+	* Documentation/pbuilder-doc.xml: add document on using auto-debsign
+	and add a FAQ entry for source.changes file.
+
+	* pbuilder-checkparams: use --debsign-k option
+	to specify DEBSIGN_KEYID
+
+	* pdebuild.1: add --debsign-k option
+
+	* pdebuild-user-mode-linux.1: add --debsign-k option
+
+2005-04-11  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/B91dpkg-i: Fix example script so that it actually works.
+
+2005-04-06  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: 
+	* pbuilderrc.5: update documentation to fix confusing entry on DEBEMAIL
+	  (#302855)
+
+2005-03-04  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder: apply patch frp, Danilo to save aptcache on pbuilder login.
+	Apply similar change to pbuilder execute.
+	271600
+
+	* pbuilder.8: 
+	* pbuilder-checkparams: 
+	* pbuilder-modules: support --aptcache option
+	thanks: Danilo Piazzalunga <danilopiazza@libero.it>
+	295766
+
+	* Cleaned build dir for pbuilder-uml #297100
+	
+	* pbuilder-modules (pbuilder-options): document save-after-login/exec
+	flag in --help output. #296672
+
+2005-02-13  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: update documentation to include 'sarge'
+
+	* pbuilder: set umask 0022 in pbuilder.
+	276589
+
+	* pbuilderrc (BUILDRESULT): make default distribution sarge, instead of woody.
+
+	* pbuilder-modules: update to include sarge in list of distributions; 
+	this list is too long, needs some improvement.
+	289170
+
+	* pdebuild: Change build results by default to be owned by the building user, not root:root
+	This change only required for pdebuild only, UML already runs as user.
+	286397
+
+	* pbuilder.8: clarify documentation for 286602, Do not use --debbuildopts -B, but 
+	use --binary-arch
+
+	* Documentation/pbuilder-doc.xml: 293882: Jens Seidel <jensseidel@users.sf.net> small typo fixes.
+
+	* pbuilderrc (MIRRORSITE): 295032: change default mirror from www.jp.debian.org to ftp.jp.debian.org
+
+2005-01-04  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xsl: update XSL stylesheet to work with new LDP
+
+	* Documentation/pbuilder-doc.xml: update date.
+
+	* pbuilder-buildpackage: 
+	* pbuilder-buildpackage-funcs: 
+	* pbuilder-checkparams: 
+	* pbuilder-modules: 
+	* pbuilder-uml-checkparams: 
+	* pdebuild: 
+	* pdebuild-internal: 
+	* pdebuild-user-mode-linux: 
+	* pbuilder: update copyright year
+
+	* update copyright
+
+2004-12-29  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: minor update, it's fourth year already passed?
+
+	* pdebuild-user-mode-linux, pdebuild: typo fix, thanks
+	Clint Adams <schizo@debian.org>, Bug#287041
+
+2004-12-11  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: some more minor fixes before it is released
+
+	* pdebuild-user-mode-linux, pdebuild: use bash instead of sh
+
+2004-12-02  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: some parts I fixed, but 
+	I am leaving some FIXME entries for later.
+
+	* pbuilderrc.5: change to 'sid'. distribution default is now sid.
+
+	* pbuilder-createbuildenv: change default distribution to sid, not woody
+
+	* Documentation/pbuilder-doc.xml: apply patch from on documentation 
+	era eriksson <era@iki.fi>. Needs review.
+
+	* pdebuild-user-mode-linux: also
+	* pdebuild: pass DEBBUILDOPTS through echo to dpkg-buildpackage.
+
+2004-11-19  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: update docs.
+
+2004-11-17  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile: add pbuilder-distribution.sh
+
+	* Documentation/pbuilder-doc.xml: document the example.
+
+	* examples/pbuilder-distribution.sh: add example from Jamin.
+
+2004-11-16  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild-user-mode-linux: 
+	* pdebuild: Check for build-deps before dpkg-buildpackage -S
+
+2004-11-14  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild: add quoting for debbuildopts.
+
+2004-11-05  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: Fix formatting errors
+	#279700 from Jordi Mallach
+
+2004-10-31  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (PBUILDER_UML_IMAGE): add notes on 
+	BUILDRESULTUID and SUDO interaction.
+
+	* pbuilder-buildpackage (PACKAGENAME): move around buildresult dir creation before pkgname logfile creation.
+
+	* pbuilder.8: add documentation for --save-after-login/exec option.
+
+	* pbuilder: execute and login with --save-after-login/exec option.
+
+	* pbuilder-user-mode-linux.1: add notes that uml-nocow is effective for exec and login.
+
+	* pbuilder-uml-checkparams (UML_SAVE_AFTER_LOGIN): add UML_NOCOW for exec
+
+	* pbuilder-checkparams (SAVE_AFTER_LOGIN): --save-after-login/exec command-option.
+
+	* pdebuild-user-mode-linux.1: add notes that the option will override 
+	pbuilder option.
+
+	* pdebuild.1: add notes that the option will override pbuilder option
+
+	* pdebuild-user-mode-linux: ditto.
+
+	* pdebuild: override --debbbuildopts in pbuilder option when DEBBUILDOPTS is available and for non-internal mode.
+
+2004-10-20  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/control: Remove uml package
+	* debian/rules: Remove uml package
+	workaround for sarge release.
+
+2004-10-09  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (PBUILDER_UML_IMAGE): documentation on
+	what directories cannot be bind-mounted
+	#275113
+	
+	Added documentation on how to hook to pbuilder update.
+	somewhat addresses #275016, #272353
+	
+	* debian/control (Depends): remove versioned depends on user-mode-linux. Packages are provided from other kernel packages.
+	#275544
+
+	* pbuilder: implement pbuilder debuild
+	#275110
+
+	* Documentation/pbuilder-doc.xml (PBUILDER_UML_IMAGE): update doc on 
+	debian_chroot env var.
+	#275466
+	
+
+2004-09-13  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): remove non-free and contrib from non-us.
+
+2004-08-12  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuildd/remote-buildd.sh: files from 'compiler' distributed pbuilder setup
+	* pbuildd/build-agent.sh: files from 'compiler'
+	* pbuildd/README: Added
+
+2004-08-08  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuildd/buildd.sh: Applied patch from Roland Stigge.
+	263987 264182 264182
+	buildd.sh assumes to be in ${BASEDIRECTORY}
+	buildd.sh shouldn't try to build packages for wrong architectures
+	support DEPWAIT
+
+2004-07-29  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/pbuilder-uml.files: add pbuilder-uml-checkparams
+
+	* Makefile: add pbuilder-uml-checkparams
+
+	* pdebuild-user-mode-linux.1: update manual to reflect
+	  current reality of pdebuild-user-mode-linux. It was originally just a
+	  copy of pdebuild manpage.
+
+	* pbuilder-checkparams: shift around debootstrapopts parameter
+	  processing out of pdebuild options; it doesn't belong there.
+
+	* pdebuild-user-mode-linux: Call pbuilder-uml-checkparams to 
+	  parse commands in UML way, not pbuilder way.
+	* pbuilder-uml-checkparams: Move command-line parser to here
+	* pbuilder-user-mode-linux: Move command-line parser out
+
+2004-07-24  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux.1: document dumpconfig.
+
+	* pbuilder.8: document dumpconfig
+
+	* pbuilder-modules: add note to dumpconfig in help.
+
+	* pbuilder: add dumpconfig option.
+
+	* pbuilder-user-mode-linux: pass --debug option to pbuilder when
+	--uml-debugmode is available.
+	add "dumpconfig" operation.
+
+2004-07-21  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test-uml.sh: try to update. Still does not work.
+
+	* testsuite/rootstrap.conf: try to update
+
+	* pbuilder-uml.conf.5: update doc to note that ~/.pbuilderrc shoulnd't have APTCACHEHARDLINK=yes if using user-mode-linux
+
+	* pbuilder-uml.conf (APTCACHEHARDLINK): set default value of APTCACHEHARDLINK to no.
+
+2004-07-16  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: 259325: call /sbin/halt -d -f 
+	instead of just doing an exit from UML.
+	init=/bin/sh, and this is required for safe exit now, apparently.
+
+2004-07-14  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update notes on D10tmp script.
+
+	* examples/D10tmp: mkdir -p
+
+2004-07-09  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh (IOSTATPID): add debemail to testsuite.
+
+	* pbuilder-buildpackage (PACKAGENAME): move SUTOUSER outside of what's fed into bash.
+	Run bash in SUTOUSER. SUTOUSER might be eating quote characters.
+
+2004-06-19  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: apply patch from 
+	Mike Markley <mike@markley.org>
+	Bug#252800: pbuilder-uml: hardcodes rootstrap image size argument
+	(--buildresult): found typo in error message,
+	It said $d instead of $2.
+
+	* pbuilder-user-mode-linux.1: document.
+
+	* pbuilder-user-mode-linux (uml-login-nocow): add --uml-login-nocow
+	option for pbuilder login without COW filesystem use.
+
+	* pdebuild.1: add warning on pdebuild/pbuilder options.
+	specifying --basetgz as pdebuild option does not work.
+	255005
+
+2004-06-17  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-updatebuildenv: Patch from matt kraai to save 
+	apt cache when pbuilder update fails. 
+	252777, 252793
+
+2004-05-27  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/control (Depends): add coreutils 4.5.8-1 dependency.
+
+2004-04-20  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: patch from Michel Daenzer <daenzer@debian.org>
+	(244698) to work around /usr/sbin/update-binfmts.
+
+2004-04-18  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: "main contrib non-free" to "main" only.
+	contrib, non-free aren't really required here.
+
+2004-04-07  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/control (Depends): Require 0.2.29 or later of debootstrap
+
+	* pbuilder-modules (pbuilder-options): document option.
+
+	* pbuilder-checkparams (IGNORE_UMOUNT): --debootstrapopts
+
+	* pbuilderrc.5: document the option DEBOOTSTRAPVARIANT.
+
+	* pbuilderrc (DEBOOTSTRAPOPTS): new option.
+
+	* pbuilder-createbuildenv (DEBOOTSTRAPOPTS): add DEBOOTSTRAPOPTS which should be empty, or '--variant=buildd'
+
+2004-04-04  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: update manpage to clarify terms on don't bind-mount.
+	update date.
+
+	* debian/TODO: update TODO file.
+
+2004-03-13  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh: run-test changed to create log.
+	Add libc6workaround for now.
+	-- after some testing, libc6workaround is not really required. Strange. It will probably be required for 
+	upgrades containing libc6.
+	
+	* Makefile: install
+
+	* examples/E50-libc2.3.2.ds1-11-workaround: libc6 workaround.
+
+	* Documentation/pbuilder-doc.xml: Try to update the docs.
+
+2004-02-28  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile (install): install F90chrootmemo
+
+	* pbuilder: implement hook F for login/execute
+
+	* Documentation/pbuilder-doc.xml: update doc to use F hook.
+
+	* examples/F90chrootmemo: create F example.
+
+	* pbuilder.8: add "F" hook
+
+2004-02-27  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: document the chrootmemo script in FAQ section.
+
+	* Makefile (install): install the memo.
+
+	* examples/D90chrootmemo: implement Turbo's request.
+	Add this to your hookdir.
+
+2004-02-23  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: fix typo on manual page from Matt Kraai
+
+2004-01-19  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild-user-mode-linux.1: document
+
+	* pdebuild.1: document
+
+	* pdebuild-internal: add support for DEBBUILDOPTS
+
+	* pdebuild-user-mode-linux: add support for DEBBUILDOPTS
+	  remove '|| true ' from dpkg-source invocation
+
+	* pdebuild: --debbuildopts support.
+
+	* examples/execute_installtest.sh (KILLPID): add killing routine;
+	change it to reboot, to get a reboot done.
+
+2004-01-12  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh (IOSTATPID): create normal/ dir for plain pbuilder logs.
+
+	* testsuite/run-test-uml.sh (PBUILDER_UML): create uml/ dir for uml logs.
+
+	* testsuite/run-test.sh: update estimate time.
+
+2004-01-11  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-checkparams: logging
+
+	* debian/copyright (Copyright): update copyright info.
+
+	* pbuilder: update copyright info
+
+	* pbuilder-modules: update copyright info.
+
+	* testsuite/run-test.sh: change to pbuilder test, instead of UML.
+
+	* testsuite/run-test-uml.sh: split out UML test
+
+	* README: tried updating the documentation.
+
+	* Documentation/pbuilder-doc.css: Change css so that it's black on white, not white on black.
+
+2004-01-10  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/B91dpkg-i: fix typo to properly obtain the list of packages
+
+2004-01-06  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: Notes on debootstrap failures.
+
+	* pbuilder.8: add a note so that people won't mistake pbuilder will use --extrapackage for 
+	creating the bootstrap script.
+
+2003-12-31  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: updated doc so that user-mode-linux is 
+	no longer in the experimental section of the documentation.
+	A new faq entry on 'pbuilder is slow', to recomment using pbuilder-uml when 
+	the user thinks tar is slow.
+
+2003-12-30  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): Document apt-proxy is usable as a proxy.
+
+2003-12-29  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update docs on --use-pdebuild-internal
+
+2003-12-27  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh (PBUILDER_UML): fix rm testbuild2.
+	Estimate is 45 minutes now. It takes longer.
+
+	* Makefile (clean): clean testsuite/testbuild2 directory also.
+
+	* pdebuild-internal: use dpkg-buildpackage inside the chroot rather than debuild.
+
+2003-12-26  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/execute_installtest.sh: add CVS id output
+
+2003-12-24  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh (PBUILDER_UML): add pdebuild-user-mode-linux tests.
+
+2003-12-23  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile (install): update build rules to install pdebuild-internal
+
+	* pbuilderrc.5: update document USE_PDEBUILD_INTERNAL
+
+	* pdebuild-user-mode-linux.1: document --use-pdebuild-internal
+
+	* pdebuild.1: document --use-pdebuild-internal
+
+	* pbuilder-modules: document use-pdebuild-internal
+
+	* pbuilder-checkparams: --use-pdebuild-internal option.
+
+	* pdebuild: use pdebuild-internal if USE_PDEBUILD_INTERNAL option is 'yes'
+
+	* pdebuild-user-mode-linux: use pdebuild-internal if USE_PDEBUILD_INTERNAL option is 'yes'
+
+	* pdebuild-internal: Implement a pbuilder execute script to be
+	used for pdebuild without doing debian/rules clean outside of chroot.
+
+	* pbuilder-checkparams: support multiple bindmounts;
+	delimit it with spaces.
+
+	* pbuilder-modules: add --debug option here.
+
+2003-12-20  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/execute_installtest.sh: add /etc/mailname hack for emacs.
+	note known bugs as comment.
+
+2003-12-18  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: update changelog for 0.96 release 
+
+2003-12-16  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/control (Description): do not conflict with older bash.
+
+	* pbuilder-buildpackage-funcs: 
+	* pbuilder-checkparams: do not error out on
+	failure to unset.
+
+	* pbuilder.8: document --debug.
+
+	* pbuilder-checkparams (IGNORE_UMOUNT): --debug option.
+
+	* pbuilder-createbuildenv: 
+	* pbuilder-updatebuildenv: use PBUILDER_DEBUGMODE variable
+
+	* pbuilder-createbuildenv (DEBOOTSTRAPSCRIPT): use $TRAP instead of trap,
+	and set TRAP to trap only when PRESERVE_BUILDPLACE is not yes.
+
+	* Makefile (install): install new examples.
+
+	* Documentation/pbuilder-doc.xml: Document execute_installtest.sh
+
+	* examples/execute_installtest.sh: Install testing script. Calls apt.
+
+	* testsuite/run-test.sh (PBUILDER_UML): add regression test on execute script.
+
+	* pbuilder-user-mode-linux.1: update manual page on 
+	passing on of the command-line on 'execute'.
+
+	* pbuilder.8: update manual page on passing on of the 
+	command-line on 'execute'
+
+	* pbuilder-user-mode-linux (UML_EXECUTE_EXTRAOPT): added new option
+	for appending parameters to the end of the pbuilder-command-line.
+
+	* examples/execute_paramtest.sh: sample execute script;
+	to give what is given as a parameter.
+
+	* pbuilder-user-mode-linux: || true on unset.
+
+	* pbuilder: Accept command-line options for 'execute' command
+
+2003-12-15  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): document problem with /dev/null
+
+2003-12-14  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): add notes on debconf inside pbuilder.
+
+2003-12-11  Junichi Uekawa  <dancer@debian.org>
+
+	* debuild-pbuilder.1: fix document formatting error, from Roland Stigge.
+
+	* pbuilder-runhooks (hooks): Try and detect file name non-matching case 
+	for hooks, from Dale Amon.
+
+2003-11-28    <dancer@zaurus>
+
+	* Documentation/pbuilder-doc.xml: update
+
+2003-11-27  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/control (Conflicts): add conflicts against old bash.
+	unset fails.
+
+2003-11-21  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): add notes on fakechroot.
+
+2003-11-16  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: preen fsck.
+	comment out fsck bit, it's too slow.
+
+	* THANKS: add 
+
+	* pbuilder-runhooks: fix warning messages to be more correct, thanks
+	to Daniel Martin.
+
+2003-11-11  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): reorder umount and mount so that 
+	dev, devpts, proc is done in that order.
+
+2003-11-09  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: Do no hard-fail if I fail to fsck; 
+	fsck isn't really a requirement.
+
+2003-11-08  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: add fsck
+
+2003-11-06  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild-user-mode-linux.1: update documentation.
+
+	* pdebuild.1: typographical fix.
+
+	* pdebuild-user-mode-linux (ARCHITECTURE): update to support --configfile option.
+
+2003-10-29  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: note the memo.
+
+	* elmo.txt: note on apt.
+
+2003-10-28  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild.1: pbuilder will use the config file that is specified
+	as pdebuild command-line.
+
+	* pdebuild (ARCHITECTURE): Add --configfile to the call to pbuilder 
+	invocation.
+
+	* pbuilder-checkparams (IGNORE_UMOUNT): EXTRA_CONFIGFILE is an array
+	containing the list of CONFIGFILEs loaded via --configfile.
+
+	* pbuilder-user-mode-linux: rename variable that looked similar to 
+	other variable. CONFIGFILE->SYSTEM_CONFIG.
+
+	* pbuilder-checkparams (IGNORE_UMOUNT): add error check to --configfile option
+
+	* pbuilderrc.5: update docs on BUILDRESULT not effective on 
+	pdebuild.
+
+	* pdebuild.1: add notes on pdebuild requiring buildresult to be 
+	specified.
+
+2003-10-23  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): fix quoting.
+
+	* pbuilderrc.5: update doc to mention mirrorsite.
+
+2003-10-20  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: document.
+	add more warnings against bind mounting. -xdev does cross bind-mount boundaries if they are the same device.
+
+2003-10-18  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile (clean): fix clean rule to clean up
+
+	* testsuite/run-test.sh (PBUILDER_UML): add more cases, test-build debootstrap also.
+
+	* pbuilder-modules (pbuilder-options): change policy-rc.d to allow makedev
+	to run.
+
+	* pbuilder-user-mode-linux.1: update doc.
+
+	* pbuilder-user-mode-linux (UML_DEBUGMODE): error check if BUILDPLACE
+	is user-accessible.
+
+2003-10-10  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): change the wording slightly
+	and document a workaround.	
+
+2003-10-05  Junichi Uekawa  <dancer@debian.org>
+
+	* THANKS: update thanks file.
+
+2003-10-03  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux (BUILDING_DSC_FILE): error checking on readlink.
+
+	* pbuilder-checkparams (IGNORE_UMOUNT): error-checking on readlink.
+
+2003-09-24  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): actually, return 101 for policy-rc.d
+
+	* debian/TODO: update
+
+	* pbuilder-modules (pbuilder-options): install policy-rc.d inside chroot if it does not exist,
+	and make it a dummy exit-all one.
+
+	* THANKS: add Aaron here.
+
+	* pbuilder-buildpackage (PACKAGENAME): use echo here, so that su won't 
+	mess up the command-line. c.f. 203584, "Aaron M. Ucko" <ucko@debian.org>
+
+2003-09-23  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: update
+
+	* pbuilder.8: updated docs.
+
+	* pbuilder-user-mode-linux.1: add docs on new options, mirror and nonusmirror.
+
+	* testsuite/run-test.sh (PBUILDER_UML): add option --mirror.
+
+	* pbuilder-user-mode-linux (UML_DEBUGMODE): support mirror option to set mirror, and nonusmirror.
+
+2003-09-22  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild (ARCHITECTURE): do not || true for dpkg-buildpackage -S.
+
+	* testsuite/run-test.sh (PBUILDER_UML): update script to test both sid and sarge.
+
+2003-09-19  Junichi Uekawa  <dancer@debian.org>
+
+	* testsuite/run-test.sh (PBUILDER_UML): download
+
+	* Makefile (clean): remove testsuite/testimage, it's 1G.
+	(full-check): add new target to run the test program.
+
+	* pbuilder-user-mode-linux (UML_EXITCODE): check for rootstrap.conf in the 
+	current directory.
+
+	* testsuite/run-test.sh (PBUILDER_UML): a test script to run pbuilder-uml and see if it's working.
+
+	* testsuite/rootstrap.conf (interface): testsuite config
+
+2003-09-05  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-uml.conf.5: document slirp here also.
+
+2003-09-04  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux.1: Document how to use slirp; 
+	  it was actually easy.
+
+	* pbuilder-modules: fix typo in file existence checking.
+
+	* debian/TODO:  how about passing "-o dpkg::Options=--force-confnew" to apt? is now done.
+	Request from Roland Stigge <ernie@atari.antcom.de>
+	to finally implement the missing feature.
+
+	* pbuilder-checkparams: set FORCE_CONFNEW array variable if 
+	DEBIAN_FRONTEND is noninteractive to allow non-interactive install.
+
+	* pbuilder-updatebuildenv: use FORCE_CONFNEW variable to 
+	give force-confnew option to DPKG
+
+2003-09-02  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: check if etc/hosts etc. exists before trying to 
+	readlink.
+
+2003-09-01  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: 0.85
+
+	* THANKS: update
+
+	* pbuilder-checkparams (IGNORE_UMOUNT): fix case of --basetgz option
+	when the base.tgz does not exist (pbuilder create).
+	readlink failed if file did not exist.
+
+2003-08-27  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (PBUILDER_UML_IMAGE): Update 
+	  documentation to note updates that I am aware of.
+
+	* THANKS: update the list.
+
+	* pbuilder.8: fix unintended italic in manual page
+	Subject: Bug#207390: italicized period in manual page
+	From: Matt Kraai <kraai@alumni.cmu.edu>
+
+	* pbuilder-buildpackage (BUILD_PID): add default BUILDRESULTGID for chown.
+
+2003-08-25  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/README.Debian (Testsuite): update README.Debian
+
+2003-08-22  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: error out when COW file cannot be created.
+	(UML_DEBUGMODE): add --buildplace option.
+
+	* pbuilder-user-mode-linux.1: update manual page since some 
+	information are missing.
+	Add information on --buildplace option.
+
+2003-08-20  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: give a more helpful message when /dev/ubd/1  is not mountable.
+	Give a warning message that running as uid=0 is not supported.
+
+	* pbuilder-buildpackage (BUILD_PID): Use chown "userid:" instead of 
+	"userid"
+
+2003-08-15  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): Document uml-net group requirement for user-mode-linux.
+
+	* THANKS: update.
+
+	* pbuilder-user-mode-linux (UML_EXITCODE): check against no --distribution flag.
+	pbuilder-user-mode-linux errored out when no distribution was set.
+	From: Marek Habersack <grendel@debian.org>
+
+	* pbuilder-user-mode-linux.1: update document to note that 
+	pbuilder-uml shouldn't be ran as root.
+
+2003-08-09  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): rm -r replacement, 
+	clean_subdirectories, use this instead of rm -rf, to check for 
+	-xdev.
+
+2003-08-05  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: add 'rw' option to linux invocation to mount 
+	/ read-write.
+
+2003-08-01  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux (UML_EXITCODE): remove |lv from pipe, 
+	it's not needed. 
+	Subject: Bug#203732: pbuilder-uml: Missing dependency on lv
+	From: Daniel Schepler <schepler@math.berkeley.edu>
+
+
+2003-07-27  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: support --distribution flag for 
+	pbuilder-user-mode-linux
+	#176095
+
+2003-07-26  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/pbuilder.links: Try symlinking /etc/pbuilderrc to /etc/pbuilder/pbuilderrc
+
+2003-07-22  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: document update, to clarify 
+	a little bit on where the example for running lintian is.
+
+2003-07-08  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: update to note about user-mode-linux quirks.
+
+	* pbuilder-uml.conf.5: note that APTCACHEHARDLINK
+
+	* Documentation/pbuilder-doc.xml: document the error for LOGNAME not defined warning, Invalid cross-device link error, and conflict against essential being a bad idea.
+
+2003-07-03  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux.1: document that.
+
+	* pbuilder-user-mode-linux (UML_DEBUGMODE): interpret --configfile itself and then pass to pbuilder.
+
+2003-06-07  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: update documentation so that --othermirror is obvious.
+
+2003-05-17  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): add notes on pbuilder
+	backport.
+
+2003-04-24  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: note that --configfile option
+	is useful for switching distributions.
+
+2003-04-20  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-satisfydepends: use Source: rather than Format.
+	Format does not exist on very old .dsc files.
+	189691 Daniel Schepler
+
+2003-04-19  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder: update copyright date.
+
+	* pbuilder-buildpackage (PACKAGENAME): moved around D hook location
+	so that D hook is called before satisfying build-deps.
+	update copyright date.
+
+	* pbuilder.8: minor improvements on the documentation wording.
+
+2003-04-17  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (PBUILDER_UML_IMAGE): update and document 
+	/tmp peculiarity.
+
+	* pbuilder-user-mode-linux.1: document /tmp peculiarity
+
+2003-04-11  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: update TODO, bind mount, and other entries.
+
+2003-04-10  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): added id tags to 
+	facilitate with wysidocbookxml
+
+2003-04-09  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux (EXTRAOPT): Change to use new hostfs options
+	for user-mode-linux
+
+2003-04-08  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update documentation a bit.
+
+	* debian/TODO: update the TODO file wrt bind-mount/hostfs for UML.
+
+	* pbuilder-user-mode-linux: Do not try to umount 
+	the mountpoints. There is no point in doing that.
+	This works around the problem of non-upgradable UML.
+
+	* pbuilder-modules (pbuilder-options): support IGNORE_UMOUNT
+	option, and do not umount.
+
+	* pbuilder-checkparams (IGNORE_UMOUNT): split --no-targz and 
+	--internal-build-uml.
+	new variable IGNORE_UMOUNT, for ignoring umount.
+
+2003-04-06  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): document 
+	bindmounts option.
+
+	* pbuilderrc: add reference to the manual page in the example 
+	  configuration file.
+
+	* pbuilder-user-mode-linux (UML_DEBUGMODE): --bindmounts option.
+
+	* debian/TODO: remove bind-mount from TODO.
+
+	* pbuilder.8: document --bindmounts.
+
+	* pbuilder-modules (pbuilder-options): add --bindmounts option
+
+	* pbuilder-checkparams (PRESERVE_BUILDPLACE): add --bindmounts option
+
+	* AUTHORS: update
+
+	* pbuilderrc.5: document BINDMOUNTS option
+	
+2003-04-05  Sam Hartman  <hartmans@debian.org>
+ 
+ 	* pbuilder: Remove warning about bind filesystems as it is no
+ 	longer true. 
+ 
+ 	* pbuilder-modules :  Support Bind mounts
+ 
+ 	* pbuilderrc (BINDMOUNTS): New option
+ 
+2003-04-05  Sam Hartman  <hartmans@debian.org>
+ 
+ 	* pbuilder-modules (cleanbuildplace): Use find not  rm -rf to
+ 	clean up; avoid crossing out of the chroot on bind mounts. 
+ 
+2003-03-30  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (PBUILDER_UML_IMAGE): spell-checked
+
+2003-03-17  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: add new FAQ entry on 
+	using apt cache for pbuilder files.
+
+2003-03-12  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (pbuilder-options): fix applying of preserve-buildplace patch.
+
+	* pbuilder-checkparams (PRESERVE_BUILDPLACE): thinko fix.
+	do not unset buildresult.
+	184420,184422
+
+2003-03-11  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage (PACKAGENAME): add missing PACKAGENAME.
+	duh.
+
+	* pbuilder-satisfydepends: unquote checkbuilddep_versiondeps ${CURRENTREALPKGNAME}
+
+	* pbuilder-checkparams (PRESERVE_BUILDPLACE): the next day bug.
+	let -buildresult '' to set BUILDRESULT to ''.
+
+2003-03-10  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-checkparams (PRESERVE_BUILDPLACE): support pbuilder-user-mode-linux invocation for --buildresult.
+
+	* pbuilder.8,pbuilder-createbuildenv,pbuilder-updatebuildenv: change hook name to E.
+
+	* debian/rules: add check target for build.
+
+	* Makefile (check): add check target to makefile, to see if there is 
+	any syntax error.
+
+	* pbuilder-updatebuildenv: support --preserve-buildplace
+	apply things from 
+	Daniel Schepler <schepler@math.berkeley.edu>
+
+	* pbuilder-satisfydepends: support --preserve-buildplace
+	support Format: field.
+
+	* pbuilder-modules (pbuilder-options): support --preserve-buildplace
+
+	* pbuilder-buildpackage (PACKAGENAME): support --preserve-buildplace
+
+	* pbuilder-buildpackage-funcs: support --preserve-buildplace
+
+	* pbuilder-createbuildenv (DEBOOTSTRAPSCRIPT): support --preserve-buildplace
+
+	* pbuilder-checkparams (PRESERVE_BUILDPLACE): add PRESERVE_BUILDPLACE
+
+	* pbuilder.8: update docs to add --preserve-buildplace
+
+	* pbuilder-satisfydepends: quote some strings... trying to be pedantic
+
+	* pbuilder-buildpackage-funcs: unset LOGNAME for when building with 
+	real root privilage.
+	thanks Barak Pearlmutter <bap@cs.unm.edu>
+
+	* pbuilder.8: document X hooks which were previously undocumented.
+
+	* pbuilder-user-mode-linux (BUILDING_DSC_FILE): use readlink on real existing files.
+	GNU "readlink -f " exits with an exit code of 1 when the file does not 
+	exist, debianutils readlink did not. 
+
+	* pbuilder-runhooks (hooks): do not call readlink here, 
+	  since the file may not exist.
+
+	* pbuilder-checkparams (USE_PKGNAME_LOGFILE): use readlink on real existing files.
+
+	* pbuilder-buildpackage (PACKAGENAME): use readlink on real existing files.
+
+2003-03-09  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: fix typo 
+	From: Tommaso Moroni <tommaso.m@tiscalinet.it>
+	Subject: Bug#184049: pbuilder: typo error in man page
+
+	* THANKS: update.
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): add doc on PS1 
+	setting for pbuilder.
+	183861: distinctive prompt
+	Barak Pearlmutter <bap@cs.unm.edu>
+
+2003-03-06  Junichi Uekawa  <dancer@debian.org>
+
+	* AUTHORS: update authors and thanks file.
+
+2003-03-01  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-satisfydepends: Try giving out messages on fail to install,
+	and bugfix.
+	from Daniel Schepler <schepler@math.berkeley.edu>
+
+	* Documentation/pbuilder-doc.xml: update documentation info 
+	somewhat to match what dxml-db2latex expects.
+
+2003-02-22  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder: check if it is in UML mode, and do not warn if it is in 
+	UML mode.
+
+2003-02-14  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: update ssh installing script 
+	to allow X forwarding.
+
+2003-02-13  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: document an example script to 
+	start up ssh inside pbuilder-uml.
+
+	* pbuilder-checkparams: support execute option.
+
+	* Documentation/pbuilder-doc.xml: document pbuilder-uml more, 
+	and execute command.
+
+	* pbuilder-modules: update copyright statement.
+	document "execute"
+
+	* pbuilder-user-mode-linux.1: document "execute" command
+
+	* pbuilder-user-mode-linux: implement execute command.
+
+	* pbuilder.8: document "execute"
+
+	* pbuilder: "execute" command.
+
+2003-02-10  Junichi Uekawa  <dancer@debian.org>
+
+	* pdebuild: set pdebuild here as well.
+
+	* pbuilder-checkparams (BASEBUILDPLACE): support the convention, and 
+	do not exec < /dev/null in that case.
+
+	* pdebuild-user-mode-linux (PBCURRENTCOMMANDLINEOPERATION): set to
+	pdebuild-user-mode-linux.
+
+	* pbuilder-user-mode-linux.1: fix manual to have pbuilder-uml.conf.5
+
+	* Makefile (install): add pdebuild-user-mode-linux
+
+	* pdebuild-user-mode-linux.1: Initial manual page.
+
+	* pdebuild-user-mode-linux: try making a new script that 
+	uses pbuilder-user-mode-linux for building instead of pbuilder.
+
+2003-02-04  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage-funcs: use "cp -p" in copydsc
+
+2003-01-29  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder: add warning on never to bind mount on login.
+
+	* pbuilder-uml.conf.5: document the FQDN lookup quirk.
+
+	* pbuilder-uml.conf (UML_HOSTNAME): default value is the hostname
+	of the host system.
+
+2003-01-28  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): document that.
+
+	* pbuilder.8: document apt-get update hook.
+
+	* pbuilder-satisfydepends: apply patch from Daniel Schepler <schepler@math.berkeley.edu>,
+	fixing obvious typos. Bug: 178552
+
+2003-01-18  Junichi Uekawa  <dancer@debian.org>
+
+	* THANKS: update.
+
+	* pbuilder-modules (pbuilder-options): doit=cp instead of "ln -s".
+	in pbuilder-modules.
+	Thanks to eichin@metacarta.com (Mark Eichin) for reporting this.
+	Bug: 177173
+
+2003-01-16  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (save_aptcache,recover_aptcache): 
+	use "find | while read ; " combination to go over the limits of 
+	shell globbing.
+	#176872, reported by "Michel D辰nzer" <daenzer@debian.org>.
+
+2003-01-10  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: use /var/cache/pbuilder/pbuilder-umlresult 
+	as directory to mount hostfs for result.
+	(UML_DEBUGMODE): --uml-debugmode option to enable trace of 
+	shell.
+
+	* Makefile (install): create pbuilder-umlresult dir.
+
+	* pbuilder-uml.conf.5: document UML_BUILDRESULT
+
+	* pbuilder-uml.conf (UML_BUILDRESULT): add UML_BUILDRESULT=
+
+	* pbuilder-user-mode-linux (EXTRAOPT): add support for exitcode.
+	Thanks mdz for the hint!
+	(UML_EXTRAOPT): try and implement BUILDRESULT
+
+2003-01-09  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: use /var/cache/pbuilder/pbuilder-mnt
+	instead of /mnt, which may be used for other tasks.
+	PBUILDER_COWFILENAME is buildplace/$$.cow.
+
+	* Makefile (install): install /var/cache/pbuilder/pbuilder-mnt dir.
+
+	* pbuilder-user-mode-linux (UML_EXTRAOPT): --buildresult ignore.
+
+	* pbuilder-user-mode-linux.1: document --uml-hostname
+
+	* pbuilder-user-mode-linux: set hostname inside UML.
+	(UML_EXTRAOPT): --uml-hostname option.
+
+	* pbuilder-uml.conf.5: document
+
+	* pbuilder-uml.conf (UML_HOSTNAME): add variable for hostname
+
+2003-01-08  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux (UML_EXTRAOPT): --logfile option.
+
+	* pbuilder-user-mode-linux.1: and document these new options.
+
+	* pbuilder-user-mode-linux (OPERATION): --override-config option passed
+	through to pbuilder.
+	(EXTRAOPT): quote ${EXTRAOPT} which is probably meant to be passed 
+	through.
+	(UML_EXTRAOPT): define as variable that is used to pass uml extra options.
+	and, of course, add these options: --binary-arch --override-config --timeout --http-proxy --configfile --hookdir --aptconfdir
+
+
+	* debian/rules (binary-arch): add manual page installation
+
+	* pbuilder-uml.conf.5: new manual page
+
+	* pbuilder-uml.conf (UML_MEM): Use 128MB memory per default, it would 
+	be better to use that.
+
+	* pbuilder-user-mode-linux: export HOME inside UML
+	Try and umount the device afterwards, so that it will be clean-mount
+	the next time.
+	thanks: Matt Zimmerman <mdz@debian.org>
+	(OPERATION): --uml-mem option.
+
+	* pbuilder-checkparams: update copyright
+
+	* pdebuild: update copyright info.
+
+	* update copyright information to add 2003.
+
+	* pbuilder-user-mode-linux: LOGNAME is set as soon as
+	entering UML.
+
+2003-01-07  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (PBUILDER_UML_IMAGE): update notes
+	on parallel-invocation of pbuilder-uml
+
+	* Documentation/pbuilder-doc.xsl: stylesheet
+
+	* Documentation/Makefile (%.html): build rules updated thusly.
+
+	* Documentation/pbuilder-doc.css: add new file to match netfort page style.
+
+	* Documentation/pbuilder-doc.xml: update documentation
+	and add chapter on pbuilder-uml, document that pbuilder-uml actually
+	works, and some detailed nodes on how to use them.
+	Add FAQ entry on how to specify extra apt sources.
+	fix encoding to be utf-8
+
+	* pbuilder-user-mode-linux.1: update doc to document that 
+	configuration files for pbuilder is now read in.
+
+	* pbuilder-user-mode-linux: add debug info, to print out
+	the command-line used for running uml.
+	export TMPDIR=/tmp inside the chroot inside UML.
+	change UML_CHROOT_MOUNTPOINT from /tmp/ubd1 to /mnt,
+	and do not mkdir UML_CHROOT_MOUNTPOINT.
+	fix /tmp creation script so that /tmp is writable when
+	not using tmpfs.
+	use tempfile in creating the COW file.
+	clean COW file after finishing.
+	remove temporary file created by tempfile, because UML doesn't seem to 
+	like the zero-byte file. (POSSIBLE SECURITY PROBLEM)
+	extra cleanup added for cleanup_function
+
+	* pbuilder-uml.conf (BUILDPLACE): add definition of BUILDPLACE
+	for pbuilder-uml. It is probably needed, because BUILDPLACE
+	needs to be writable by the user for UML, while it is not for 
+	pbuilder.
+
+	* pbuilder-user-mode-linux: load config for pbuilder also, before
+	trying to load other things.
+
+2003-01-06  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml (EXTRAPACKAGES): document possible usage of pbuilder for dchroot.
+
+	* pbuilder.8: document --no-targz
+
+	* pbuilder-checkparams (USE_PKGNAME_LOGFILE): allow
+	--no-targz option as alias to --internal-build-uml
+
+	* pdebuild (ARCHITECTURE): use dpkg-architecture
+	to find out the architecture.
+	sign changes file not dsc file.
+	pointed out by
+	Andrew Lau <netsnipe@debianplanet.org>, bug #175432
+
+2003-01-04  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/control (Description): fix suggests to pbuilder-uml
+
+2003-01-03  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/pbuilder-doc.xml: add notes on what kind of things 
+	to expect when mass-autobuilding.
+
+2002-12-31  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/README.Debian (Testsuite): update the number of 
+	packages which do build and not build.
+	5000 builds -> 6000
+	1000 fail -> 600
+
+	* Documentation/pbuilder-doc.xml: import some parts from 
+	README.Debian.
+
+	* debian/README.Debian (Try): removed some parts to XML doc.
+
+	* Documentation/pbuilder-doc.xml: add notes on how to set up 
+	pentium-builder  for building.
+
+	* Documentation/Makefile (install): add install method.
+
+	* Makefile (install): add install method for docs.
+
+	* Documentation/pbuilder-doc.xml: history of pbuilder moved to here.
+
+	* AUTHORS: history and background of pbuilder is moved over and 
+	remove from here.
+
+	* Documentation/pbuilder-doc.xml: add docs on pbuildd.
+
+	* pbuildd/Makefile (install): add /var/cache/pbuilder/pbuildd dir
+
+2002-12-30  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile: install pbuildd files as well.
+
+	* pbuildd/buildd.sh: modified for pbuilder.
+
+	* pbuildd/buildd-config.sh (HOOKDIR): modified for pbuilder.
+
+2002-12-28  Junichi Uekawa  <dancer@debian.org>
+
+	* Documentation/Makefile (all): documentation makefile.
+
+	* Documentation/pbuilder-doc.xml: start to create documentation.
+
+2002-12-23  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-satisfydepends: add note of which versions to try in pdebuild.
+
+2002-12-18  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: try to use COW device.
+	I had a typo, fix it.
+
+	* pbuilder-user-mode-linux.1: document
+
+2002-12-16  Junichi Uekawa  <dancer@debian.org>
+
+	* THANKS: update.
+
+	* pdebuild.1: More vigorously document pdebuild option, which changed.
+	From: Jose Carlos Garcia Sogo <jsogo@debian.org>.
+
+2002-12-15  Junichi Uekawa  <dancer@debian.org>
+
+	* THANKS: update this file, thinking that this file is probably autogenerated from
+	ChangeLog on other projects...
+
+	* pbuilder-modules (pbuilder-options): modify the ordering of scripts so that 
+	concurrent-build experience is more active.
+	(pbuilder-options): extraction does not need the locking, does it?
+	I can ignore the locks while extracting. Creating the tarball needs to 
+	lock the file. mv will not replace inodes, and running extraction routines
+	will not be affected by it.
+	Therefore I am removing the locking completely from extraction routines.
+	At request of Sam Couter <sam@couter.dropbear.id.au> 
+
+2002-12-13  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/D10tmp: fix error in script.
+
+	* examples/C10shell: example of shell invocation.
+
+	* Makefile (install): install dpkg-i example.
+
+	* examples/B91dpkg-i: add new file to demonstrate using script to
+	automatically install packages.
+
+	* README: update the readme file for a change, since 
+	Andrew Stribblehill <a.d.stribblehill@durham.ac.uk> noticed a
+	mistake.
+
+2002-12-12  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage (PACKAGENAME): add banner for logfile.
+
+	* debian/control (Recommends): add devscripts to recommends
+
+	* pbuilder-checkparams (USE_PKGNAME_LOGFILE): fix typo
+
+	* pbuilder-modules (pbuilder-options): add reference to pkgname-logfile to help text.
+
+	* pbuilder.8: documentation of pkgname-logfile moved closer to --logfile option.
+
+	* ChangeLog: spell-checked.
+
+	* pbuilder.8: document --pkgname-logfile option.
+	From Michael Banck <mbanck@gmx.net>, requested feature.
+
+	* pbuilder-checkparams (PBUILDER_BUILD_LOGFILE): logfile name is stored in PBUILDER_BUILD_LOGFILE
+	(PBUILDER_BUILD_LOGFILE): add --pkgname-logfile option for using logfile with pkgname-version.log
+	(USE_PKGNAME_LOGFILE): make this variable be usable only as command-line option, and not for 
+	configuration.
+
+	* pbuilderrc.5: update doc to document AUTO_DEBSIGN
+
+	* pdebuild: force set BUILDRESULT from pdebuild options when invoking pbuilder, so that config from
+	pdebuild is used inside pbuilder.
+	(PKG_SOURCENAME, PKG_VERSION): define as version and source base name.
+	(debsign): invoke debsign when AUTO_DEBSIGN=yes.
+	From Andrew Lau <netsnipe@debianplanet.org>, requested feature.
+
+	* pdebuild.1: update docs, so that --buildresult quirk is documented,
+	and --auto-debsign is documented.
+
+	* pbuilder-checkparams: change option ordering so that
+	internal options go at bottom.
+	--auto-debsign option added for setting AUTO_DEBSIGN=yes
+	(BINARY_ARCH): move buildsourceroot and pbuilderroot option around 
+	so that they are in the pdebuild options section.
+
+	* pbuilder.8: fix the documentation to clarify that A is executed 
+	after satisfying the build-depends.
+
+2002-12-07  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage-funcs: apply patch from Daniel Schepler <schepler@math.berkeley.edu>,
+	to properly use BUILDOPT in checkbuilddep.
+
+2002-11-27  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage-funcs: try and implement binary-arch option.
+
+	* pbuilder-checkparams (--binary-arch): set DEBBUILDOPTS.
+
+	* pbuilder.8: document --binary-arch
+
+	* pbuilder-modules (pbuilder-options): add doc of binary-arch
+
+	* pbuilder-checkparams (OVERRIDE_APTLINES): --binary-arch option.
+	(BINARY_ARCH): set initial value to "no".
+	thanks: Daniel Schepler <schepler@math.berkeley.edu>
+
+	* THANKS: update.
+
+	* pbuilder-buildpackage-funcs (createbuilduser): do not set HOME here.
+
+	* pbuilder-buildpackage (PACKAGENAME): make HOME to be "/tmp/buildd".
+	thanks: Clint Adams <schizo@debian.org>
+
+2002-11-25  Junichi Uekawa  <dancer@debian.org>
+
+	* THANKS: update list of people.
+
+	* pbuilder-modules (pbuilder-options): display value of $BASETGZ instead of 
+	base.tgz
+	Bug: 167813
+	Thanks: Michael Banck <mbanck@gmx.net>
+
+	* pbuilder-user-mode-linux: Fix the order of conffile loading.
+	Bug: 167808
+	Thanks: Peter Hawkins <peter@hawkins.emu.id.au>
+
+2002-11-12  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/README.Debian: update documentation a 
+	little-bit.
+
+2002-10-30  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.8: update documentation for --debemail, it was wrong.
+
+	* pbuilderrc.5: update documentation for DEBEMAIL, it was wrong.
+
+	* pbuilderrc (HOOKDIR): Set default DEBEMAIL to "".
+
+	* pbuilder-satisfydepends: remove the debug thing.
+
+	* debuild-pbuilder: a better handling of directory, copied from pdebuild.
+
+	* pbuilder-satisfydepends: make CHROOTEXEC invocation to make 
+	it less ambiguous, for versiondeps.
+
+2002-10-29  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage-funcs: unset LOGNAME
+
+	* pbuilder-satisfydepends (--continue-fail): add a new feature to debug.
+
+	* pbuilderrc.5: update
+
+	* pbuilder.8: update documentation slightly.
+
+	* THANKS: update thanks file.
+
+	* pbuilder-buildpackage-funcs: LOGNAME is set to BUILDUSERNAME, and
+	Create shadow entry for inside chroot on fakerooting as well.
+	Reported by: Robert Bihlmeyer <robbe@orcus.priv.at>
+
+	* pbuilder-buildpackage: Changed to work with trap instead of other
+	kludgey alternatives.
+
+	* pbuilder-buildpackage-funcs: fixed to use trap for buildpackage hooks.
+
+2002-10-27  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-checkparams (BASEBUILDPLACE): check for user-mode-linux operation,
+	Reported by ranty@debian.org
+	Bug: #166194
+
+2002-10-23  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage-funcs: clean up when dsc-file copying into chroot fails.
+
+2002-10-19  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: beautify file, with Todoo mode.
+
+	* debian/control (Standards-Version): 3.5.7
+
+        * and revert the change made.... fuser will kill anything that 
+	uses proc, which may be outside the chroot (including X and other
+	things..)
+	
+	* pbuilder-modules (umountproc): use "umount_one".
+
+	* debian/control (Suggests): add psmisc Suggestion.
+
+	* pbuilder-modules (umount_one): generic umount module split out from
+	umountproc
+	Add FORCE_KILL_WITH_FUSER option, kills processes with fuser if 
+	"yes"
+	Reported by Thorsten Sauter <tsauter@gmx.net>
+
+2002-10-18  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage-funcs: hack HOME variable.
+
+2002-10-16  Junichi Uekawa  <dancer@debian.org>
+
+	* THANKS: update.
+
+	* AUTHORS: update, add hmh.
+
+	* debian/README.Debian: update a lot.
+
+	* pbuilderrc.5: update doc to mention --override-config
+
+	* pbuilder.8: update doc to mention that sid/sarge/woody are supported.
+	update doc to mention --override-config
+
+	* pbuilder-modules: update the help text a little bit.
+
+	* pbuilder-checkparams (OVERRIDE_APTLINES): new option --override-config
+	to install new aptlines.
+
+	* pbuilder-modules (extractbuildplace): Check that OVERRIDE_APTLINES is not set,
+	and rewrite apt lines.
+	Bug: #164473
+
+	* pbuilder-satisfydepends: apply patch from hmh, thanks!
+	It now searches for a version that matches.
+	Bug: #164919
+
+2002-10-11  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (create_basetgz): new function
+	add file locking
+	(extractbuildplace) add file locking.
+
+	* pbuilder-updatebuildenv: use create_basetgz
+
+	* pbuilder-createbuildenv (DEBOOTSTRAPSCRIPT): make error handling more
+	fine-grained, and add more handling for error cases.
+	(create_basetgz): move function over to -modules.
+	and use it.
+
+2002-10-05  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage (BUILD_PID): fix more quoting problems with
+	PID. $! cannot be inside "". It seems.
+
+	* debian/TODO: note that TODO item, support building without
+	root is implemented.
+	Running as non-root in the build process is implemented through
+	the fakeroot options, so that entry goes away, too.
+
+	* AUTHORS: update the little story.
+
+	* THANKS: update a bit.
+
+	* pbuilder-buildpackage (BUILD_PID): quote properly
+
+2002-09-29  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: update manpage to document the vars.
+
+	* pbuilder-buildpackage (BUILD_PID): preserve file permissions 
+	on copying the result.
+	(BUILDRESULTUID,BUILDRESULTGID): define UID and GID.
+	chown and chgrp to the user ID after build.
+
+2002-09-25  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-runhooks (hooks): do not error out if there are no hooks in the hookdir.
+
+	* debuild-pbuilder.1: fix typo.
+	update date. 
+	add author and URL.
+
+	* pdebuild.1: add author, URL.
+
+	* pbuilder.8: update date and add URL.
+
+	* pbuilderrc.5: add credits and upstream URL.
+	update date.
+
+2002-09-24  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules (copy_local_configuration): fix the 
+	rules to copy over to work around debootstrap breakage
+	with handling of symlinks.
+	Remove the target file prior to copy.
+	
+2002-09-22  Junichi Uekawa  <dancer@debian.org>
+
+	* THANKS: updated thanks file.
+
+	* pbuilder.8: update documentation, to clarify a bit.
+
+	* pbuilder-checkparams (BUILDPLACE): Change command-line parsing
+	so that it should fix problems with specifying configfile.
+	(BUILDPLACE): only set CHROOTEXEC if it is empty.
+	set CHROOTEXEC to be empty at the start of param checking.
+
+	* pbuilder-createbuildenv: use pbuilder-modules code for
+	copying etc/ files.
+
+	* pbuilder-modules: split out the function to copy local configuration.
+
+2002-09-19  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/rules (binary-indep): install pbuilder-user-mode-linux.1 manpage.
+
+	* pbuilder-user-mode-linux.1: document with more details.
+
+	* pbuilder-user-mode-linux (OPERATION): add distribution option.
+
+2002-09-18  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-uml.conf: change configuration file so that it is more  generic.
+
+	* debian/pbuilder-uml.files: add more files to be moved over to pbuilder-uml package.
+
+	* pbuilder-user-mode-linux: change the filenames to pbuilder.conf pbuilder-uml.conf
+
+	* pbuilder-user-mode-linux.1: document config files.
+
+	* pbuilder-uml.conf: change filename.
+
+	* uml.conf: new file created.
+
+	* pbuilder-user-mode-linux (BUILDING_DSC_FILE): add update after create. It should work better.
+	(UML_MOUNT_TMPFS): add config file loading routine.
+
+2002-09-17  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux (UML_MOUNT_TMPFS): fix update whatever.
+
+	* pbuilder-user-mode-linux.1: create manual page
+
+	* pbuilder-user-mode-linux (BUILDING_DSC_FILE): update script to get it working.
+
+2002-09-16  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux (BUILDING_DSC_FILE): change the construct of the script.
+	(UML_MOUNT_TMPFS): make chroot tmpfs mounting optional.
+
+	* debian/control (Depends): add Source-Version dependency, because some modules 
+	are going to be incompatible with each other.
+
+	* debian/pbuilder-user-mode-linux.files: create file. Move pbuilder-user-mode-linux
+
+	* debian/rules: move the thing from binary-arch to binary-indep
+
+	* debian/control (Depends): update depends of debootstrap to 0.1.17.9
+
+	* pbuilder-user-mode-linux: add trapping and cleaning up routine.
+
+	* pbuilder-modules: modify things shuffling around until it works...
+
+	* pbuilder-user-mode-linux (BUILDING_DSC_FILE): add call to pbuilder update.
+
+	* pbuilder-updatebuildenv: check for INTERNAL_BUILD_UML and ignore the 
+	basetgz creation in UML.
+
+	* pbuilder-modules: remove invocation of hostname from uml.
+
+	* debian/control (Depends): require 1.31.1 or greater of debianutils for readlink
+
+	* Makefile (install): add pbuilder-user-mode-linux to install target
+
+	* debian/control (Depends): add depends on debianutils, for readlink
+
+	* pbuilder-user-mode-linux (BUILDING_DSC_FILE): use --internal-build-uml
+
+	* pbuilder-modules (extractbuildplace): change to do less things 
+	when INTERNAL_BUILD_UML is specified.
+	(cleanbuildplace): add check for INTERNAL_BUILD_UML
+
+	* pbuilder-checkparams (--internal-build-uml): new option.
+
+	* Makefile (install): add pbuilder-buildpackage-funcs to install target
+
+	* pbuilder-buildpackage (PACKAGENAME): add id tag for calling showbuildbanner
+
+	* pbuilder-buildpackage-funcs: create new file
+	add banner opt for showbuildbanner
+
+	* pbuilder-buildpackage: move funcs to /usr/lib/pbuilder/pbuilder-buildpackage-funcs
+
+2002-09-15  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-user-mode-linux: experimental file.
+
+2002-09-13  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-checkparams (CHROOTEXEC): add --internal-chrootexec option to set CHROOTEXEC variable.
+
+	* pbuilder-createbuildenv: remove def for CHROOTEXEC
+	* pbuilder-updatebuildenv: ditto
+
+	* pbuilder-checkparams (CHROOTEXEC): CHROOTEXEC is set in checkparams, instead of -buildpackage etc.
+
+2002-09-09  Junichi Uekawa  <dancer@debian.org>
+
+	* AUTHORS: add notes on devfs support.
+
+	* pbuilder-modules: add devfs support
+	Thanks to: "Dagfinn Ilmari Manns?er" <ilmari@ping.uio.no>
+
+	* pbuilderrc (USEDEVFS): change default value on USEDEVFS
+
+	* pbuilderrc.5: update docs on noninteractive.
+	document USEDEVFS
+
+2002-09-06  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: 0.36
+
+	* debian/rules (binary-arch): add manpage install
+
+	* pbuilder-loadconfig: create from checkparams. a module to load config files only.
+
+	* debuild-pbuilder: add debuild wrapper script.
+
+	* debuild-pbuilder.1: add manpage
+
+	* pbuilder-buildpackage (BUILD_PID): use "trap" a bit, so that error checking can be done at all.
+
+2002-08-27  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage (BUILD_PID): race condition with 
+	termination. Make it display message before KILL.
+
+2002-08-24  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage (BUILD_PID): add error checking for "kill"
+
+2002-08-20  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage (BUILD_PID): add better messages for 
+	build-termination process.
+	more verbose execution logs, better messages
+
+	* debian/docs: add THANKS.
+
+	* pbuilder-modules: document --timeout option.
+
+	* pbuilder.8: document --timeout option
+
+	* pbuilder-checkparams: add --timeout option
+
+	* pbuilderrc.5: document TIMEOUT_TIME
+
+	* pbuilder-buildpackage (CHROOTEXEC): add missing executehooks "C" to a
+	case.
+	(CHROOTEXEC): clean the command-line a bit, so that it's easier to use.
+	(BUILD_PID): add timeout for build process.
+
+2002-08-18  Junichi Uekawa  <dancer@debian.org>
+
+	* AUTHORS: added section about History and
+	background of pbuilder.
+
+2002-08-07  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: 0.35 release
+
+	* debian/control (Depends): stricter depends.
+
+	* debian/README.Debian: update notes
+
+2002-08-06  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: update manpage to make it more verbose
+
+2002-07-23  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile (install): add examples dir.
+	(install): install B90linda, D10tmp
+	(install): install them executable, probably. 
+
+2002-07-17  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: 0.33 release
+
+	* THANKS: Created file to credit people.
+
+2002-07-11  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-updatebuildenv: fix the && usage to use if.
+
+2002-07-07  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: document that "" for APTCACHE will turn off 
+	the caching, as pointed by Colin Walters
+
+	* pbuilder.8: add some documentation.
+
+2002-06-20  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/B90linda: added an example to use linda.
+
+2002-06-18  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/README.Debian: update README.Debian to note of TMPDIR.
+
+2002-05-30  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: add suggestion from david@josefine.at
+
+2002-05-26  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: use readlink -f to determine the real location of etc/hostname etc.
+
+2002-05-14  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage: add handler for some .dsc files which
+	contain something after the filenames, like ones which have the
+	undocumented url: field. (e.g. zope-extfile)
+
+2002-05-13  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder: modified clean target to load pbuilder-checkparams,
+	instead of sourcing the config file directly.
+	Change the test to if conditions.
+	Fixed a thinko.
+
+2002-05-07  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: document USEDEVPTS
+
+	* pbuilderrc (USEDEVPTS): added USEDEVPTS option, and change to yes.
+
+	* pbuilder-modules: mount /dev/pts and umount.
+	fixed messages
+
+2002-05-01  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: release 0.27
+
+2002-04-30  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/rules (binary-arch): change pbuilder manpage to 8
+
+	* pbuilderrc.5: change pbuilder manpage to 8
+
+	* pbuilder.1: change pbuilder manpage to 8
+
+	* pdebuild.1: change pbuilder manpage to 8
+
+	* pbuilderrc.5: updated documentation by comment from Steven M
+	Robbins. I appreciate this!
+
+2002-04-20  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: update a little bit.
+
+2002-04-13  Junichi Uekawa  <dancer@debian.org>
+
+	* examples/D10tmp: created TMPDIR creating script
+
+	* created examples dir, for example script.
+
+	* pbuilder.1: added notes on manpage
+
+2002-04-05  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage: "perl dpkg-source" instead of "dpkg-source"
+	for potato.
+	er... this didn't help, reverting.
+
+2002-03-31  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-satisfydepends: changed message slightly 
+	  to make things more visible.
+
+2002-03-24  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-satisfydepends: Build-Depends:[SPACE] is not forced.
+	  Fixed regexp. for "smurf"
+
+2002-03-13  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilderrc.5: fixed the documentation, somehow 
+	  --distribution doc was mixed in with --hookdir.
+	  refer to pbuilder.1 for --hookdir options.
+
+	* pbuilder-buildpackage (CHROOTEXEC): executehooks "D" before unpack, 
+	  and after extract.
+
+	* pbuilder.1: document new hook "D"
+
+	* pbuilder-satisfydepends: fix depends regexp, so that 
+	  multi-line Build-Depends with epoch versions will not fail.
+
+	* pbuilder-buildpackage: will clean up and exit if 
+	  satisfydepends fail.
+
+	* pbuilder-satisfydepends: fixed --echo and --chroot race.
+	  It is now possible to specify "--chroot whatever --echo"
+	  to debug some chrooting action.
+	  "/usr/lib/pbuilder/pbuilder-satisfydepends" reads debian/control
+	  and satisfies dependency, outside of chroot. It is rather handy.
+	  saveaptcache_umountproc_cleanbuildplace cannot be called from
+	  satisfydepends.
+	  fixed error message.
+
+	* pbuilder.1: added notes on "almost obsolete"ness of 
+	  -m option.
+
+2002-03-12  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-satisfydepends: created
+	  Modified/forked pbuilder-buildpackage.
+	  Should be possible to install build-dependency outside of 
+	  chroot, for usual operation. 
+	  -- Do you trust pbuilder parser ? 
+	  Instead of dpkg --print-architecture, use 
+	  dpkg-architecture -qDEB_HOST_ARCH
+	  It is now possible to debug dependency with 
+	  pbuilder-satisfydepends --echo --force-version --control controlfile
+
+	* pbuilder-buildpackage: only run apt-get -y 
+	  install ${EXTRAPACKAGES} when ${EXTRAPACKAGES} is not ""
+
+	* debian/TODO: updated, non-root builds using fakeroot 
+	  are now supported.
+	  document $TMPDIR and $HOME problems.
+
+	* pbuilder-buildpackage: only handle Build-Depends / Control
+	  found in Source section and ignore any such entry in package 
+	  sections..
+	  
+
+2002-03-10  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: add new bug # to changelog.
+
+2002-03-03  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.1: fix the documentation, --debbuildopts.
+	Note the default.
+
+	* pbuilder-checkparams (BUILDPLACE): no longer set DEBEMAIL to
+	nobody@nowhere even if it is "". Just hope that the 
+	user has set it to a valid value.
+
+	* pbuilderrc (DEBEMAIL): nobody@nowhere is the default DEBEMAIL.
+	Configure it!
+
+	* pbuilderrc, pbuilderrc.5: change default to build source/binary
+	packages. Document it.
+
+2002-02-26  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage: reversed logic. sort -nr instead of sort in 
+	  PACKAGEVERSION apt-cache routine.
+
+2002-02-24  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: release 0.24
+
+	* pdebuild.1: added better documentation.
+
+	* pbuilder-buildpackage: add runhooks
+
+	* pbuilder-runhooks: add quoting.
+
+	* pbuilder.1: added notes of hooks
+
+	* pbuilder-createbuildenv: HOOKDIR checking is moved over to runhooks.
+	* pbuilder-updatebuildenv: likewise
+
+	* pbuilder-runhooks: checks HOOKDIR, and if it's blank, quit.
+
+2002-02-22  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: release 0.23
+
+2002-02-20  Junichi Uekawa  <dancer@debian.org>
+
+	* Makefile (install): fixed typo.
+
+	* pbuilderrc.5: update the doc accordingly.
+
+	* pbuilder-buildpackage (CHROOTEXEC): add fakeroot to EXTRAPACKAGES when in fakeroot mode.
+
+	* pbuilderrc (BASETGZ): revert the pbuilderrc change to make fakeroot always installed.
+	It's only required when fakeroot mode of buildpackage is run. Make it so.
+
+	* pbuilder-buildpackage: most things are now fixed. fakeroot mode now works!
+
+	* Makefile (INSTALL_DIRECTORY): rewrote the makefile to be a bit better with install.
+
+	* pbuilder-buildpackage: add fix to chown the directory as well
+	removed some debug string.
+
+2002-02-18  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: adds /etc/mailname on extractbuildplace.
+	emacsen should install.
+
+	* pbuilder-buildpackage: Can now handle ([SPACE]<< version)
+	version relationship. Needed for arpack
+	trying to change the /etc/group string, to make things work.
+	Changed ordering of commands for SUTOUSER.
+
+2002-02-16  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage: fix ordering, to make the passwd creation work
+	-rfakeroot added to DEBBUILDOPTS automatically.
+	some more typos fixed.
+	very much fixo.
+
+	* pbuilderrc: added fakeroot to default extrapackages
+
+	* pbuilderrc.5: added notes.
+
+2002-02-15  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder.1: document updated, noting of minor details of 
+	what option takes effect in what command.
+
+	* pbuilder-buildpackage: changing it to use the specified uid.
+	EXTRAPACKAGES option is valued within "pbuilder build"
+
+	* pbuilderrc.5: document BUILDUSERNAME, BUILDUSERID
+
+	* pbuilderrc (BUILDUSERNAME): added
+	(BUILDUSERID): added
+
+2002-02-14  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: document some known bugs and features.
+
+	* pbuilder-updatebuildenv: instead of purge lilo,
+	purge $REMOVEPACKAGES
+	Tried to add something like: -o 'DPkg::Options={"--force-confnew";}' 
+	to apt-get dist-upgrade, but it doesn't seem to function.
+
+	* pbuilder-buildpackage: quoting some string
+	redirct the cp error output to /dev/null because it looks ugly.
+	Slight mods to message
+
+2002-02-13  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage: support for saving the aptcache when
+	  build target fails in the middle of installing the 
+	  build dependency.
+
+2002-02-12  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: 0.22 released, 0.23 started.
+
+	* pbuilder-updatebuildenv: apt-get clean is handled with ||true
+
+	* pbuilder-modules: some notes will be given if cache content is empty
+	Added more check.
+
+	* debian/changelog: updated the changelog, adding notes.
+
+2002-02-11  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-buildpackage: added a banner for pbuilder
+	changed the message for build-dependency failure, to make it more "pbuilder" like.
+
+2002-02-10  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: updated TODO
+
+	* debian/README.Debian (Testsuite): document testsuit. 
+	The current testsuite is not individual programs, but the 
+	Debian main archive itself.
+
+	* debian/changelog: update the changelog wrt the problem with debootstrap.
+
+	* debian/control (Depends): update the depends field to require 0.1.16.2
+	of debootstrap. There was a bug in 0.1.16 and 0.1.16.1
+	0.1.15.7 etc. should work, but they no longer exist in the archive,
+	I shouldn't worry about it.
+
+	* pbuilder-buildpackage: fixed the sed rule to allow for space.
+	
+	* pbuilder-buildpackage: fixing the awk bit to make case-insensitive,
+	and non-intervening. Build-Depends detection should be better now.
+	slight fix in ordering and minor detail.
+
+	* pbuilder-buildpackage: Build-Depends-Indep etc. field names 
+	are handled as case-insensitive. So "BuilD-DePeNDS-inDeP" is 
+	a valid field name according to policy.
+	INSTALLPKG and INSTALLPKGMULTI are local vars
+	considering INSTALLPKGMULTI is printed with $0, not $1 (which contains random output)
+	introduced CURRENTREALPKGNAME
+	Using the CURRENTREALPKGNAME variable in depends/conflicts checker.
+	fixed the CURRENTREALPKGNAME to handle packages with build-dependency 
+	without space. i.e. PACKAGENAME(>> version)
+
+	* pbuilder-updatebuildenv: uses recover_aptcache and save_aptcache.
+
+	* pbuilder-createbuildenv: added recover_aptcache, and save_aptcache 
+	to the creation process.
+
+	* pbuilder-modules: recover_aptcache, save_aptcache function
+	created
+
+	* pbuilder-buildpackage: moved the recovering the aptcache
+	and saving routine out to -modules.
+
+2002-02-09  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-modules: some message change.
+
+	* pbuilder-buildpackage: Build-[dD]epends, and 
+	Build-[Dd]epends-[Ii]ndep, because many packages seem to use
+	Build-depends instead of Build-Depends, and most tools seem to
+	cope with it.
+	Likewise for Build-Conflicts.
+	fix some messages.
+
+2002-02-08  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: release 0.21
+
+	* pbuilder-buildpackage: added echobacktime function, and
+	some logging of time, so that the information can be used
+	in tracking the time required.
+
+	* pdebuild: use the dpkg-buildpackage -r option rather than
+	calling it with $BUILDSOURCEROOTCMD.
+	dpkg-buildpackage does more optimal things. Am I breaking things?
+
+	* pbuilder-checkparams : adding DEBIAN_FRONTEND=Noninteractive
+	case to the noninteractive mode check. Needed to work around FAI/
+	sbuild/whateverelse undocumented incompatibility.
+
+2002-02-06  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: updated the changelog.
+
+2002-02-02  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/README.Debian: typo fixes.
+
+	* pbuilderrc.5: checked and fixed typos.
+
+	* pbuilder-modules: fixed, privilate -> privilege
+
+	* debian/TODO: fixed typo, added notes.
+
+	* pbuilder-updatebuildenv: added GPL notice
+
+	* pbuilder-createbuildenv: added GPL notice
+
+	* pbuilder-checkparams: added GPL notice
+
+	* pbuilder-modules: added GPL notice
+
+	* pbuilder-buildpackage: added GPL notice at top
+
+	* pbuilder: updated copyright notice to 2001,2002.
+
+	* pbuilder: remove the unnecessary test -z thing,
+	 so that duplicate help message will not appear.
+
+	* pbuilderrc.5: APTCONFDIR documentation
+
+	* pbuilder.1: document --aptconfdir
+	added some more comments on "update" option and "--distribution"
+	more notes are added to --buildresult.
+
+	* pbuilder-modules: when aptconfdir is set, 
+	just dump the files inside there to /etc/apt inside chroot. 
+
+	* pbuilder-checkparams: added --aptconfdir
+
+	* pbuilderrc (APTCONFDIR): new variable.
+
+	* pbuilder-modules: installing apt-lines will use arbitrary dir to copy the template from.
+
+2002-02-01  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-checkparams: --othermirror option parser had a typo. 
+	  pointed by kov@debian.org
+
+2002-01-31  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/TODO: updated documentation in TODO.
+
+ 	* debian/changelog, debian/README.Debian: the documented workaround is not a good one, removed the workaround, and mention of it.
+
+	* debian/README.Debian: updates to the documentation.
+
+2002-01-28  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: updated the changelog.
+
+	* pbuilder-checkparams: change the --logfile option behavior,
+	it should be able to redirect stderr output better.
+	Read ~/.pbuilderrc
+
+	* pbuilder.1: typo/spelling mistake fixed.
+
+	* debian/README.Debian (Notes): added notes on the workaround.
+
+2002-01-27  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder: modified to use umountproc_cleanbuildplace in "trap" for "pbuilder login"
+
+	* pbuilder-createbuildenv: added a trap function to cleanbuildplace on exit.
+	some obsolete and unnecessary cleanbuildplace invocation removed.
+
+	* pbuilder-buildpackage: changed abortingfunction -> umountproc_cleanbuildplace (name change)
+	* pbuilder-modules (umountproc_cleanbuildplace): changed function name.
+	* pbuilder-updatebuildenv: changed aborting function to umountproc_cleanbuildplace, to unify.
+	moved the "trap" invocation to a better location, before loadhooks.
+
+2002-01-24  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-updatebuildenv: Aborting function is performed through 
+	  trap * exit. Probably others too need to be done this way.
+
+2002-01-22  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-updatebuildenv: added a aborting function abortprocess, 
+	  so that any upgrade process that fails will clean up.
+
+2002-01-18  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-checkparams: fixed a typo.
+
+2002-01-18    <dancer@debian.org>
+
+	* pbuilder-modules: added documentation for debbuildopts.
+
+	* pbuilderrc (DEBBUILDOPTS): added a default value for the new option.
+
+	* pbuilder-buildpackage : hand-applied patch from Daniel Kobras
+	* pbuilder-checkparams: ditto
+	* pbuilder.1: ditto
+	* pbuilderrc.5: ditto
+
+	* added copyright notice to bottom of ChangeLog
+
+	* AUTHORS: added Daniel Kobras to the list. Maybe he should join the "THANKS" file, but I don't know if I should be making another file.
+
+	* debian/TODO: updated
+
+2002-01-15    <dancer@debian.org>
+
+	* pbuilderrc: quoting some text just for the sake of quoting.
+	adding some verbose comments.
+
+	* pbuilder-checkparams: var emptying at the beginning for DPKG_BUILDPACKAGEOPTS was obsolete, removed. 
+
+	* debian/README.Debian (Testsuite): added notes on testsuites, and how they are doing.
+
+	* pbuilder: Modify $@ to "$@" as pointed out by Daniel Kobras.
+
+2002-01-15  Junichi Uekawa  <dancer@debian.org>
+
+	* pbuilder-checkparams : added routine to load usr/share/pbuilder/pbuilderrc if it exists.
+
+	* Makefile (install): added usr/share/pbuilder/pbuilderrc default config.
+
+
+	This file contains some changelog record for individual files.
+	More generic info should be found in debian/changelog.
+	I should probably create NEWS file, but well... it takes some
+	energy. When pbuilder stabilizes, I will look at doing it.
+
+	14 Jan 2002 Junichi Uekawa <dancer@debian.org>
+	Copyright (c) 2001-2007 Junichi Uekawa 上川純一

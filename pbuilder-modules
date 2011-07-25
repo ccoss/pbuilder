@@ -1,0 +1,557 @@
+#! /bin/bash
+# common modules for pbuilder.
+#   pbuilder -- personal Debian package builder
+#   Copyright (C) 2001-2009 Junichi Uekawa
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+
+function showhelp () {
+    cat <<EOF
+pbuilder - a personal builder
+Copyright 2001-2007 Junichi Uekawa
+Distributed under GNU Public License version 2 or later
+
+pbuilder [operation] [pbuilder-options]
+pdebuild [pdebuild-options] -- [pbuilder-options]
+
+command lines:
+pbuilder --create [--basetgz base.tgz-path] [--distribution sid|experimental|...]
+  Creates a base.tgz
+
+pbuilder --update [--basetgz base.tgz-path] [--distribution sid|experimental|...]
+  Updates a base.tgz
+
+pbuilder --build [--basetgz base.tgz-path] pbuilder_2.2.0-1.dsc
+  Builds using the base.tgz. Requires a .dsc filename
+
+pbuilder --clean
+  Cleans the temporal build directory.
+
+pbuilder --login
+pbuilder --execute -- [command] [command-options]
+  Logs in to the build environment and execute command.
+
+pbuilder --dumpconfig
+  Dumps configuration information to stdout for debugging.
+
+pbuilder-options:
+ --basetgz [base.tgz location]
+ --buildplace [location of build]
+ --mirror [mirror location]
+ --othermirror [other mirror location in apt deb-line format, delimited with | signs]
+ --http-proxy [proxy]
+ --distribution [distribution(sid|experimental|...)]
+ --architecture [architecture]
+ --components [components]
+ --buildresult [location-to-copy-build-result]
+ --aptcache [location of retrieved package files]
+ --removepackages [packages-to-remove on pbuilder create]
+ --extrapackages [packages-to-add on pbuilder create]
+ --configfile [configuration file to load]
+ --hookdir [hook directory]
+ --debemail [mail address]
+ --debbuildopts [dpkg-buildpackage options]
+ --logfile [filename to output log]
+ --pkgname-logfile
+ --aptconfdir [overriding apt config dir]
+ --timeout [timeout time]
+ --override-config 
+ --binary-arch
+ --preserve-buildplace
+ --bindmounts [bind-mount-point]
+ --debug
+ --twice
+ --autocleanaptcache
+ --debootstrapopts [debootstrap options]
+ --save-after-login/--save-after-exec
+ --debootstrap [debootstrap|cdebootstrap]
+
+pdebuild-specific pbuilder-options:
+ --pbuilderroot [command to obtain root privilege for pbuilder] 
+ --pbuildersatisfydepends [command to satisfy build-dependencies]
+ --buildsourceroot [command to obtain root privilege for dpkg-buildpackage]
+ --use-pdebuild-internal
+ --architecture
+ --auto-debsign
+ --debsign-k [keyid]
+EOF
+    exit 1
+}
+
+# Log a message
+# message is of a format
+#  E: error message
+#  W: warning message
+#  I: informational message
+function log() {
+    case "$*" in
+	"E: "*) 
+	    echo "$*" >&2
+	    ;;
+ 	"W: "*) 
+	    echo "$*" >&2
+	    ;;
+ 	"I: "*) 
+	    echo "$*"
+	    ;;
+	*)
+	    echo "malformed log message: $*"
+	    exit 1
+	    ;;
+    esac
+}
+
+# test whether a directory is empty
+# fails if "$*" exists but isn't a directory
+# fails and outputs garbage if "$*" doesn't actually exist
+is_empty_dir() {
+  return "$(find "$*" -maxdepth 0 -type d -empty -printf 0 -o -printf 1)"
+}
+
+# sanity checks to ensure mountpoint $1 is truly unmounted in $BUILDPLACE
+# (fails relatively often to ensure we don't "rm -rf" a bind mount)
+function seems_truly_unmounted() {
+    local mountpoint
+    mountpoint="$1"
+    if ! [ -e "$BUILDPLACE/$mountpoint" ]; then
+        log "W: $mountpoint doesn't exist"
+        return 1
+    fi
+    if ! [ -d "$BUILDPLACE/$mountpoint" ]; then
+        log "W: $mountpoint isn't a directory"
+        return 1
+    fi
+    if [ -r "$BUILDPLACE/proc/mounts" ] && grep -q "^[^ ]* $mountpoint " "$BUILDPLACE/proc/mounts"; then
+        log "W: $mountpoint is mounted according to build place's /proc/mounts"
+        return 1
+    fi
+    if [ -r "/proc/mounts" ] && grep -q "^[^ ]* $BUILDPLACE/$mountpoint " "/proc/mounts"; then
+        log "W: $mountpoint is mounted according to system's /proc/mounts"
+        return 1
+    fi
+    if ! is_empty_dir "$BUILDPLACE/$mountpoint"; then
+        log "W: $mountpoint not empty"
+        return 1
+    fi
+    return 0
+}
+
+function umount_one () {
+    if [ "${IGNORE_UMOUNT}" = "yes" ]; then
+	# support ignore umount option.
+	log "I: ignoring umount of $1 filesystem"
+	return
+    fi
+    log "I: unmounting $1 filesystem"
+    local UMOUNT_OUTPUT
+    if ! UMOUNT_OUTPUT="$(LC_ALL=C umount "$BUILDPLACE/$1" 2>&1)"; then
+        log "W: Could not unmount $1: $UMOUNT_OUTPUT"
+        local ignore_umount_error="no"
+        case $UMOUNT_OUTPUT in
+          "umount: "*": not found"|"umount:"*": not mounted")
+            # run an additional set of sanity checks
+            if seems_truly_unmounted "$1"; then
+                ignore_umount_error="yes"
+            else
+                log "W: Tried ignoring error in unmount, but sanity check failed: $1 might still be mounted"
+            fi
+            ;;
+          *)
+            :
+            ;;
+        esac
+        if [ "$ignore_umount_error" != "yes" ]; then
+	    log "W: Retrying to unmount $1 in 5s"
+	    sleep 5s
+	    while ! umount "$BUILDPLACE/$1"; do
+		sleep 5s
+		cat <<EOF
+
+  Could not unmount $1, some programs might
+  still be using files in /proc (klogd?).
+  Please check and kill these processes manually
+  so that I can unmount $1.  Last umount error was:
+$UMOUNT_OUTPUT
+
+  This error only affects chroots; you may want to use
+  user-mode-linux to avoid this message.
+
+EOF
+		chroot "$BUILDPLACE" bin/sh
+	    done
+        else
+            log "W: Ignored error in unmount"
+        fi
+    fi
+}
+
+function umountproc () {
+    # push arguments on a stack to reverse direction.
+    local reversed
+    reversed=
+    for mnt in $BINDMOUNTS; do
+	reversed="$mnt $reversed"
+    done
+    for mnt in $reversed; do
+	umount_one "$mnt"
+    done
+    if [ -x /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled; then
+	umount_one "selinux"
+    fi
+    if [ "$USEDEVPTS" = "yes" ]; then
+	umount_one "dev/pts"
+    fi
+    if [ "$USEDEVFS" = "yes" ]; then
+	umount_one "dev"
+    fi
+    if [ "$USEPROC" = "yes" ]; then
+	if [ -e $BUILDPLACE/proc/sys/fs/binfmt_misc/status ]; then
+	    umount_one "proc/sys/fs/binfmt_misc"
+	fi
+	umount_one "proc"
+    fi
+}
+
+
+# Mount /proc /dev/pts /dev and bind-mount points
+# Also create a policy-rc.d script if it doesn't already exist.
+function mountproc () {
+    local -a mounted
+    if [ "$USEPROC" = "yes" ]; then
+	log "I: mounting /proc filesystem"
+	mkdir -p $BUILDPLACE/proc
+	mount -t proc /proc "$BUILDPLACE/proc"
+	ln -s ../proc/mounts $BUILDPLACE/etc/mtab 2> /dev/null || true
+	mounted[${#mounted[@]}]="$BUILDPLACE/proc"
+    fi
+    if [ "$USEDEVFS" = "yes" ]; then
+	log "I: mounting /dev filesystem"x
+	mkdir -p $BUILDPLACE/dev || true
+	mount -t devfs /dev "$BUILDPLACE/dev" 
+	mounted[${#mounted[@]}]="$BUILDPLACE/dev"
+    fi
+    if [ "$USEDEVPTS" = "yes" ]; then
+	log "I: mounting /dev/pts filesystem"
+	mkdir -p $BUILDPLACE/dev/pts || true
+	TTYGRP=5
+	TTYMODE=620
+	[ -f /etc/default/devpts ] && . /etc/default/devpts
+	mount -t devpts /dev/pts "$BUILDPLACE/dev/pts" -onoexec,nosuid,gid=$TTYGRP,mode=$TTYMODE
+	mounted[${#mounted[@]}]="$BUILDPLACE/dev/pts"
+    fi
+    if [ -x /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled; then
+	log "I: mounting selinux filesystem"
+	mkdir -p $BUILDPLACE/selinux
+	mount -t selinuxfs /selinux "$BUILDPLACE/selinux"
+	mounted[${#mounted[@]}]="$BUILDPLACE/selinux"
+    fi
+    for mnt in $BINDMOUNTS; do
+	log "I: Mounting $mnt"
+	if mkdir -p "$BUILDPLACE/$mnt" && 
+	    mount -obind "$mnt" "$BUILDPLACE/$mnt"; then
+	    # successful.
+	    mounted[${#mounted[@]}]="$mnt"
+	else
+	    # this part of code is the only part which is supposed to fail.
+	    # When unsuccessful, backtrack / umount and abort.
+	    if [ -n "${mounted[*]}" ]; then
+		log "I: error recovery: umount successfully mounted mount-points: ${mounted[@]}"
+		for umnt in "${mounted[@]}"; do
+		    log "I: umounting $umnt"
+		    umount "$umnt"
+		done
+	    fi
+	    exit 1
+	fi
+    done
+    if [ -f "$BUILDPLACE/usr/sbin/policy-rc.d" ]; then
+	log "I: policy-rc.d already exists"
+    else
+	log "I: installing dummy policy-rc.d"
+	echo "\
+#!/bin/sh
+
+while true; do
+case "\$1" in
+  -*) shift ;;
+  makedev) exit 0;;
+  x11-common) exit 0;;
+  *)  exit 101;;
+esac
+done
+
+" >  "$BUILDPLACE/usr/sbin/policy-rc.d" 
+	chmod a+x "$BUILDPLACE/usr/sbin/policy-rc.d" 
+    fi
+}
+
+## function to clean subdirs, use instead of rm -r
+function clean_subdirectories () {
+  if [ -z "$1" ]; then
+      log "E: Fatal internal error in clean_subdirectories"
+      exit 1;
+  fi
+  if [ ! -d "$1" ]; then
+      log "W: directory $1 does not exist in clean_subdirectories"
+      return;
+  fi
+  log "I: removing directory $1 and its subdirectories"
+  find "$1" -xdev \( \! -type d \) -print0 |xargs -0 rm -f
+  find "$1" -xdev -depth -type d -print0 | \
+      (xargs -0 rmdir || true)
+}
+
+function cleanbuildplace () {
+    if [ "$?" -ne 0 ]; then
+	log "W: Aborting with an error";
+    fi
+    if [ "${INTERNAL_BUILD_UML}" != "yes" ]; then
+        if [ -d "$BUILDPLACE" ]; then
+            # A directory on the same partition as $BUILDPLACE, bind-mounted
+            # into $BUILDPLACE, will be cleaned out by clean_subdirectories
+            # (because -xdev doesn't know about bind mounts).  To avoid that
+            # potential disaster (and also to avoid ugly error messages from
+            # rmdir otherwise), we want to make sure that there is *nothing*
+            # mounted under the chroot before we do our bulldozer routine.
+            #
+            # The readlink -f is a simple way to canonicalize the path for
+            # $BUILDPLACE (no dirty double slashes for *us*), so it matches
+            # what will be in the output of mount.
+            if mount |grep -q -F " $(readlink -f $BUILDPLACE)/"; then
+                log "E: Something is still mounted under ${BUILDPLACE}; unmount and remove ${BUILDPLACE} manually"
+            else
+                log "I: cleaning the build env "
+                clean_subdirectories "$BUILDPLACE"
+            fi
+	fi;
+    fi
+}
+
+function umountproc_cleanbuildplace () {
+    # rolling back to abort.
+    if [ "$?" -ne 0 ]; then
+	log "W: Aborting with an error";
+    fi
+    umountproc
+    cleanbuildplace
+}
+
+function saveaptcache_umountproc_cleanbuildplace () {
+    # save the apt cache, and call umountproc_cleanbuildplace
+    save_aptcache
+    umountproc_cleanbuildplace
+}
+
+function installaptlines (){
+    log "I: Installing apt-lines"
+    rm -f "$BUILDPLACE"/etc/apt/sources.list
+    if [ -z "$DISTRIBUTION" ]; then
+	log "E: Distribution not specified, please specify"
+	exit 1
+    fi
+    if [ -n "$OTHERMIRROR" ]; then 
+	echo "$OTHERMIRROR" | tr "|" "\n" >> "$BUILDPLACE"/etc/apt/sources.list 
+    fi
+    if [ -n "$MIRRORSITE" ] ; then
+	cat >> "$BUILDPLACE"/etc/apt/sources.list << EOF
+deb $MIRRORSITE $DISTRIBUTION $COMPONENTS
+#deb-src $MIRRORSITE $DISTRIBUTION $COMPONENTS
+EOF
+    fi
+    if [ -n "$APTCONFDIR" ]; then
+	log "I: Copy " "$APTCONFDIR"/* " to chroot"
+	cp -a "$APTCONFDIR/"* "$BUILDPLACE"/etc/apt
+    fi
+
+    if [ ! -d "$BUILDPLACE"/etc/apt/apt.conf.d ]; then
+	log "I: Create /etc/apt/apt.conf.d/ inside chroot"
+	mkdir "$BUILDPLACE"/etc/apt/apt.conf.d
+    fi
+
+    # configure /etc/apt.conf.d/15pbuilder
+    cat > "$BUILDPLACE"/etc/apt/apt.conf.d/15pbuilder <<EOF
+APT::Install-Recommends "false";
+EOF
+    if [ -n "$EXPERIMENTAL" ]; then
+	log "I: Installing apt-lines and pinning for experimental"
+	if [ -n "$MIRRORSITE" ] ; then
+	    echo "deb $MIRRORSITE experimental main" >> "$BUILDPLACE"/etc/apt/sources.list
+	    echo "#deb-src $MIRRORSITE experimental main" >> "$BUILDPLACE"/etc/apt/sources.list
+	fi
+	cat >> "$BUILDPLACE"/etc/apt/apt.conf.d/15pbuilder <<EOF
+APT::Default-Release "experimental";
+EOF
+    fi
+}
+
+function copy_local_configuration () {
+    log "I: copying local configuration"
+    for a in hosts hostname resolv.conf; do 
+	if [ -f "/etc/$a" ]; then
+		rm -f "$BUILDPLACE/etc/$a"
+		cp $( readlink -f "/etc/$a" ) "$BUILDPLACE/etc/$a";
+	else
+		log "W: No local /etc/$a to copy, relying on $BUILDPLACE/etc/$a to be correct"
+ 	fi
+    done
+}
+
+function extractbuildplace () {
+    # after calling this function, umountproc, and cleanbuildplace
+    # needs to be called. Please trap it after calling this function.
+
+    if [ "${INTERNAL_BUILD_UML}" != "yes" -a ! \( "${PRESERVE_BUILDPLACE}" = "yes" -a -d "$BUILDPLACE" \) ]; then
+	cleanbuildplace
+	log "I: Building the build Environment"
+	if ! mkdir -p "$BUILDPLACE"; then
+	    log "E: failed to build the directory to chroot"
+	    exit 1
+	fi
+	log "I: extracting base tarball [${BASETGZ}]"
+	if [ ! -f "$BASETGZ" ]; then
+	    log "E: failed to find $BASETGZ, have you done <pbuilder create> to create your base tarball yet?"
+	    exit 1
+	fi
+	if ! (cd "$BUILDPLACE" && tar xfzp "$BASETGZ"); then
+	    log "E: failed to extract $BASETGZ to $BUILDPLACE"
+	    exit 1
+	fi
+	log "I: creating local configuration"
+	hostname -f > "$BUILDPLACE/etc/mailname"
+    fi
+    copy_local_configuration
+
+    # installaptlines may fail with exit 1, do it earlier than mountproc.
+    if [ "$OVERRIDE_APTLINES" = "yes" ]; then
+	installaptlines
+    else # Warn if override config is not set
+	if [ "$OVERRIDE_APTLINES_WARN" = "yes" ]; then
+	    log "W: --override-config is not set; not updating apt.conf Read the manpage for details."
+	fi
+    fi
+
+    mountproc
+    mkdir -p "$BUILDPLACE/tmp/buildd"
+}
+
+
+function recover_aptcache() {
+    local doit
+    # recover the aptcache archive
+    if [ -n "$APTCACHE" ]; then
+	if [ "$APTCACHEHARDLINK" = "yes" ]; then
+	    doit=ln
+	else
+	    doit=cp
+	fi
+	log "I: Obtaining the cached apt archive contents"
+	find "$APTCACHE" -maxdepth 1 -name \*.deb | \
+	    while read A ; do
+	    $doit "$A" "$BUILDPLACE/var/cache/apt/archives/" || true
+	done
+    fi
+}
+
+function save_aptcache() {
+    # save the current aptcache archive
+    # it is safe to call this function several times.
+    local doit
+    if [ -n "$APTCACHE" ]; then
+	log "I: Copying back the cached apt archive contents"
+	mkdir -p "$APTCACHE" ;
+	if [ "$APTCACHEHARDLINK" = "yes" ]; then
+	    doit=ln
+	else
+	    doit=cp
+	fi
+	find "$BUILDPLACE/var/cache/apt/archives/" -maxdepth 1 -name \*.deb | \
+	    while read A ;do
+	    if [ ! -f "$APTCACHE/"$(basename "$A") -a -f "$A" ]; then
+		log "I: new cache content "$(basename "$A")" added"
+		$doit "$A" "$APTCACHE/" || true
+	    fi
+	done
+    fi
+}
+
+function create_basetgz() {
+    # create base.tgz
+    ( 
+	if ! cd "$BUILDPLACE"; then
+	    log "E: unexpected error in chdir to $BUILDPLACE"
+	    exit 1;
+	fi
+	while test -f "${BASETGZ}.tmp"; do
+	    log "I: Someone else has lock over ${BASETGZ}.tmp, waiting"
+	    sleep 10s
+	done
+	log "I: creating base tarball [${BASETGZ}]"
+	if ! tar cfz "${BASETGZ}.tmp" * ; then
+	    log "E: failed building base tarball"
+	    rm -f "${BASETGZ}.tmp"
+	    exit 1;
+	fi
+	mv "${BASETGZ}.tmp" "${BASETGZ}"
+    )
+}
+
+function copyinputfile() {
+    # copy files to inside chroot, copy all files specified by INPUTFILE[] parameter.
+    TARGETDIR="$1"
+    if [ -z "$TARGETDIR" ]; then
+	log "E: Unexpected error in copyinputfile"
+	exit 1x
+    fi
+    if [ -n "$INPUTFILE" ]; then
+	log "I: copy ${INPUTFILE[*]} to target directory"
+	cp "${INPUTFILE[@]}" "${TARGETDIR}"
+    fi
+}
+
+# all trap hooks that should lead to 'exit'; and error exit.
+function cleanbuildplace_trap () {
+    trap "" sigpipe sighup
+    set +e
+    cleanbuildplace
+    trap - exit sighup sigpipe
+    exit 1
+}
+function saveaptcache_umountproc_cleanbuildplace_trap () {
+    trap "" sigpipe sighup
+    set +e
+    saveaptcache_umountproc_cleanbuildplace
+    trap - exit sighup sigpipe
+    exit 1
+}
+function umountproc_cleanbuildplace_trap () {
+    trap "" sigpipe sighup
+    set +e
+    umountproc_cleanbuildplace
+    trap - exit sighup sigpipe
+    exit 1
+}
+function umountproc_trap () {
+    trap "" sigpipe sighup
+    set +e
+    umountproc
+    trap - exit sighup sigpipe
+    exit 1
+}
+
+#Setting environmental variables that are really required:
+#required for some packages to install...
+export LANG=C
+export LC_ALL=C

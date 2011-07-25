@@ -1,0 +1,107 @@
+#! /bin/bash
+#   pbuilder -- personal Debian package builder
+#   Copyright (C) 2001-2003,2005-2007 Junichi Uekawa
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+set -e
+
+. /usr/lib/pbuilder/pbuilder-checkparams
+. /usr/lib/pbuilder/pbuilder-runhooks
+
+
+if [ -n "$DISTRIBUTION" ] && [ "$OVERRIDE_APTLINES" = "yes" ]; then
+    log "I: Upgrading for distribution $DISTRIBUTION" 
+fi
+if [ "${PBUILDER_DEBUGMODE}" = "yes" ]; then
+    TRAP="echo ignoring trap "
+else
+    TRAP=trap
+fi
+
+extractbuildplace
+$TRAP umountproc_cleanbuildplace_trap exit sighup
+
+loadhooks
+log "I: Refreshing the base.tgz "
+log "I: upgrading packages"
+$CHROOTEXEC /usr/bin/apt-get -q update
+
+case "`readlink -e "$PBUILDERSATISFYDEPENDSCMD"`" in
+  *-aptitude)
+    EXTRAPACKAGES="$EXTRAPACKAGES aptitude"
+  ;;
+  *)
+    EXTRAPACKAGES="$EXTRAPACKAGES aptitude-"
+  ;;
+esac
+
+if [ -n "$CCACHEDIR" ]; then
+    EXTRAPACKAGES="$EXTRAPACKAGES ccache"
+else
+    EXTRAPACKAGES="$EXTRAPACKAGES ccache-"
+fi
+
+if [ -n "$REMOVEPACKAGES" ]; then
+    # FIXME this wont work if the packages have some reverse dependencies;
+    # apt-get can also remove package, either with apt-get remove or purge, or
+    # with apt-get install name-of-pkg- (i.e. a minus sign after the package
+    # name)
+    $CHROOTEXEC /usr/bin/dpkg --purge $REMOVEPACKAGES
+fi
+recover_aptcache
+
+$TRAP saveaptcache_umountproc_cleanbuildplace_trap exit sighup
+$CHROOTEXEC /usr/bin/apt-get -q -y "${APTGETOPT[@]}" "${FORCE_CONFNEW[@]}" dist-upgrade
+# autoremove: Ignore error in case of etch because apt in etch doesn't
+# support autoremove. TODO: Do not ignore error when etch is no longer
+# supported.
+$CHROOTEXEC /usr/bin/apt-get -q -y "${APTGETOPT[@]}" autoremove || true
+$CHROOTEXEC /usr/bin/apt-get -q -y "${APTGETOPT[@]}" install build-essential dpkg-dev $EXTRAPACKAGES
+save_aptcache
+
+# optionally auto-clean apt-cache
+if [ "${AUTOCLEANAPTCACHE}" = "yes" -a -n "$APTCACHE" ]; then
+    log "I: Cleaning the cached apt archive"
+    $CHROOTEXEC /usr/bin/apt-get autoclean || true
+    find "$APTCACHE/" -maxdepth 1 -name \*.deb | \
+	while read A; do
+	    if [ ! -f "$BUILDPLACE/var/cache/apt/archives/"$(basename "$A") -a \
+		-f "$A" ]; then
+		log "I: obsolete cache content "$(basename "$A")" removed"
+		rm -f "$A" || true
+	    fi
+    done
+fi
+
+$TRAP umountproc_cleanbuildplace_trap exit sighup
+executehooks "E"
+unloadhooks
+
+umountproc
+$CHROOTEXEC /usr/bin/apt-get clean || true
+
+$TRAP cleanbuildplace_trap exit sighup
+if [ ! "${INTERNAL_BUILD_UML}" = "yes" ]; then
+    create_basetgz
+fi
+if [ "${PRESERVE_BUILDPLACE}" = "yes" ]; then
+    :
+else
+    :
+    cleanbuildplace
+fi
+trap - exit sighup
+exit 0

@@ -1,0 +1,5 @@
+# configuration for ccache
+export CCACHE_DIR=$(readlink -f "work/ccache" )
+export PATH="/usr/lib/ccache:${PATH}"
+BINDMOUNTS="${CCACHE_DIR}"
+EXTRAPACKAGES="ccache"
